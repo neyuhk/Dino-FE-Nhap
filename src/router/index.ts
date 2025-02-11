@@ -29,6 +29,8 @@ import RegisterPage from '../pages/commons/RegisterPage.tsx'
 import ClassRoom from '../pages/commons/ClassRoom.tsx'
 import ProfilePage from '../pages/commons/ProfilePage.tsx'
 import ForumPage from '../pages/commons/ForumPage.tsx'
+import ListClassroomManagement from '../page/Admin/ClassroomManagement/ListClassroom.tsx'
+import ClassroomDetailPage from '../page/Admin/ClassroomManagement/ClassroomDetail.tsx'
 
 export const router = [
     {
