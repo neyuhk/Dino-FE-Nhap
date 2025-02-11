@@ -15,6 +15,7 @@ import { Project } from '../../model/model.ts'
 import { useSelector } from 'react-redux'
 import { logout } from '../../stores/authSlice.ts'
 import store from '../../stores'
+import { saveCodeBlock } from '../../services/codeBlock.ts'
 
 const { Header, Content } = Layout
 const { Title } = Typography
@@ -99,6 +100,28 @@ const BlocklyPage: React.FC = () => {
             eval(code)
         }
     }
+
+   const saveCodeBlockToDB = async () => {
+    if (workspace) {
+        const javascriptCode = javascriptGenerator.workspaceToCode(workspace)
+        const jsonCode = JSON.stringify(Blockly.serialization.workspaces.save(workspace), null, 2)
+        const xml = Blockly.Xml.workspaceToDom(workspace)
+        const xmlCode = Blockly.Xml.domToPrettyText(xml)
+
+        const payload = {
+            javascriptCode,
+            jsonCode,
+            xmlCode,
+        }
+
+        try {
+            await saveCodeBlock(payload)
+            console.log('Code block saved successfully')
+        } catch (e) {
+            console.error('Error saving code block', e)
+        }
+    }
+}
 
     const downloadXML = () => {
         if (workspace) {
@@ -408,29 +431,14 @@ const BlocklyPage: React.FC = () => {
                     <div id="pageContainer">
                         <div id="outputPane">
                             <pre id="generatedCode"><code style={{ textAlign: 'left' }}></code></pre>
-                            {/*<button id="runCodeButton" onClick={() => {*/}
-                            {/*    const code = document.getElementById('generatedCode')?.textContent*/}
-                            {/*    if (code) console.log(code)*/}
-                            {/*}}>Log Code (test)*/}
-                            {/*</button>*/}
                             <button style={{ marginTop: '16px' }} id="executeCodeButton" onClick={() => {
                                 executeCode()
                             }}>Execute Code (test)
                             </button>
-                            {/*<button style={{ marginTop: '16px' }} id="downloadXMLButton" onClick={() => {*/}
-                            {/*    downloadXML()*/}
-                            {/*}}>Save XML*/}
-                            {/*</button>*/}
-                            {/*<button style={{ marginTop: '16px' }} id="uploadXMLButton" onClick={*/}
-                            {/*    handleUploadClick*/}
-                            {/*}>Load XML*/}
-                            {/*</button>*/}
-                            {/*<input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={uploadXML} />*/}
-                            {/*<button style={{ marginTop: '16px' }} id="saveCodeButton" onClick={() => {*/}
-                            {/*    saveCodeAsTxt()*/}
-                            {/*}}>Save Code as TXT*/}
-                            {/*</button>*/}
-                            {/*<button style={{ marginTop: '16px' }} id="new" onClick={showModal}>New</button>*/}
+                            <button style={{ marginTop: '16px' }} id="saveCodeBlockToDB" onClick={() => {
+                                saveCodeBlockToDB().then(r => console.log(r))
+                            }}>Save code to DB
+                            </button>
                             <pre id="generatedXML"><code style={{ textAlign: 'left' }}></code></pre>
                             <div id="output"></div>
                         </div>

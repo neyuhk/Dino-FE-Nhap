@@ -1,4 +1,20 @@
 import { Assignment, Course, Lesson, Submission, User } from '../model/classroom.ts'
+import { CLASSROOM_API, COURSE_API } from '../constants/api.ts'
+import http from './http/http.ts'
+
+export const getClassroomList = async () => {
+    return (await http.get(CLASSROOM_API.GET_CLASSROOMS)).data
+}
+
+export const getClassroomById = async (id: string) => {
+    return (await http.get(CLASSROOM_API.GET_CLASSROOM_BY_ID + id)).data
+}
+
+export const addClassroom = async (data: any) => {}
+
+export const deleteClassroom = async (id: string) => {}
+
+export const editClassroom = async (classroomId: string, data: any) => {}
 
 export const mockUsers: User[] = [
     {
@@ -75,3 +91,4 @@ export const mockSubmissions: Submission[] = [
         gradedAt: new Date('2024-01-16'),
     },
 ];
+

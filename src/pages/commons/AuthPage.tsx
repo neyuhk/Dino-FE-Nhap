@@ -5,10 +5,10 @@ import {
     Card,
     Col,
     Form,
-    Input,
+    Input, message,
     Row,
     Typography,
-} from 'antd';
+} from 'antd'
 import { GoogleOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { login, register } from '../../services/auth';
@@ -32,6 +32,7 @@ const AuthPage = () => {
         setSubmitLoading(true);
         try {
             await dispatch(loginAction(values)).unwrap();
+            message.success('Login successful!');
             await dispatch(getCurrentUserAction()).unwrap();
             window.location.href = PATHS.HOME;
         } catch (e: any) {
@@ -47,6 +48,8 @@ const AuthPage = () => {
         setSubmitLoading(true);
         try {
             await register(values);
+            message.success('Registration successful! Please log in.');
+            setIsLoginView(true);
         } catch (e: any) {
             console.error(e);
             setError(e.message);

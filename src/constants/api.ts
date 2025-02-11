@@ -61,3 +61,16 @@ export const FORUM_API = {
     UPDATE_FORUM: '/forum/:id',
     DELETE_FORUM: '/forum/',
 }
+
+export const CLASSROOM_API = {
+    GET_CLASSROOMS: '/classroom',
+    GET_CLASSROOM_BY_ID: '/classroom/',
+    CREATE_CLASSROOM: '/classroom',
+    UPDATE_CLASSROOM: '/classroom/:id',
+    DELETE_CLASSROOM: '/classroom/',
+    JOIN_CLASSROOM: '/classroom/join',
+    LEAVE_CLASSROOM: '/classroom/leave',
+    GET_CLASSROOM_BY_USER_ID: '/classroom/user/',
+    GET_CLASSROOM_BY_TEACHER_ID: '/classroom/teacher/',
+    GET_CLASSROOM_BY_COURSE_ID: '/classroom/course/',
+}

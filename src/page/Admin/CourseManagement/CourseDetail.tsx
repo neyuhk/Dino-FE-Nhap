@@ -133,7 +133,8 @@ const CourseDetailPage: React.FC = () => {
         },
         {
             title: 'Video Image',
-            render: () => <img src={'/MockData/flapybird.jpg'} alt="video_image" style={{ width: '100px', maxHeight: '100px' }} />,
+            render: () => <img src={'/MockData/flapybird.jpg'} alt="video_image"
+                               style={{ width: '100px', maxHeight: '100px' }} />,
         },
         {
             title: 'Created At',

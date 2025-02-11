@@ -70,6 +70,22 @@ const SiderAdmin = () => {
                 },
             ],
         },
+        {
+            key: 'sub5',
+            icon: <BookOutlined />,
+            label: 'Classroom Management',
+            children: [
+                {
+                    key: '9',
+                    label: 'Classroom',
+                    onClick: () => navigate('/admin/classroom'),
+                },
+                {
+                    key: '10',
+                    label: 'Child 2',
+                },
+            ],
+        },
     ]
 
     return (

@@ -98,3 +98,14 @@ export interface Forum {
     images: string[];
     createdAt: string;
 }
+
+export interface Classroom {
+    _id: string;
+    name: string;
+    description: string;
+    teacher_id: User;
+    courses: Course[];
+    students: User[];
+    createdAt: string;
+    updatedAt: string;
+}

@@ -29,6 +29,8 @@ import RegisterPage from '../pages/commons/RegisterPage.tsx'
 import ClassRoom from '../pages/commons/ClassRoom.tsx'
 import ProfilePage from '../pages/commons/ProfilePage.tsx'
 import ForumPage from '../pages/commons/ForumPage.tsx'
+import ListClassroomManagement from '../page/Admin/ClassroomManagement/ListClassroom.tsx'
+import ClassroomDetailPage from '../page/Admin/ClassroomManagement/ClassroomDetail.tsx'
 
 export const router = [
     {
@@ -202,6 +204,7 @@ export const router = [
             requiresAuth: false,
         },
     },
+
     {
         path: PATHS_ADMIN.FORUM,
         component: ForumPage,
@@ -213,6 +216,22 @@ export const router = [
     {
         path: PATHS_ADMIN.FORUM_DETAIL,
         component: ForumDetail,
+        layout: AdminLayout,
+        meta: {
+            requiresAuth: false,
+        },
+    },
+    {
+        path: PATHS_ADMIN.CLASSROOM,
+        component: ListClassroomManagement,
+        layout: AdminLayout,
+        meta: {
+            requiresAuth: false,
+        },
+    },
+    {
+        path: PATHS_ADMIN.CLASSROOM_DETAIL,
+        component: ClassroomDetailPage,
         layout: AdminLayout,
         meta: {
             requiresAuth: false,
