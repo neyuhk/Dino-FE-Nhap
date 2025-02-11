@@ -92,9 +92,31 @@ export interface Forum {
     _id: string;
     title: string;
     description: string;
-    user_id: Pick<User, '_id' | 'username' | 'role'>;
+    user_id: User;
     like_count: number;
     view_count: number;
+    comment_count: number;
+    repost_count: number;
+    is_liked: boolean;
+    is_reposted: boolean;
     images: string[];
     createdAt: string;
+}
+
+export interface PostProps {
+    id: string;
+    author: string;
+    avatar: string;
+    time: string;
+    title: string;
+    content?: string;
+    image?: string;
+    likes: number;
+    comments: number;
+    reposts: number;
+    isLiked: boolean;
+    isReposted: boolean;
+    onLike: (id: string) => void;
+    onComment: (id: string) => void;
+    onRepost: (id: string) => void;
 }

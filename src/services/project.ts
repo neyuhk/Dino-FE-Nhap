@@ -1,5 +1,5 @@
 import { PROJECT_API } from '../constants/api.ts'
-import http from '@/services/http/http'
+import http from '../services/http/http'
 
 export const getProjects = async (page: number, perPage: number) => {
     return (await http.get(PROJECT_API.GET_PROJECTS, {
