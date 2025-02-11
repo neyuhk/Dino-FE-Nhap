@@ -55,8 +55,10 @@ export const COMMENT_API = {
 }
 
 export const FORUM_API = {
-    GET_FORUMS: '/forum',
+    GET_FORUMS: '/forum/userId/',
     GET_FORUM_BY_ID: '/forum/',
+    LIKE: '/forum/like',
+    REPOST: '/forum/repost',
     CREATE_FORUM: '/forum',
     UPDATE_FORUM: '/forum/:id',
     DELETE_FORUM: '/forum/',

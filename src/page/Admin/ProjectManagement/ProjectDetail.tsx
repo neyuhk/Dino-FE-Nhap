@@ -6,14 +6,16 @@ import { getProjectById, isLikedProject, likeProject } from '../../../services/p
 import { useParams } from 'react-router-dom'
 import moment from 'moment/moment'
 import CommentComponent from '../../../components/Comment/Comment.tsx'
+import { useSelector } from 'react-redux'
 
 const { Title, Paragraph, Text } = Typography
 
 const ProjectDetailPage: React.FC = () => {
+    const { user } = useSelector((state: any) => state.auth)
     const { projectId } = useParams<{ projectId: string }>()
     const [projectData, setProjectData] = useState<Project | null>(null)
     const [isLiked, setIsLiked] = useState(false)
-    const userId = '6716836ed25d75774c39730d' // Replace with actual userId from local storage
+    const userId = user._id // Replace with actual userId from local storage
 
     useEffect(() => {
         const fetchProjectData = async () => {

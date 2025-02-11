@@ -92,20 +92,13 @@ export interface Forum {
     _id: string;
     title: string;
     description: string;
-    user_id: Pick<User, '_id' | 'username' | 'role'>;
+    user_id: User;
     like_count: number;
     view_count: number;
+    comment_count: number;
+    repost_count: number;
+    is_liked: boolean;
+    is_reposted: boolean;
     images: string[];
     createdAt: string;
-}
-
-export interface Classroom {
-    _id: string;
-    name: string;
-    description: string;
-    teacher_id: User;
-    courses: Course[];
-    students: User[];
-    createdAt: string;
-    updatedAt: string;
 }
