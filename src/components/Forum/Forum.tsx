@@ -7,6 +7,8 @@ import { Forum, PostProps } from '../../model/model.ts'
 import { useSelector } from 'react-redux'
 import { getForums } from '../../services/forum.ts'
 import { message } from 'antd'
+import EmptyState from './EmptyState/EmptyState.tsx'
+import CreatePostModal from './CreatePost/CreatePostModal.tsx'
 
 interface MenuItem {
     id: string;
@@ -19,6 +21,7 @@ const ForumPage: React.FC = () => {
     const [selectedMenu, setSelectedMenu] = useState('home');
     const [forumList, setForumList] = useState<Forum[]>([])
     const [isLoading, setLoading] = useState(true)
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,6 +43,7 @@ const ForumPage: React.FC = () => {
         fetchData()
     }, [selectedMenu])
 
+
     const menuItems: MenuItem[] = [
         { id: 'home', icon: Home, label: 'Trang chủ' },
         { id: 'class', icon: BookOpen, label: 'Lớp học' },
@@ -51,6 +55,15 @@ const ForumPage: React.FC = () => {
 
     return (
         <div className={styles.container}>
+            <CreatePostModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                userId={user._id}
+                onSuccess={() => {
+                        window.location.reload();
+                }}
+            />
+
             <div className={styles.navContainer}>
                 <nav className={styles.desktopNav}>
                     <div className={styles.avatarContainer}>
@@ -65,7 +78,8 @@ const ForumPage: React.FC = () => {
                         <h2 className={styles.userNameText}>{user.name}</h2>
                     </div>
 
-                    <button className={styles.createPostButton}>
+                    <button className={styles.createPostButton}
+                            onClick={() => setIsCreateModalOpen(true)}>
                         <PlusCircle size={20} />
                         Tạo bài viết mới
                     </button>
@@ -117,18 +131,17 @@ const ForumPage: React.FC = () => {
                 </div>
 
                 <div className={styles.postsContainer}>
-                    {forumList.map((post) => (
-                        <Post
-                            key={post._id}
-                            {...post}
-                            // commentableType =
-                            // isLiked={likedPosts[post._id]}
-                            // isReposted={repostedPosts[post._id]}
-                            // onLike={handleLike}
-                            // onComment={handleComment}
-                            // onRepost={handleRepost}
-                        />
-                    ))}
+                    {isLoading ? (
+                        <div className="flex justify-center items-center h-64">
+                            <p>Đang tải...</p>
+                        </div>
+                    ) : forumList.length > 0 ? (
+                        forumList.map((post) => (
+                            <Post key={post._id} {...post} />
+                        ))
+                    ) : (
+                        <EmptyState selectedMenu={selectedMenu} />
+                    )}
                 </div>
             </div>
 
