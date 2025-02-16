@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { PlusCircle, Home, BookOpen, ThumbsUp, MessageSquare, Repeat, User, ChevronDown } from 'lucide-react';
 import styles from './Forum.module.css';
-import Post from './Post/Post.tsx';
+import Post from './Post/Post.tsx'
 import { Forum } from '../../model/model.ts';
 import { useSelector } from 'react-redux';
 import { getForums } from '../../services/forum.ts';
 import { message, Drawer } from 'antd';
+import EmptyState from './EmptyState/EmptyState.tsx'
+import CreatePostModal from './CreatePost/CreatePostModal.tsx'
 
 interface MenuItem {
     id: string;
@@ -35,19 +37,21 @@ const ForumPage: React.FC = () => {
         { id: 'class2', name: 'Lớp Văn', image: 'https://i.pinimg.com/474x/f0/97/91/f097913bdf5b919f5d336036f06ebc15.jpg' },
         { id: 'class3', name: 'Lớp Anh', image: 'https://i.pinimg.com/474x/f0/97/91/f097913bdf5b919f5d336036f06ebc15.jpg' },
     ];
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 let postList;
-                if (selectedMenu === 'home') {
-                    postList = await getForums(user._id);
+                if(selectedMenu == 'home'){
+                    postList = await getForums(user._id)
                 }
-                setLoading(false);
-                setForumList(postList.data);
+                setLoading(false)
+                setForumList(postList.data)
+                // setFilteredData(forums.data)
             } catch (error) {
-                message.error('Failed to fetch forums');
-                setLoading(false);
+                message.error('Failed to fetch forums')
+                setLoading(false)
             }
         };
 
@@ -84,6 +88,15 @@ const ForumPage: React.FC = () => {
 
     return (
         <div className={styles.container}>
+            <CreatePostModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                userId={user._id}
+                onSuccess={() => {
+                        window.location.reload();
+                }}
+            />
+
             <div className={styles.navContainer}>
                 <nav className={styles.desktopNav}>
                     <div className={styles.avatarContainer}>
@@ -98,7 +111,8 @@ const ForumPage: React.FC = () => {
                         <h2 className={styles.userNameText}>{user.username}</h2>
                     </div>
 
-                    <button className={styles.createPostButton}>
+                    <button className={styles.createPostButton}
+                            onClick={() => setIsCreateModalOpen(true)}>
                         <PlusCircle size={20} />
                         Tạo bài viết mới
                     </button>
@@ -190,9 +204,17 @@ const ForumPage: React.FC = () => {
                 </div>
 
                 <div className={styles.postsContainer}>
-                    {forumList.map((post) => (
-                        <Post key={post._id} {...post} />
-                    ))}
+                    {isLoading ? (
+                        <div className="flex justify-center items-center h-64">
+                            <p>Đang tải...</p>
+                        </div>
+                    ) : forumList.length > 0 ? (
+                        forumList.map((post) => (
+                            <Post key={post._id} {...post} />
+                        ))
+                    ) : (
+                        <EmptyState selectedMenu={selectedMenu} />
+                    )}
                 </div>
             </div>
 
@@ -242,7 +264,7 @@ const ForumPage: React.FC = () => {
                 ))}
             </Drawer>
         </div>
-    );
+    )
 };
 
 export default ForumPage;
