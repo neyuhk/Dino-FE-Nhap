@@ -26,6 +26,7 @@ const ForumPage: React.FC = () => {
     const [selectedMenu, setSelectedMenu] = useState('home');
     const [forumList, setForumList] = useState<Forum[]>([]);
     const [isLoading, setLoading] = useState(true);
+    const [hasError, fetchDataForumError] = useState(false);
 
     const [selectedClass, setSelectedClass] = useState<string | null>(null);
     const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
@@ -51,6 +52,7 @@ const ForumPage: React.FC = () => {
                 // setFilteredData(forums.data)
             } catch (error) {
                 message.error('Failed to fetch forums')
+                fetchDataForumError(true);
                 setLoading(false)
             }
         };
@@ -93,7 +95,7 @@ const ForumPage: React.FC = () => {
                 onClose={() => setIsCreateModalOpen(false)}
                 userId={user._id}
                 onSuccess={() => {
-                        window.location.reload();
+                    window.location.reload()
                 }}
             />
 
@@ -111,8 +113,10 @@ const ForumPage: React.FC = () => {
                         <h2 className={styles.userNameText}>{user.username}</h2>
                     </div>
 
-                    <button className={styles.createPostButton}
-                            onClick={() => setIsCreateModalOpen(true)}>
+                    <button
+                        className={styles.createPostButton}
+                        onClick={() => setIsCreateModalOpen(true)}
+                    >
                         <PlusCircle size={20} />
                         Tạo bài viết mới
                     </button>
@@ -149,26 +153,34 @@ const ForumPage: React.FC = () => {
                                         <ChevronDown
                                             size={20}
                                             className={`${styles.chevron} ${
-                                                isClassExpanded ? styles.chevronRotated : ''
+                                                isClassExpanded
+                                                    ? styles.chevronRotated
+                                                    : ''
                                             }`}
                                         />
                                     )}
                                 </button>
                                 {item.id === 'class' && isClassExpanded && (
-                                    <div className={`${styles.classSubmenu} ${
-                                        isClassExpanded
-                                            ? styles.classSubmenuActive
-                                            : !isClassExpanded
-                                                ? styles.classSubmenuClosing
-                                                : ""
-                                    }`}
+                                    <div
+                                        className={`${styles.classSubmenu} ${
+                                            isClassExpanded
+                                                ? styles.classSubmenuActive
+                                                : !isClassExpanded
+                                                  ? styles.classSubmenuClosing
+                                                  : ''
+                                        }`}
                                     >
                                         {myClasses.map((classItem) => (
                                             <button
                                                 key={classItem.id}
-                                                onClick={() => handleClassSelect(classItem.id)}
+                                                onClick={() =>
+                                                    handleClassSelect(
+                                                        classItem.id
+                                                    )
+                                                }
                                                 className={`${styles.classMenuItem} ${
-                                                    selectedClass === classItem.id
+                                                    selectedClass ===
+                                                    classItem.id
                                                         ? styles.classMenuItemActive
                                                         : ''
                                                 }`}
@@ -176,9 +188,13 @@ const ForumPage: React.FC = () => {
                                                 <img
                                                     src={classItem.image}
                                                     alt={classItem.name}
-                                                    className={styles.classImage}
+                                                    className={
+                                                        styles.classImage
+                                                    }
                                                 />
-                                                <span className={styles.className}>
+                                                <span
+                                                    className={styles.className}
+                                                >
                                                     {classItem.name}
                                                 </span>
                                             </button>
@@ -208,12 +224,22 @@ const ForumPage: React.FC = () => {
                         <div className="flex justify-center items-center h-64">
                             <p>Đang tải...</p>
                         </div>
-                    ) : forumList.length > 0 ? (
+                    ) : hasError ? ( // Kiểm tra lỗi trước tiên
+                        <EmptyState
+                            selectedMenu={selectedMenu}
+                            isError={true} // Đặt cờ lỗi
+                            errorMessage="Không thể tải dữ liệu. Vui lòng thử lại." // Thông báo lỗi tùy chỉnh
+                        />
+                    ) : forumList.length > 0 ? ( // Hiển thị danh sách bài viết nếu có dữ liệu
                         forumList.map((post) => (
                             <Post key={post._id} {...post} />
                         ))
                     ) : (
-                        <EmptyState selectedMenu={selectedMenu} />
+                        // Trường hợp không có dữ liệu nhưng không lỗi
+                        <EmptyState
+                            selectedMenu={selectedMenu}
+                            isError={false} // Không phải trạng thái lỗi
+                        />
                     )}
                 </div>
             </div>
@@ -259,7 +285,9 @@ const ForumPage: React.FC = () => {
                             alt={classItem.name}
                             className={styles.mobileClassImage}
                         />
-                        <span className={styles.mobileClassName}>{classItem.name}</span>
+                        <span className={styles.mobileClassName}>
+                            {classItem.name}
+                        </span>
                     </button>
                 ))}
             </Drawer>
