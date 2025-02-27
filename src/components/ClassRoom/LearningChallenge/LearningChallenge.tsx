@@ -5,7 +5,6 @@ import QuizComponent from './Quiz/QuizComponent';
 import { getAnsweredQuiz, getNextQuiz, getQuizByExerciseId } from '../../../services/lesson'
 import { Exercise, Quiz } from '../../../model/classroom';
 import styles from './LearningChallenge.module.css';
-import TestComponent from './TestComponent/TestComponent.tsx'
 
 const LearningChallenge: React.FC = () => {
     const location = useLocation();
@@ -53,50 +52,6 @@ const LearningChallenge: React.FC = () => {
         const trueAnswer = await getAnsweredQuiz(quizId);
         const isCorrect = answer === trueAnswer;
         return { isCorrect, correctAnswer: trueAnswer };
-    };
-    const generateRandomCorrectAnswers = (quizList: Quiz[]): Record<string, string[]> => {
-        const correctAnswers: Record<string, string[]> = {};
-
-        quizList.forEach(quiz => {
-            if (quiz.typeAnswer === "one_choice") {
-                // Chọn ngẫu nhiên một đáp án đúng
-                correctAnswers[quiz.id] = [quiz.answer[Math.floor(Math.random() * quiz.answer.length)]];
-            } else if (quiz.typeAnswer === "multiple_choice") {
-                // Chọn ngẫu nhiên một số đáp án (từ 1 đến tất cả)
-                const shuffledAnswers = [...quiz.answer].sort(() => Math.random() - 0.5);
-                const numberOfCorrectAnswers = Math.floor(Math.random() * quiz.answer.length) + 1;
-                correctAnswers[quiz.id] = shuffledAnswers.slice(0, numberOfCorrectAnswers);
-            }
-        });
-
-        return correctAnswers;
-    };
-
-    const handleSubmitTest = async (answers: Record<string, string[]>): Promise<{ score: number }> => {
-        // Tạo đáp án đúng giả lập
-        const correctAnswers = generateRandomCorrectAnswers(quizList);
-
-        let correctCount = 0;
-        let totalQuestions = quizList.length;
-
-        // So sánh câu trả lời của người dùng với đáp án đúng
-        quizList.forEach(quiz => {
-            const userAnswers = answers[quiz.id] || [];
-            const actualCorrectAnswers = correctAnswers[quiz.id] || [];
-
-            // Kiểm tra nếu tất cả câu trả lời của người dùng khớp với đáp án đúng
-            if (
-                userAnswers.length === actualCorrectAnswers.length &&
-                userAnswers.every(ans => actualCorrectAnswers.includes(ans))
-            ) {
-                correctCount++;
-            }
-        });
-
-        // Tính điểm (theo %)
-        const score = (correctCount / totalQuestions) * 100;
-
-        return { score };
     };
 
     const handleNextQuestion = () => {
@@ -186,12 +141,6 @@ const LearningChallenge: React.FC = () => {
                             </button>
                         </div>
                     )
-                ): exercise.type === 'test' ? (
-                    <TestComponent
-                        exercise={exercise}
-                        quizList={quizList}
-                        onSubmit = {handleSubmitTest}
-                    />
                 ) : (
                     <div className={styles.errorContainer}>
                         <AlertCircle size={64} className={styles.errorIcon} />

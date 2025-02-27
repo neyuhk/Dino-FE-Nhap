@@ -22,7 +22,7 @@ export const getLessonByCourseId = async (courseId: string): Promise<Lesson[]> =
             exercises: [
                 {
                     id: 'exercise-1',
-                    type: 'test',
+                    type: 'quiz',
                     title: 'Blink LED',
                     description: 'Write a program to blink an LED on Arduino.',
                     isCompleted: false,
