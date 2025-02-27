@@ -5,6 +5,7 @@ import QuizComponent from './Quiz/QuizComponent';
 import { getAnsweredQuiz, getNextQuiz, getQuizByExerciseId } from '../../../services/lesson'
 import { Exercise, Quiz } from '../../../model/classroom';
 import styles from './LearningChallenge.module.css';
+import TestComponent from './TestComponent/TestComponent.tsx'
 
 const LearningChallenge: React.FC = () => {
     const location = useLocation();
@@ -54,10 +55,26 @@ const LearningChallenge: React.FC = () => {
         return { isCorrect, correctAnswer: trueAnswer };
     };
 
+    const handleSubmitTest = async (answers: Record<string, string[]>) => {
+        try {
+            // Đây là nơi bạn sẽ gọi API để kiểm tra kết quả và lấy điểm số
+            // Ví dụ mẫu:
+            // const result = await submitTestAnswers(exercise.id, answers);
+            // return result;
+
+            // Trả về mẫu để demo:
+            return { score: 85 }; // Điểm mẫu
+        } catch (error) {
+            console.error('Error submitting test:', error);
+            return { score: 0 };
+        }
+    };
+
     const handleNextQuestion = () => {
         setCurrentQuizIndex(prev => (prev + 1) % quizList.length);
         setCurrentQuiz(quizList[currentQuizIndex]);
     };
+
     if (loading) {
         return (
             <div className={styles.loadingContainer}>
@@ -141,6 +158,12 @@ const LearningChallenge: React.FC = () => {
                             </button>
                         </div>
                     )
+                ) : exercise.type === 'test' ? (
+                    <TestComponent
+                        exercise={exercise}
+                        quizList={quizList}
+                        onSubmit={handleSubmitTest}
+                    />
                 ) : (
                     <div className={styles.errorContainer}>
                         <AlertCircle size={64} className={styles.errorIcon} />
