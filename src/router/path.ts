@@ -27,8 +27,6 @@ export const PATHS = {
     //classroom
     CLASSROOM: '/classroom',
     CLASSROOM_DETAIL: '/classroom/detail',
-    CLASSROOM_LESSON: '/classroom/courses',
-    CLASSROOM_LEARNING: '/classroom/courses/learning',
 
 }
 
