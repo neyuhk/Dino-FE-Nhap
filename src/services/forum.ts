@@ -1,5 +1,5 @@
 import http from '@/services/http/http'
-import httpFile from './http/http/httpFile.ts'
+import httpFile from './http/httpFile.ts'
 import { COURSE_API, FORUM_API } from '../constants/api.ts'
 
 export const getForums = async () => {
@@ -24,5 +24,10 @@ export const likePost = async (forumId: string, userId: string) => {
 
 export const repost = async (forumId: string, userId: string) => {
     return (await http.post(FORUM_API.REPOST , {forumId, userId})).data
+}
+
+export const newForum = async (payload : any) => {
+    console.log('payload nekk',payload)
+    return (await httpFile.post(FORUM_API.CREATE_FORUM, payload)).data
 }
 

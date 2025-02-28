@@ -24,9 +24,11 @@ export const PATHS = {
     BLOCKLY: '/blockly',
     BLOCKLY_PROJECT_ID: '/blockly/:projectId',
 
-    // //classroom
-    // PROJECTS: '/classroom',
-    // PROJECT_DETAIL: '/projects/project-detail/:projectId',
+    //classroom
+    CLASSROOM: '/classroom',
+    CLASSROOM_DETAIL: '/classroom/detail',
+    CLASSROOM_LESSON: '/classroom/courses',
+    CLASSROOM_LEARNING: '/classroom/courses/learning',
 
 }
 
