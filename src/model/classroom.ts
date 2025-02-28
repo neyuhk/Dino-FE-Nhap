@@ -34,10 +34,10 @@ export interface Lesson {
 
     exercises: Exercise[];
     order: number;
-    duration: number; // Thời lượng bài học (phút)
+    duration: number;
     isCompleted: boolean;
-    progress: number; // Phần trăm hoàn thành
-    averageScore?: number; // Điểm trung bình các bài tập
+    progress: number;
+    averageScore?: number;
     lastAccessedAt?: string;
 }
 
