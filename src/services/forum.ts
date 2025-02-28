@@ -2,8 +2,12 @@ import http from '@/services/http/http'
 import httpFile from './http/http/httpFile.ts'
 import { COURSE_API, FORUM_API } from '../constants/api.ts'
 
-export const getForums = async (id:string) => {
-    return (await http.get(FORUM_API.GET_FORUMS + id)).data
+export const getForums = async () => {
+    return (await http.get(FORUM_API.GET_FORUMS)).data
+}
+
+export const getForumsBaseOnUserId = async (id:string) => {
+    return (await http.get(FORUM_API.GET_FORUMS_BASE_ON_USERID + id)).data
 }
 
 export const deleteForum = async (id: string) => {

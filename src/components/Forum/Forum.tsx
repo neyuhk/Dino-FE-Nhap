@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { PlusCircle, Home, BookOpen, ThumbsUp, MessageSquare, Repeat, User } from 'lucide-react';
 import styles from './Forum.module.css';
 import Post from './Post/Post.tsx'
-import { Forum, PostProps } from '../../model/model.ts'
+import { Forum } from '../../model/model.ts'
 import { useSelector } from 'react-redux'
-import { getForums } from '../../services/forum.ts'
+import { getForumsBaseOnUserId } from '../../services/forum.ts'
 import { message } from 'antd'
 
 interface MenuItem {
@@ -25,7 +25,7 @@ const ForumPage: React.FC = () => {
             try {
                 let postList;
                 if(selectedMenu == 'home'){
-                    postList = await getForums(user._id)
+                    postList = await getForumsBaseOnUserId(user._id)
                 }
                 setLoading(false)
                 setForumList(postList.data)

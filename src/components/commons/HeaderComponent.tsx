@@ -50,6 +50,16 @@ const HeaderComponent = () => {
             title: 'Blockly',
             href: PATHS.BLOCKLY,
         },
+        // {
+        //     key: 'courses',
+        //     title: 'Courses',
+        //     href: PATHS.COURSES,
+        // },
+        {
+            key: 'forum',
+            title: 'Forum',
+            href: PATHS.FORUM,
+        }
     ]
     return (
         <div className="header-content">

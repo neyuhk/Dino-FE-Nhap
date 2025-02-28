@@ -12,6 +12,8 @@ export const USER_API = {
     GET_CURRENT_USER: '/user/me',
     GET_USERS: '/user',
     GET_USER_BY_ID: '/user/',
+    UPDATE_USER: '/user/edit',
+    CHANGE_ROLE: '/user/change-role',
 }
 
 export const PROJECT_API = {
@@ -55,7 +57,8 @@ export const COMMENT_API = {
 }
 
 export const FORUM_API = {
-    GET_FORUMS: '/forum/userId/',
+    GET_FORUMS: '/forum',
+    GET_FORUMS_BASE_ON_USERID: '/forum/userId/',
     GET_FORUM_BY_ID: '/forum/',
     LIKE: '/forum/like',
     REPOST: '/forum/repost',

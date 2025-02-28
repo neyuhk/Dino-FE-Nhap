@@ -83,7 +83,7 @@ const ListCourseManagement: React.FC = () => {
         formData.append('startDate', values.startDate.format('YYYY-MM-DD'))
         formData.append('endDate', values.endDate.format('YYYY-MM-DD'))
         formData.append('certification', values.certification)
-
+        console.log(formData.entries())
         if (selectedImage) {
             formData.append('file', selectedImage.originFileObj)
         }
