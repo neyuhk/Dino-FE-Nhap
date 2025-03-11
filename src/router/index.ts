@@ -36,6 +36,11 @@ import LessonList from '../components/ClassRoom/LessonList/LessonList.tsx'
 import HeaderOnlyLayout from '../layouts/HeaderOnlyLayout.tsx'
 import LearningChallengePage from '../pages/commons/LearningChallengePage.tsx'
 import LearningChallenge from '../components/ClassRoom/LearningChallenge/LearningChallenge.tsx'
+import TestLayout from '../layouts/TestLayout.tsx'
+import CourseLessons from '../components/ClassRoom/Teacher/CourseLessons/CourseLessons.tsx'
+import CourseDetail from '../components/ClassRoom/Teacher/CourseLessons/CourseDetail.tsx'
+import LessonDetail from '../components/ClassRoom/Teacher/LessonDetail/LessonDetail.tsx'
+
 
 export const router = [
     {
@@ -174,7 +179,23 @@ export const router = [
             requiresAuth: false,
         },
     },
-
+    //teacher
+    {
+        path: PATHS.TEACHER_COURSES,
+        component: CourseDetail,
+        layout: HeaderOnlyLayout,
+        meta: {
+            requiresAuth: false,
+        }
+    },
+    {
+        path: PATHS.TEACHER_LESSON,
+        component: LessonDetail,
+        layout: HeaderOnlyLayout,
+        meta: {
+            requiresAuth: false,
+        }
+    },
 
     //admin
     {

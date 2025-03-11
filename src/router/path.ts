@@ -14,6 +14,7 @@ export const PATHS = {
     //courses
     COURSES: '/courses',
 
+
     //forum
     FORUM: '/forum',
 
@@ -29,6 +30,10 @@ export const PATHS = {
     CLASSROOM_DETAIL: '/classroom/detail',
     CLASSROOM_LESSON: '/classroom/courses',
     CLASSROOM_LEARNING: '/classroom/courses/learning',
+
+    //teacher
+    TEACHER_COURSES: '/classroom/courses/:courseId',
+    TEACHER_LESSON: '/classroom/courses/:courseId/lesson/:lessonId',
 
 }
 

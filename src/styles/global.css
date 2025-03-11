@@ -37,6 +37,9 @@ button {
     --background-transparent: rgba(233, 235, 239, 0.62);
     --gradient-colors: linear-gradient(to right, #FFB410 0%, #FFABCD 50%, #6FBCC2 75%, #877AEF 100%);
     --text-color: #37796F;
+    --gray-light: #e5e7eb;
+    --gray-medium: #9ca3af;
+    --gray-dark: #6b7280;
 }
 
 :root {

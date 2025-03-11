@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { GraduationCap, Book, CheckCircle, AlertCircle, ChevronRight } from 'lucide-react';
+import { GraduationCap, Book, CheckCircle, AlertCircle, ChevronRight, Clock } from 'lucide-react';
 import styles from './LessonList.module.css';
 import { Exercise, Lesson } from '../../../model/classroom.ts'
 import { getLessonByCourseId } from '../../../services/lesson.ts'
@@ -22,7 +22,7 @@ const LessonList: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'all' | 'completed' | 'incomplete'>('all');
-    const [expandedLesson, setExpandedLesson] = useState<string | null>(null);
+    const [expandedLessons, setExpandedLessons] = useState<Set<string>>(new Set());
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -42,15 +42,47 @@ const LessonList: React.FC = () => {
         }
     };
 
+    const isExerciseExpired = (exercise: Exercise): boolean => {
+        if (!exercise.endDate) return false;
+        return new Date(exercise.endDate) < new Date();
+    };
+
     const handleSelectExercise = (exercise: Exercise) => {
+        // Prevent navigation if exercise is expired
+        if (isExerciseExpired(exercise)) {
+            return;
+        }
         console.log(exercise);
         navigate(PATHS.CLASSROOM_LEARNING, { state: { exercise } });
     };
 
-    // const handleCardClick = (classroomId: string) => {
-    //     console.log('class room',classroomId);
-    //     navigate(`${PATHS.CLASSROOM_LESSON}`, { state: { classroomId } });
-    // };
+    const formatDate = (dateString: string | undefined): string => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('vi-VN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
+
+    const toggleLessonExpansion = (lessonId: string) => {
+        setExpandedLessons(prevExpanded => {
+            const newExpanded = new Set(prevExpanded);
+            if (newExpanded.has(lessonId)) {
+                newExpanded.delete(lessonId);
+            } else {
+                newExpanded.add(lessonId);
+            }
+            return newExpanded;
+        });
+    };
+
+    const isLessonExpanded = (lessonId: string): boolean => {
+        return expandedLessons.has(lessonId);
+    };
 
     if(!user){
         return (
@@ -81,16 +113,19 @@ const LessonList: React.FC = () => {
         );
     }
 
-    const filteredLessons = lessons.filter(lesson => {
-        switch (activeTab) {
-            case 'completed':
-                return lesson.isCompleted;
-            case 'incomplete':
-                return !lesson.isCompleted;
-            default:
-                return true;
-        }
-    });
+    const filteredLessons = Array.isArray(lessons)
+        ? lessons.filter(lesson => {
+            switch (activeTab) {
+                case 'completed':
+                    return lesson.isCompleted;
+                case 'incomplete':
+                    return !lesson.isCompleted;
+                default:
+                    return true;
+            }
+        })
+        : [];
+
 
     const getIncompleteExercises = (lesson: Lesson) => {
         return lesson.exercises.filter(ex => !ex.isCompleted).length;
@@ -121,10 +156,10 @@ const LessonList: React.FC = () => {
 
             <div className={styles.lessonList}>
                 {filteredLessons.map((lesson) => (
-                    <div key={lesson.id} className={styles.lessonCard}>
+                    <div key={lesson._id} className={styles.lessonCard}>
                         <div
                             className={styles.lessonHeader}
-                            onClick={() => setExpandedLesson(expandedLesson === lesson.id ? null : lesson.id)}
+                            onClick={() => toggleLessonExpansion(lesson._id)}
                         >
                             <div className={styles.lessonInfo}>
                                 <Book size={24} className={styles.lessonIcon} />
@@ -148,45 +183,67 @@ const LessonList: React.FC = () => {
 
                             <ChevronRight
                                 size={24}
-                                className={`${styles.expandIcon} ${expandedLesson === lesson.id ? styles.expanded : ''}`}
+                                className={`${styles.expandIcon} ${isLessonExpanded(lesson._id) ? styles.expanded : ''}`}
                             />
                         </div>
 
-                        {expandedLesson === lesson.id && (
-                            <div className={styles.lessonDetails}>
-                                <p className={styles.lessonDescription}>{lesson.description}</p>
+                        <div className={`${styles.lessonDetails} ${isLessonExpanded(lesson._id) ? styles.detailsExpanded : ''}`}>
+                            <p className={styles.lessonDescription}>{lesson.description}</p>
 
-                                {lesson.exercises.length > 0 && (
-                                    <div className={styles.exerciseSection}>
-                                        <h4>Bài tập ({lesson.exercises.length})</h4>
-                                        <div className={styles.exerciseList}>
-                                            {lesson.exercises.map((exercise) => (
-                                                <div key={exercise.id} className={styles.exerciseItem} onClick={() => handleSelectExercise(exercise)}>
+                            {lesson.exercises.length > 0 && (
+                                <div className={styles.exerciseSection}>
+                                    <h4>Bài tập ({lesson.exercises.length})</h4>
+                                    <div className={styles.exerciseList}>
+                                        {lesson.exercises.map((exercise) => {
+                                            const expired = isExerciseExpired(exercise);
+                                            return (
+                                                <div
+                                                    key={exercise.id}
+                                                    className={`${styles.exerciseItem} ${expired ? styles.exerciseExpired : ''}`}
+                                                    onClick={() => handleSelectExercise(exercise)}
+                                                >
                                                     <div className={styles.exerciseInfo}>
                                                         <span className={styles.exerciseTitle}>{exercise.title}</span>
                                                         <p className={styles.exerciseDescription}>{exercise.description}</p>
-                                                        {exercise.score !== undefined && (
+                                                        {exercise.endDate && (
+                                                            <div className={styles.exerciseDeadline}>
+                                                                <Clock size={16} className={styles.deadlineIcon} />
+                                                                <span className={`${expired ? styles.deadlineExpired : ''}`}>
+                                                                    Hạn nộp: {formatDate(exercise.endDate.toLocaleDateString())}
+                                                                    {expired ? ' (Đã hết hạn)' : ''}
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                        {(exercise.score !== undefined || expired) && (
                                                             <span className={styles.exerciseScore}>
-                                Điểm: {exercise.score}/10
-                              </span>
+                                                                Điểm: {expired && !exercise.isCompleted ? '0' : exercise.score ?? 0}/10
+                                                            </span>
                                                         )}
                                                     </div>
-                                                    <span className={`${styles.exerciseStatus} ${exercise.isCompleted ? styles.completed : ''}`}>
-                            {exercise.isCompleted ? 'Đã hoàn thành' : 'Chưa hoàn thành'}
-                          </span>
+                                                    <span className={`
+                                                        ${styles.exerciseStatus} 
+                                                        ${exercise.isCompleted ? styles.completed : ''} 
+                                                        ${expired && !exercise.isCompleted ? styles.expired : ''}
+                                                    `}>
+                                                        {expired && !exercise.isCompleted
+                                                            ? 'Hết hạn'
+                                                            : exercise.isCompleted
+                                                                ? 'Đã hoàn thành'
+                                                                : 'Chưa hoàn thành'}
+                                                    </span>
                                                 </div>
-                                            ))}
-                                        </div>
+                                            );
+                                        })}
                                     </div>
-                                )}
+                                </div>
+                            )}
 
-                                {lesson.averageScore !== undefined && (
-                                    <div className={styles.averageScore}>
-                                        Điểm trung bình: <strong>{lesson.averageScore.toFixed(1)}/10</strong>
-                                    </div>
-                                )}
-                            </div>
-                        )}
+                            {lesson.averageScore !== undefined && (
+                                <div className={styles.averageScore}>
+                                    Điểm trung bình: <strong>{lesson.averageScore.toFixed(1)}/10</strong>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>
