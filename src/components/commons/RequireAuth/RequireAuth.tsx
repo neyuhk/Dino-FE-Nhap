@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './RequireAuth.module.css';
-import { PATHS } from '../../router/path.ts'
+import { PATHS } from '../../../router/path.ts'
 
 const RequireAuth: React.FC = () => {
     const navigate = useNavigate();

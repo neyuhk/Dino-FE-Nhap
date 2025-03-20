@@ -3,7 +3,9 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import styles from './CourseDetail.module.css';
 import CourseLessons from './CourseLessons';
 import Toast from '../../../commons/Toast/Toast.tsx'
-import CourseStudents from './CourseStudents.tsx' // Component này bạn đã có sẵn
+import CourseStudents from './CourseStudents.tsx'
+import { useSelector } from 'react-redux'
+import RequireAuth from '../../../commons/RequireAuth/RequireAuth.tsx' // Component này bạn đã có sẵn
 
 interface Course {
     _id: string;
@@ -35,6 +37,13 @@ const CourseDetail: React.FC = () => {
     const course = location.state?.course || null;
     const [activeTab, setActiveTab] = useState<'lessons' | 'students'>('lessons');
     const [loading, setLoading] = useState<boolean>(true);
+    const { user } = useSelector((state: any) => state.auth);
+
+    if(!user){
+        return (
+            <RequireAuth></RequireAuth>
+        );
+    }
 
     const [toast, setToast] = useState<ToastMessage>({
         show: false,

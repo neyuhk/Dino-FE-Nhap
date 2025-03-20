@@ -8,28 +8,11 @@
 }
 
 .header {
+    gap: 1rem;
     display: flex;
     align-items: center;
     margin-bottom: 2rem;
     position: relative;
-}
-
-.backButton {
-    font-family: var(--font-primary);
-    background-color: var(--secondary-color);
-    color: var(--primary-color);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: background-color 0.2s;
-    margin-right: 1rem;
-}
-
-.backButton:hover {
-    background-color: #c0e0c0;
 }
 
 .title {

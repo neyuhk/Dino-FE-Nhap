@@ -3,6 +3,8 @@ import styles from './TeacherClassroom.module.css';
 import Toast from '../../commons/Toast/Toast.tsx'
 import { Course } from '../../../model/classroom.ts'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import RequireAuth from '../../commons/RequireAuth/RequireAuth.tsx'
 
 interface ClassTeacher {
     teacherId: string;
@@ -48,6 +50,14 @@ const TeacherClassroom: React.FC = () => {
         title: '',
         message: ''
     });
+
+    const { user } = useSelector((state: any) => state.auth);
+
+    if(!user){
+        return (
+            <RequireAuth></RequireAuth>
+        );
+    }
 
     // Mock teacherId - trong thực tế sẽ lấy từ context hoặc props
     const teacherId = "t123456";

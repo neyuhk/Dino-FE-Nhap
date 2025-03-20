@@ -2,8 +2,8 @@
 import { User } from './model.ts'
 
 export interface Exercise {
-    id: string;
-    type: "quiz" | "test";
+    _id: string;
+    type: "quiz" | "test" | "file";
     time: number;
     title: string;
     description: string;
@@ -14,10 +14,11 @@ export interface Exercise {
 }
 
 export interface Quiz{
-    id: string;
-    typeAnswer: 'multiple_choice' | 'one_choice';
+    _id: string;
+    type_answer: 'multiple_choice' | 'one_choice';
     question: string;
-    answer: string[];
+    answers: string[];
+    correct_answer: string[];
     image: string;
     index: number;
 }
@@ -26,10 +27,10 @@ export interface Lesson {
     _id: string;
     title: string;
     description: string;
-    videoUrl: string;
+    video_url: string;
     images: string[];
     body: string;
-    course_id: Course;
+    course_id: string;
     createdAt: string;
     updatedAt: string;
 
@@ -131,6 +132,14 @@ export interface Student extends User {
     }[];
     rank?: number;
     averageScore?: number;
+}
+
+export interface SubmitAnswerReq{
+    questionId: string;
+    exerciseId: string;
+    lessonId: string;
+    userId: string;
+    answer: string[]
 }
 
 // Mock data for students

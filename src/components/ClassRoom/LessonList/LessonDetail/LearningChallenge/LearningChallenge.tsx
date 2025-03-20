@@ -1,22 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookOpen, AlertCircle, Loader2 } from 'lucide-react';
-import QuizComponent from './Quiz/QuizComponent';
-import { getAnsweredQuiz, getNextQuiz, getQuizByExerciseId } from '../../../services/lesson'
-import { Exercise, Quiz } from '../../../model/classroom';
+import QuizComponent from './Quiz/QuizComponent.tsx';
+import { getAnsweredQuiz, getNextQuiz, getQuizByExerciseId } from '../../../../../services/lesson.ts'
+import { Exercise, Quiz, SubmitAnswerReq } from '../../../../../model/classroom.ts'
 import styles from './LearningChallenge.module.css';
 import TestComponent from './TestComponent/TestComponent.tsx'
+import { useSelector } from 'react-redux'
+import RequireAuth from '../../../../commons/RequireAuth/RequireAuth.tsx'
+import ConfirmationPopup from './PopupComponent/ConfirmationPopup.tsx'
 
 const LearningChallenge: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { exercise } = location.state as { exercise: Exercise };
+    const { exercise, lessonId } = location.state as { exercise: Exercise, lessonId: string };
     const [quizList, setQuizList] = useState<Quiz[]>([]);
     const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
     const [loading, setLoading] = useState(true);
     const [progress, setProgress] = useState(0);
     const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+    const [quizCount, setQuizCount] = useState(0);
+    const { user } = useSelector((state: any) => state.auth);
 
+    const [showConfirmation, setShowConfirmation] = useState(true);
+
+    if(!user){
+        return (
+            <RequireAuth></RequireAuth>
+        );
+    }
     useEffect(() => {
         if (!exercise) {
             setLoading(false);
@@ -25,13 +37,12 @@ const LearningChallenge: React.FC = () => {
 
         const fetchQuizzes = async () => {
             try {
-                const quizzes = await getQuizByExerciseId(exercise.id);
-                setQuizList(quizzes);
-                setCurrentQuiz(quizzes[0] || null);
-                setProgress(0);
+                const quizzes = await getQuizByExerciseId(exercise._id);
+                setQuizList(quizzes.data);
+                // Don't set currentQuiz here, wait for confirmation
+                setLoading(false);
             } catch (error) {
                 console.error('Lỗi khi tải câu hỏi:', error);
-            } finally {
                 setLoading(false);
             }
         };
@@ -44,15 +55,30 @@ const LearningChallenge: React.FC = () => {
     //     setCurrentQuiz(nextQuiz);
     //     setProgress((currentIndex + 1) / quizList.length * 100);
     // };
-    const handleSubmitAnswer = async (quizId: string, answer: string) => {
-        const quiz = quizList.find(q => q.id === quizId);
+    const handleSubmitAnswer = async (quiz: Quiz, answer: string[]) => {
         if (!quiz) {
             console.error("Quiz not found!");
             return { isCorrect: false, correctAnswer: '' };
         }
-        const trueAnswer = await getAnsweredQuiz(quizId);
-        const isCorrect = answer === trueAnswer;
-        return { isCorrect, correctAnswer: trueAnswer };
+
+        const submitData: SubmitAnswerReq = {
+            questionId: quiz._id,
+            exerciseId: exercise._id,
+            lessonId,
+            userId: user._id,
+            answer, // Mảng đáp án đã chọn
+        };
+
+        try {
+            const result = await getAnsweredQuiz(submitData);
+            return {
+                isCorrect: result.isCorrect,
+                correctAnswer: result.correctAnswer
+            };
+        } catch (error) {
+            console.error("Error submitting answer:", error);
+            return { isCorrect: false, correctAnswer: '' };
+        }
     };
 
     const handleSubmitTest = async (answers: Record<string, string[]>) => {
@@ -70,9 +96,35 @@ const LearningChallenge: React.FC = () => {
         }
     };
 
+    const handleConfirmExercise = () => {
+        setShowConfirmation(false);
+        setQuizCount(1)
+        // Optional: Randomize questions here
+        if (quizList.length > 0) {
+            const randomizedQuizzes = [...quizList].sort(() => Math.random() - 0.5);
+            setQuizList(randomizedQuizzes);
+            setCurrentQuiz(randomizedQuizzes[0]);
+        }
+    };
+
     const handleNextQuestion = () => {
-        setCurrentQuizIndex(prev => (prev + 1) % quizList.length);
-        setCurrentQuiz(quizList[currentQuizIndex]);
+        setProgress((currentQuizIndex + 1) / quizList.length * 100);
+        const nextIndex = currentQuizIndex + 1;
+        setQuizCount(quizCount + 1);
+        // Check if we've reached the end of the questions
+        if (nextIndex >= quizList.length) {
+            // Set currentQuiz to null to display the completion screen
+            setCurrentQuiz(null);
+            // Set progress to 100%
+            setProgress(100);
+            return;
+        }
+
+        // Otherwise, move to the next question
+        setCurrentQuizIndex(nextIndex);
+        setCurrentQuiz(quizList[nextIndex]);
+        // Update progress
+
     };
 
     if (loading) {
@@ -132,13 +184,23 @@ const LearningChallenge: React.FC = () => {
             )}
 
             <main className={styles.mainContent}>
-                {exercise.type === 'quiz' ? (
+                {showConfirmation ? (
+                    <ConfirmationPopup
+                        exercise={exercise}
+                        quizCount={quizList.length}
+                        onConfirm={handleConfirmExercise}
+                        onCancel={() => navigate(-1)}
+                    />
+                ) : exercise.type === 'quiz' ? (
                     currentQuiz ? (
                         <QuizComponent
                             quiz={currentQuiz}
-                            onSubmitAnswer={handleSubmitAnswer}
+                            quizNumber = {quizCount}
+                            onSubmitAnswer={(answer) => handleSubmitAnswer(currentQuiz, answer)}
                             onNextQuestion={handleNextQuestion}
-                            time={60}
+                            time={exercise.time}
+                            exerciseId={exercise._id}
+                            lessonId={lessonId}
                         />
                     ) : (
                         <div className={styles.completionContainer}>

@@ -1,13 +1,19 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { CheckCircle, XCircle, Timer, ArrowRight, Clock } from 'lucide-react';
+import { CheckCircle, XCircle, Timer, ArrowRight, Clock, AlertTriangle } from 'lucide-react';
 import styles from './QuizComponent.module.css';
-import { Quiz } from '../../../../model/classroom.ts'
+import { Quiz, SubmitAnswerReq } from '../../../../../../model/classroom.ts'
+import { getAnsweredQuiz } from '../../../../../../services/lesson.ts'
+import RequireAuth from '../../../../../commons/RequireAuth/RequireAuth.tsx'
+import { useSelector } from 'react-redux'
 
 interface QuizComponentProps {
     quiz: Quiz;
-    onSubmitAnswer: (quizId: string, answer: string) => Promise<{ isCorrect: boolean, correctAnswer: string }>;
+    quizNumber: number;
+    onSubmitAnswer: (quiz: Quiz, answer: string) => Promise<{ isCorrect: boolean, correctAnswer: string[] }>;
     onNextQuestion: () => void;
     time?: number;
+    exerciseId: string;
+    lessonId: string;
 }
 
 const COLORS = [
@@ -20,27 +26,33 @@ const COLORS = [
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
-const QuizComponent: React.FC<QuizComponentProps> = ({ quiz, onSubmitAnswer, onNextQuestion, time  }) => {
+const QuizComponent: React.FC<QuizComponentProps> = ({ quiz, quizNumber, onSubmitAnswer, onNextQuestion, time, exerciseId, lessonId  }) => {
     const [selectedAnswers, setSelectedAnswers] = useState<boolean[]>([]);
     const [timeLeft, setTimeLeft] = useState(time);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-    const [correctAnswerString, setCorrectAnswerString] = useState<string>('');
+    const [correctAnswers, setCorrectAnswers] = useState<string[]>([]);
     const [showCelebration, setShowCelebration] = useState(false);
     const [isTimeOut, setIsTimeOut] = useState(false);
     const [nextQuestionCountdown, setNextQuestionCountdown] = useState<number | null>(null);
+    const { user } = useSelector((state: any) => state.auth);
 
+    if(!user){
+        return (
+            <RequireAuth></RequireAuth>
+        );
+    }
     const theme = useMemo(() =>
-        COLORS[Math.floor(Math.random() * COLORS.length)], [quiz.id]
+        COLORS[Math.floor(Math.random() * COLORS.length)], [quiz._id]
     );
 
     // Reset state on quiz change
     useEffect(() => {
-        setSelectedAnswers(new Array(quiz.answer.length).fill(false));
+        setSelectedAnswers(new Array(quiz.answers.length).fill(false));
         setTimeLeft(time);
         setIsSubmitted(false);
         setIsCorrect(null);
-        setCorrectAnswerString('');
+        setCorrectAnswers([]);
         setShowCelebration(false);
         setIsTimeOut(false);
         setNextQuestionCountdown(null);
@@ -84,40 +96,50 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quiz, onSubmitAnswer, onN
         if (isSubmitted) return;
 
         setSelectedAnswers(prev => {
-            if (quiz.typeAnswer === 'one_choice') {
-                // For one_choice, only one answer can be selected
-                const newAnswers = new Array(quiz.answer.length).fill(false);
-                newAnswers[index] = true;
-                return newAnswers;
-            } else {
-                // For multiple_choice, toggle the selected state
+
+            if (quiz.type_answer === 'multiple_choice') {
+                // Cho phép chọn nhiều đáp án
                 const newAnswers = [...prev];
                 newAnswers[index] = !newAnswers[index];
+                return newAnswers;
+            } else {
+                // Chỉ cho phép chọn một đáp án
+                const newAnswers = new Array(quiz.answers.length).fill(false);
+                newAnswers[index] = true;
                 return newAnswers;
             }
         });
     };
 
+
     const handleSubmit = async (isTimeout = false) => {
         if (isSubmitted) return;
 
-        const answerString = selectedAnswers
-            .map(selected => selected ? '1' : '0')
-            .join('');
+        const answerArray = quiz.answers
+            .map((answer, index) => (selectedAnswers[index] ? answer : null))
+            .filter((answer) => answer !== null) as string[];
+
+        const submitData: SubmitAnswerReq = {
+            questionId: quiz._id,
+            exerciseId,
+            lessonId,
+            userId: user._id,
+            answer: answerArray
+        };
 
         try {
-            const { isCorrect, correctAnswer } = await onSubmitAnswer(quiz.id, answerString);
-            setIsCorrect(isCorrect);
-            setCorrectAnswerString(correctAnswer);
+            const response = await getAnsweredQuiz(submitData);
+
+            setIsCorrect(response.data.isCorrect);
+            setCorrectAnswers(response.data.correctAnswer);
             setIsSubmitted(true);
 
-            if (isCorrect) {
+            if (response.data.isCorrect) {
                 setShowCelebration(true);
                 setTimeout(() => setShowCelebration(false), 3000);
             }
         } catch (error) {
             console.error("Error submitting answer:", error);
-            // Provide fallback to continue experience
             setIsSubmitted(true);
             setIsCorrect(false);
         }
@@ -133,13 +155,16 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quiz, onSubmitAnswer, onN
             return selectedAnswers[index] ? styles.selected : '';
         }
 
-        const isCorrectAnswer = correctAnswerString[index] === '1';
+        const answer = quiz.answers[index];
+        const isCorrectAnswer = correctAnswers.includes(answer);
         const userSelected = selectedAnswers[index];
 
-        if (isCorrectAnswer) {
+        if (isCorrectAnswer && userSelected) {
             return styles.correct;
-        } else if (userSelected) {
-            return styles.incorrect;
+        } else if (isCorrectAnswer && !userSelected) {
+            return styles.missed; // Đáp án đúng nhưng người dùng không chọn
+        } else if (!isCorrectAnswer && userSelected) {
+            return styles.incorrect; // Đáp án sai mà người dùng chọn
         }
 
         return '';
@@ -147,11 +172,30 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quiz, onSubmitAnswer, onN
 
     // Determine grid layout based on number of answers
     const getAnswersContainerStyle = () => {
-        const gridClass = quiz.answer.length > 4
+        const gridClass = quiz.answers.length > 4
             ? styles.answersContainerGrid
             : styles.answersContainer;
 
         return gridClass;
+    };
+
+    // Get appropriate icon for answer result
+    const getResultIcon = (index: number) => {
+        if (!isSubmitted) return null;
+
+        const answer = quiz.answers[index];
+        const isCorrectAnswer = correctAnswers.includes(answer);
+        const userSelected = selectedAnswers[index];
+
+        if (isCorrectAnswer && userSelected) {
+            return <CheckCircle size={20} className={styles.resultIcon} color="#4CAF50" />;
+        } else if (isCorrectAnswer && !userSelected) {
+            return <AlertTriangle size={20} className={styles.resultIcon} color="#FFC107" />;
+        } else if (!isCorrectAnswer && userSelected) {
+            return <XCircle size={20} className={styles.resultIcon} color="#FF5252" />;
+        }
+
+        return null;
     };
 
     return (
@@ -188,7 +232,10 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quiz, onSubmitAnswer, onN
                     </span>
                 </div>
                 <div className={styles.questionNumber} style={{ color: theme.accent }}>
-                    Question {quiz.index + 1}
+                    Câu hỏi {quizNumber}
+                </div>
+                <div className={styles.questionType} style={{ color: theme.accent }}>
+                    {quiz.type_answer === 'multiple_choice' ? 'Nhiều đáp án' : 'Một đáp án'}
                 </div>
             </div>
 
@@ -213,7 +260,7 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quiz, onSubmitAnswer, onN
             </div>
 
             <div className={getAnswersContainerStyle()}>
-                {quiz.answer.map((answer, index) => (
+                {quiz.answers.map((answer, index) => (
                     <button
                         key={index}
                         onClick={() => handleAnswerSelect(index)}
@@ -228,12 +275,7 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quiz, onSubmitAnswer, onN
                             {LETTERS[index]}
                         </span>
                         <span className={styles.answerText}>{answer}</span>
-                        {isSubmitted && correctAnswerString[index] === '1' && (
-                            <CheckCircle size={20} className={styles.resultIcon} color="#4CAF50" />
-                        )}
-                        {isSubmitted && selectedAnswers[index] && correctAnswerString[index] !== '1' && (
-                            <XCircle size={20} className={styles.resultIcon} color="#FF5252" />
-                        )}
+                        {getResultIcon(index)}
                     </button>
                 ))}
             </div>

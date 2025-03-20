@@ -1,28 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { GraduationCap, Book, CheckCircle, AlertCircle, ChevronRight, Clock } from 'lucide-react';
+import { GraduationCap, Book, CheckCircle, AlertCircle, ChevronRight, ChevronLeft } from 'lucide-react'
 import styles from './LessonList.module.css';
-import { Exercise, Lesson } from '../../../model/classroom.ts'
-import { getLessonByCourseId } from '../../../services/lesson.ts'
-import { useSelector } from 'react-redux'
-import RequireAuth from '../../RequireAuth/RequireAuth.tsx'
-import { PATHS } from '../../../router/path.ts'
-import { useLocation, useNavigate } from 'react-router-dom'
-
-interface LessonListProps {
-    courseId: string;
-}
+import { Lesson } from '../../../model/classroom.ts';
+import { getLessonByCourseId } from '../../../services/lesson.ts';
+import { useSelector } from 'react-redux';
+import RequireAuth from '../../commons/RequireAuth/RequireAuth.tsx';
+import { PATHS } from '../../../router/path.ts';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const LessonList: React.FC = () => {
-
     const location = useLocation();
     const { user } = useSelector((state: any) => state.auth);
-    const { coursesId } = location.state as { coursesId: string};
+    const { coursesId } = location.state as { coursesId: string };
 
     const [lessons, setLessons] = useState<Lesson[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'all' | 'completed' | 'incomplete'>('all');
-    const [expandedLessons, setExpandedLessons] = useState<Set<string>>(new Set());
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -34,7 +28,7 @@ const LessonList: React.FC = () => {
             console.log('courseId', coursesId);
             setIsLoading(true);
             const data = await getLessonByCourseId(coursesId);
-            setLessons(data);
+            setLessons(data.data);
         } catch (err) {
             setError('Có lỗi xảy ra khi tải bài học. Vui lòng thử lại sau!');
         } finally {
@@ -42,49 +36,19 @@ const LessonList: React.FC = () => {
         }
     };
 
-    const isExerciseExpired = (exercise: Exercise): boolean => {
-        if (!exercise.endDate) return false;
-        return new Date(exercise.endDate) < new Date();
-    };
-
-    const handleSelectExercise = (exercise: Exercise) => {
-        // Prevent navigation if exercise is expired
-        if (isExerciseExpired(exercise)) {
-            return;
+    const handleLessonClick = (lessonId: string) => {
+        // Find the selected lesson to pass as state
+        const selectedLesson = lessons.find(lesson => lesson._id === lessonId);
+        if (selectedLesson) {
+            navigate(`/classroom/courses/lesson/${lessonId}`, { state: { lesson: selectedLesson } });
         }
-        console.log(exercise);
-        navigate(PATHS.CLASSROOM_LEARNING, { state: { exercise } });
     };
 
-    const formatDate = (dateString: string | undefined): string => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
+    const getIncompleteExercises = (lesson: Lesson) => {
+        return lesson.exercises.filter(ex => !ex.isCompleted).length;
     };
 
-    const toggleLessonExpansion = (lessonId: string) => {
-        setExpandedLessons(prevExpanded => {
-            const newExpanded = new Set(prevExpanded);
-            if (newExpanded.has(lessonId)) {
-                newExpanded.delete(lessonId);
-            } else {
-                newExpanded.add(lessonId);
-            }
-            return newExpanded;
-        });
-    };
-
-    const isLessonExpanded = (lessonId: string): boolean => {
-        return expandedLessons.has(lessonId);
-    };
-
-    if(!user){
+    if (!user) {
         return (
             <RequireAuth></RequireAuth>
         );
@@ -126,13 +90,15 @@ const LessonList: React.FC = () => {
         })
         : [];
 
-
-    const getIncompleteExercises = (lesson: Lesson) => {
-        return lesson.exercises.filter(ex => !ex.isCompleted).length;
-    };
-
     return (
         <div className={styles.container}>
+            <button
+                className={styles.backButton}
+                onClick={() => navigate(-1)}
+            >
+                <ChevronLeft size={20} />
+                Quay lại lớp học
+            </button>
             <div className={styles.tabContainer}>
                 <button
                     className={`${styles.tabButton} ${activeTab === 'all' ? styles.activeTab : ''}`}
@@ -159,7 +125,7 @@ const LessonList: React.FC = () => {
                     <div key={lesson._id} className={styles.lessonCard}>
                         <div
                             className={styles.lessonHeader}
-                            onClick={() => toggleLessonExpansion(lesson._id)}
+                            onClick={() => handleLessonClick(lesson._id)}
                         >
                             <div className={styles.lessonInfo}>
                                 <Book size={24} className={styles.lessonIcon} />
@@ -181,68 +147,7 @@ const LessonList: React.FC = () => {
                                 )
                             )}
 
-                            <ChevronRight
-                                size={24}
-                                className={`${styles.expandIcon} ${isLessonExpanded(lesson._id) ? styles.expanded : ''}`}
-                            />
-                        </div>
-
-                        <div className={`${styles.lessonDetails} ${isLessonExpanded(lesson._id) ? styles.detailsExpanded : ''}`}>
-                            <p className={styles.lessonDescription}>{lesson.description}</p>
-
-                            {lesson.exercises.length > 0 && (
-                                <div className={styles.exerciseSection}>
-                                    <h4>Bài tập ({lesson.exercises.length})</h4>
-                                    <div className={styles.exerciseList}>
-                                        {lesson.exercises.map((exercise) => {
-                                            const expired = isExerciseExpired(exercise);
-                                            return (
-                                                <div
-                                                    key={exercise.id}
-                                                    className={`${styles.exerciseItem} ${expired ? styles.exerciseExpired : ''}`}
-                                                    onClick={() => handleSelectExercise(exercise)}
-                                                >
-                                                    <div className={styles.exerciseInfo}>
-                                                        <span className={styles.exerciseTitle}>{exercise.title}</span>
-                                                        <p className={styles.exerciseDescription}>{exercise.description}</p>
-                                                        {exercise.endDate && (
-                                                            <div className={styles.exerciseDeadline}>
-                                                                <Clock size={16} className={styles.deadlineIcon} />
-                                                                <span className={`${expired ? styles.deadlineExpired : ''}`}>
-                                                                    Hạn nộp: {formatDate(exercise.endDate.toLocaleDateString())}
-                                                                    {expired ? ' (Đã hết hạn)' : ''}
-                                                                </span>
-                                                            </div>
-                                                        )}
-                                                        {(exercise.score !== undefined || expired) && (
-                                                            <span className={styles.exerciseScore}>
-                                                                Điểm: {expired && !exercise.isCompleted ? '0' : exercise.score ?? 0}/10
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <span className={`
-                                                        ${styles.exerciseStatus} 
-                                                        ${exercise.isCompleted ? styles.completed : ''} 
-                                                        ${expired && !exercise.isCompleted ? styles.expired : ''}
-                                                    `}>
-                                                        {expired && !exercise.isCompleted
-                                                            ? 'Hết hạn'
-                                                            : exercise.isCompleted
-                                                                ? 'Đã hoàn thành'
-                                                                : 'Chưa hoàn thành'}
-                                                    </span>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            )}
-
-                            {lesson.averageScore !== undefined && (
-                                <div className={styles.averageScore}>
-                                    Điểm trung bình: <strong>{lesson.averageScore.toFixed(1)}/10</strong>
-                                </div>
-                            )}
+                            <ChevronRight size={24} className={styles.expandIcon} />
                         </div>
                     </div>
                 ))}

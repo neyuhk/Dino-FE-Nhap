@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './TestComponent.module.css';
-import { Quiz, Exercise } from '../../../../model/classroom.ts'
+import { Quiz, Exercise } from '../../../../../../model/classroom.ts'
 
 interface TestComponentProps {
     exercise: Exercise;

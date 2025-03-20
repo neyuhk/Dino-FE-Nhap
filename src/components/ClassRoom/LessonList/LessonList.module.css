@@ -47,6 +47,25 @@
     background-color: #d32f2f;
 }
 
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+    margin-bottom: 16px;
+}
+
+.backButton:hover {
+    color: #4CAF50;
+}
+
+
 .tabContainer {
     display: flex;
     gap: 12px;

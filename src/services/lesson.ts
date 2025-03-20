@@ -1,7 +1,7 @@
-import { COURSE_API, FORUM_API, LESSON_API } from '../constants/api.ts'
+import { COURSE_API, EXERCISE_API, FORUM_API, LESSON_API } from '../constants/api.ts'
 import http from '@/services/http/http'
 import httpFile from '@/services/http/httpFile'
-import { Lesson, Quiz, Student } from '../model/classroom.ts'
+import { Lesson, Quiz, Student, SubmitAnswerReq } from '../model/classroom.ts'
 import httpAuth from './http/httpAuth.ts'
 
 export const getLessonByCourseId = async (id:string) => {
@@ -28,74 +28,24 @@ export const addLesson = async (courseId: string, lessonData: FormData) => {
     }
 };
 
-export const getQuizByExerciseId = async (exerciseId: string) => {
-    return [
-        {
-            id: 'quiz1',
-            typeAnswer: 'one_choice' as "multiple_choice" | "one_choice",
-            question: '2 + 3 bằng bao nhiêu?',
-            answer: ["4", "Ba", "Năm", "Sáu"],
-            image: '',
-            index: 0,
-        },
-        {
-            id: 'quiz2',
-            typeAnswer: 'one_choice' as "multiple_choice" | "one_choice",
-            question: 'Hành tinh nào được gọi là Hành tinh Đỏ?',
-            answer: ["Trái Đất", "Sao Hỏa", "Sao Mộc", "Sao Kim"],
-            image: '',
-            index: 1,
-        },
-        {
-            id: 'quiz3',
-            typeAnswer: 'multiple_choice' as "multiple_choice" | "one_choice",
-            question: 'Những loài động vật nào có thể bay?',
-            answer: ["Đại bàng", "Chim cánh cụt", "Dơi", "Cá heo"],
-            image: '',
-            index: 2,
-        },
-        {
-            id: 'quiz4',
-            typeAnswer: 'one_choice' as "multiple_choice" | "one_choice",
-            question: 'Trên Trái Đất có bao nhiêu châu lục?',
-            answer: ["5", "6", "7", "8"],
-            image: '',
-            index: 3,
-        },
-        {
-            id: 'quiz5',
-            typeAnswer: 'one_choice' as "multiple_choice" | "one_choice",
-            question: 'Ai là tác giả của vở kịch "Romeo và Juliet"?',
-            answer: ["Shakespeare", "Hemingway", "Tolstoy", "Dickens"],
-            image: '',
-            index: 4,
-        },
-        {
-            id: 'quiz6',
-            typeAnswer: 'multiple_choice' as "multiple_choice" | "one_choice",
-            question: 'Những ngôn ngữ lập trình nào dưới đây là đúng?',
-            answer: ["Python", "Java", "HTML", "CSS"],
-            image: '',
-            index: 5,
-        },
-        {
-            id: 'quiz7',
-            typeAnswer: 'one_choice' as "multiple_choice" | "one_choice",
-            question: 'Thủ đô của Nhật Bản là gì?',
-            answer: ["Seoul", "Bắc Kinh", "Tokyo", "Bangkok"],
-            image: '',
-            index: 6,
-        },
-        {
-            id: 'quiz8',
-            typeAnswer: 'one_choice' as "multiple_choice" | "one_choice",
-            question: 'Đại dương nào lớn nhất trên Trái Đất?',
-            answer: ["Đại Tây Dương", "Ấn Độ Dương", "Thái Bình Dương", "Bắc Băng Dương"],
-            image: '',
-            index: 7,
-        }
-    ];
+export const addQuiz = async (payload: any) => {
+    return (await httpFile.post(EXERCISE_API.ADD_QUIZ, payload)).data
+}
 
+export const deleteQuiz = async (id: string) => {
+    return (await http.delete(EXERCISE_API.DELETE_QUIZ + id)).data
+}
+
+export const newExercise = async (body: any) => {
+    return (await http.post(EXERCISE_API.NEW_EXERCISE, body)).data
+}
+
+export  const getQuiz = async (id: string) => {
+    return (await http.get(EXERCISE_API.GET_QUIZ_BY_EXERCISE_ID + id)).data
+}
+
+export const getQuizByExerciseId = async (exerciseId: string) => {
+    return (await http.get(EXERCISE_API.GET_QUIZ_BY_EXERCISE_ID + exerciseId)).data
 }
 
 export const getNextQuiz = async (index: number) => {
@@ -170,8 +120,8 @@ export const getNextQuiz = async (index: number) => {
     // return quizzes;
 };
 
-export const getAnsweredQuiz = async (quizId: string) => {
-    return "1000"
+export const getAnsweredQuiz = async (submitAnswerReq : SubmitAnswerReq) => {
+    return (await http.post(EXERCISE_API.GET_ANSWER_QUIZ, submitAnswerReq)).data
 }
 
 

@@ -16,22 +16,23 @@
 }
 
 .backButton {
-    background-color: var(--background-primary);
-    color: var(--text-color);
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-size: 1rem;
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
     cursor: pointer;
+    font-family: var(--font-secondary);
+    font-weight: 500;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    margin-right: 16px;
 }
 
 .backButton:hover {
-    background-color: var(--secondary-color);
-    transform: translateY(-2px);
+    background-color: var(--primary-color);
+    color: white;
 }
 
 .title {
