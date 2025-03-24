@@ -12,11 +12,6 @@ export const getCourseById = async (id: string) => {
 }
 
 export const addCourse = async (data: any) => {
-    // return await axios.post('http://localhost:8000/api/course', data, {
-    //     headers: {
-    //         'Content-Type': 'multipart/form-data'
-    //     }
-    // });
     return (await httpFile.post(COURSE_API.CREATE_COURSE, data)).data;
 }
 
@@ -26,4 +21,12 @@ export const deleteCourse = async (id: string) => {
 
 export const editCourse = async (courseId: string ,data: any) => {
     return (await httpFile.put(COURSE_API.UPDATE_COURSE + courseId, data)).data;
+}
+
+export const getStudentByCourseId = async (id: string) => {
+    return (await http.get(COURSE_API.GET_STUDENT_BY_COURSE_ID + id)).data
+}
+
+export const addStudent = async (data: any) => {
+    return (await http.post(COURSE_API.ADD_STUDENT, data)).data;
 }

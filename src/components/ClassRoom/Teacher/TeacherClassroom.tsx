@@ -233,7 +233,7 @@ const TeacherClassroom: React.FC = () => {
                             >
                                 <div className={styles.courseImageContainer}>
                                     <img
-                                        src={course.images[0] || '/images/default-course.jpg'}
+                                        src={course.images.length > 0 && course.images[0] ? course.images[0] : 'https://i.pinimg.com/474x/cd/4b/d9/cd4bd9b0ea2807611ba3a67c331bff0b.jpg'}
                                         alt={course.title}
                                         className={styles.courseImage}
                                     />

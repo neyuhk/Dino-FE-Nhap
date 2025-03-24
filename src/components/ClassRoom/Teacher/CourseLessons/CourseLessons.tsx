@@ -17,6 +17,7 @@ import { getLessonByCourseId } from '../../../../services/lesson.ts'
 import Toast from '../../../commons/Toast/Toast.tsx'
 import AddLessonPopup from '../AddLessonPopup/AddLessonPopup.tsx'
 import { FaDeleteLeft } from 'react-icons/fa6'
+import EmptyStateNotification from '../common/EmptyStateNotification/EmptyStateNotification.tsx'
 
 interface ToastMessage {
     show: boolean;
@@ -26,28 +27,10 @@ interface ToastMessage {
     image?: string;
 }
 
-interface EmptyStateProps {
-    title: string;
-    message: string;
-    image: string;
-}
-
 interface CourseLessonsProps {
     courseId: string;
 }
 
-// Empty state component
-const EmptyStateNotification: React.FC<EmptyStateProps> = ({ title, message, image }) => {
-    return (
-        <div className={styles.emptyStateContainer}>
-            <div className={styles.emptyStateContent}>
-                <img src={image} alt={title} className={styles.emptyStateImage} />
-                <h2 className={styles.emptyStateTitle}>{title}</h2>
-                <p className={styles.emptyStateMessage}>{message}</p>
-            </div>
-        </div>
-    );
-};
 
 const CourseLessons: React.FC<CourseLessonsProps> = ({ courseId }) => {
     const navigate = useNavigate();
@@ -153,6 +136,7 @@ const CourseLessons: React.FC<CourseLessonsProps> = ({ courseId }) => {
         // Navigate to lesson edit page
         navigate(`/lessons/${lessonId}/edit`);
     };
+
 
     const handleAddLesson = () => {
         setShowAddLessonPopup(true);
@@ -260,17 +244,11 @@ const CourseLessons: React.FC<CourseLessonsProps> = ({ courseId }) => {
                                 {lesson.order}
                             </div>
                             <div className={styles.lessonImageContainer}>
-                                {lesson.images && lesson.images.length > 0 ? (
                                     <img
-                                        src={lesson.images[0]}
+                                        src={lesson.images.length > 0 && lesson.images[0]? lesson.images[0] : "https://i.pinimg.com/736x/fb/08/2e/fb082e7893d751e73578b2d668a338e3.jpg"}
                                         alt={lesson.title}
                                         className={styles.lessonImage}
                                     />
-                                ) : (
-                                    <div className={styles.noImage}>
-                                        <FaFileAlt size={40} />
-                                    </div>
-                                )}
                             </div>
                             <div className={styles.lessonContent}>
                                 <h3 className={styles.lessonTitle}>

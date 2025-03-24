@@ -10,7 +10,7 @@ export interface Exercise {
     score?: number;
     isCompleted: boolean;
     submittedAt?: string;
-    endDate: Date;
+    end_date: Date;
 }
 
 export interface Quiz{
@@ -104,9 +104,6 @@ export interface Classroom {
     updatedAt: Date;
     students: User[];
 }
-
-// Add this to your model/classroom.ts file
-// Make sure to import the User interface
 
 export interface Student extends User {
     studentId: string;

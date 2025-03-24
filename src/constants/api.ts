@@ -33,6 +33,8 @@ export const COURSE_API = {
     CREATE_COURSE: '/course',
     UPDATE_COURSE: '/course/',
     DELETE_COURSE: '/course/',
+    GET_STUDENT_BY_COURSE_ID: '/course/member/',
+    ADD_STUDENT: '/course/add-student'
 }
 
 export const LESSON_API = {
@@ -49,6 +51,7 @@ export const EXERCISE_API = {
     GET_QUIZ: '/quiz',
     ADD_QUIZ: '/quiz',
     DELETE_QUIZ: '/quiz/delete/',
+    DELETE_EXERCISE: '/exercise/',
     GET_QUIZ_BY_EXERCISE_ID: '/quiz/exercise/',
     GET_ANSWER_QUIZ: '/quiz/answer',
 }
@@ -59,13 +62,15 @@ export const COMMENT_API = {
     GET_COMMENT_BY_ID: '/comment/',
     CREATE_COMMENT: '/comment',
     UPDATE_COMMENT: '/comment/:id',
-    DELETE_COMMENT: '/comment/:id',
+    DELETE_COMMENT: '/comment/',
     LIKE_COMMENT: '/comment/like/',
 }
 
 export const FORUM_API = {
     GET_FORUMS: '/forum/userId/',
     GET_FORUM_BY_ID: '/forum/',
+    GET_LIKE_FORUM_BY_ID: '/forum/like/user/',
+    GET_REPOST_FORUM_BY_ID: '/forum/repost/',
     LIKE: '/forum/like',
     REPOST: '/forum/repost',
     CREATE_FORUM: '/forum',

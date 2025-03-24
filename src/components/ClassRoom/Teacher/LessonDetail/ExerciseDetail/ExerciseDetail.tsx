@@ -144,7 +144,7 @@ const ExerciseDetail: React.FC = () => {
         if (exercise.type === 'test') {
             return `${formattedTime.trim()} để hoàn thành`;
         }
-        return `Hạn nộp: ${format(new Date(exercise.endDate), 'PPP')}`;
+        return `Hạn nộp: ${format(new Date(exercise.end_date), 'PPP')}`;
     };
 
     const getExerciseTypeLabel = () => {

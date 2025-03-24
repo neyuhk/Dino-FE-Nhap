@@ -12,5 +12,5 @@ export const getUsers = async () => {
 }
 
 export const getUserById = async (id: string) => {
-    return (await http.get(USER_API.GET_USER_BY_ID + id)).data
+    return (await httpAuth.get(USER_API.GET_USER_BY_ID + id)).data
 }
