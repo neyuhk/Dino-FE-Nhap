@@ -18,8 +18,9 @@
     font-size: 1rem;
     color: var(--gray-dark);
 }
+
 .errorContainer {
-    min-height: 2.5rem; /* Đảm bảo chiều cao tối thiểu */
+    min-height: 2.5rem;
     padding: 0.5rem 0;
 }
 
@@ -33,8 +34,14 @@
 
 /* Search Section */
 .searchResultContainer {
-    min-height: 0; /* Hoặc một giá trị cụ thể nếu bạn muốn giữ không gian */
-    transition: all 0.3s ease; /* Làm mượt chuyển động */
+    min-height: 0;
+    transition: all 0.3s ease;
+}
+
+.searchResultActions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
 }
 
 .searchSection {
@@ -95,6 +102,171 @@
     border-radius: 8px;
     overflow: hidden;
     background-color: var(--background-color);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.studentCardHeader {
+    background-color: var(--background-secondary);
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.studentCardHeader h4 {
+    margin: 0;
+    color: var(--text-color);
+    font-family: var(--font-primary), 'Oswald', sans-serif;
+    font-size: 1.1rem;
+}
+
+.studentCard {
+    display: flex;
+    padding: 1.5rem;
+    gap: 1.5rem;
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+    .studentCard {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+.avatarContainer {
+    position: relative;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+@media (min-width: 768px) {
+    .avatarContainer {
+        align-self: flex-start;
+    }
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.userRole {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.studentInfo {
+    flex: 1;
+}
+
+.studentInfo h4 {
+    margin: 0 0 1rem 0;
+    color: var(--text-color);
+    font-size: 1.3rem;
+    font-family: var(--font-primary), 'Oswald', sans-serif;
+    border-bottom: 1px solid var(--gray-light);
+    padding-bottom: 0.5rem;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0.75rem;
+}
+
+@media (min-width: 576px) {
+    .infoGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.infoItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.infoLabel {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.infoValue {
+    font-size: 0.95rem;
+    color: var(--text-color);
+    word-break: break-word;
+}
+
+.studentActions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+    margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+    .studentActions {
+        align-items: flex-start;
+        margin-top: 0;
+    }
+}
+
+.addButton {
+    padding: 0.75rem 1.25rem;
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(var(--success-rgb), 0.2);
+}
+
+.addButton:hover {
+    background-color: var(--success-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(var(--success-rgb), 0.25);
+}
+
+.addIcon {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.cancelSearchButton {
+    padding: 0.75rem 1.25rem;
+    background-color: var(--background-primary);
+    color: var(--text-color);
+    border: 1px solid var(--gray-light);
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.cancelSearchButton:hover {
+    background-color: var(--background-secondary);
 }
 
 /* Pending Section */
@@ -104,7 +276,7 @@
     border: 1px solid var(--gray-light);
     border-radius: 8px;
     padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .pendingSection h3 {
@@ -127,14 +299,31 @@
     padding-right: 0.5rem;
 }
 
+.pendingName {
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Cải thiện email trong hàng chờ */
+.pendingEmail {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .pendingItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1rem;
+    padding: 0.85rem 1rem;
     background-color: var(--background-primary);
     border-radius: 6px;
     border-left: 3px solid var(--primary-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -166,11 +355,27 @@
 }
 
 .smallAvatar {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--background-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.emptyPending {
+    background-color: var(--background-primary);
+    border: 1px dashed var(--gray-light);
+    border-radius: 6px;
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.emptyPendingSubtext {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    opacity: 0.8;
 }
 
 .removeButton {
@@ -195,9 +400,9 @@
 
 .addAllButton {
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.85rem;
     background-color: var(--success-color);
-    color: var(--text-lighter);
+    color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -208,11 +413,14 @@
     align-items: center;
     gap: 0.5rem;
     font-family: var(--font-secondary), 'Montserrat', sans-serif;
+    margin-top: 1rem;
+    box-shadow: 0 2px 4px rgba(var(--success-rgb), 0.2);
 }
 
 .addAllButton:hover {
     background-color: var(--success-dark);
     transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(var(--success-rgb), 0.25);
 }
 
 .addAllButton:disabled {
@@ -221,12 +429,189 @@
     transform: none;
 }
 
-/* Thêm biến màu RGB để sử dụng với opacity */
-:root {
-    --error-rgb: 220, 53, 69; /* Tương đương với màu error-color */
+.loadingIcon {
+    animation: pulse 1.5s infinite;
 }
 
-/* Nếu thanh cuộn xuất hiện, hãy tùy chỉnh nó */
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+.plusIcon {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Students List - Table View */
+.studentsList {
+    background-color: var(--background-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.studentsListHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.studentsListHeader h3 {
+    margin: 0;
+    font-family: var(--font-primary), 'Oswald', sans-serif;
+    color: var(--text-color);
+}
+
+.filterControls {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.searchFilter {
+    position: relative;
+}
+
+.filterInput {
+    padding: 0.6rem 1rem;
+    padding-right: 2.5rem;
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    min-width: 250px;
+    font-family: var(--font-secondary), 'Montserrat', sans-serif;
+}
+
+.filterInput:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+}
+
+.sortButton {
+    margin: 0px;
+    padding: 0.6rem 1rem;
+    background-color: var(--background-primary);
+    color: var(--text-color);
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-secondary), 'Montserrat', sans-serif;
+    font-weight: 500;
+}
+
+.sortButton:hover {
+    background-color: var(--background-secondary);
+    border-color: var(--gray-medium);
+}
+
+/* Table Styling */
+.studentsTable {
+    overflow-x: auto;
+    border-radius: 6px;
+    border: 1px solid var(--gray-light);
+}
+
+.studentsTable table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.studentsTable thead tr {
+    background-color: var(--background-secondary);
+    border-bottom: 2px solid var(--gray-light);
+}
+
+.studentsTable th {
+    padding: 0.9rem 1rem;
+    text-align: left;
+    color: var(--text-color);
+    font-weight: 600;
+    white-space: nowrap;
+    font-family: var(--font-primary), 'Oswald', sans-serif;
+}
+
+.studentsTable tbody tr {
+    border-bottom: 1px solid var(--gray-light);
+    transition: background-color 0.2s;
+}
+
+.studentsTable tbody tr:last-child {
+    border-bottom: none;
+}
+
+.studentsTable tbody tr:hover {
+    background-color: rgba(var(--primary-rgb), 0.05);
+}
+
+.studentsTable td {
+    padding: 0.8rem 1rem;
+    color: var(--text-secondary);
+    vertical-align: middle;
+}
+
+.tableAvatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 0.75rem;
+    border: 2px solid var(--background-color);
+}
+
+.studentCell {
+    display: flex;
+    align-items: center;
+    color: var(--text-color) !important;
+    font-weight: 500;
+}
+.studentCell span {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tableActionButton {
+    padding: 0.5rem 0.75rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background-color 0.2s;
+    font-family: var(--font-secondary), 'Montserrat', sans-serif;
+}
+
+.tableActionButton:hover {
+    background-color: var(--primary-dark);
+}
+
+.noResults {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+    background-color: var(--background-primary);
+    border-radius: 6px;
+    border: 1px dashed var(--gray-light);
+}
+
+/* Root Variables */
+:root {
+    --error-rgb: 220, 53, 69;
+    --primary-rgb: 13, 110, 253;
+    --success-rgb: 25, 135, 84;
+}
+
+/* Scrollbar Styling */
 .pendingList::-webkit-scrollbar {
     width: 6px;
 }
@@ -245,108 +630,7 @@
     background: var(--primary-color);
 }
 
-/* Students List */
-.studentsList {
-    background-color: var(--background-color);
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.studentsList h3 {
-    font-family: var(--font-primary), 'Oswald', sans-serif;
-    color: var(--text-color);
-    margin-bottom: 1rem;
-}
-
-.studentsGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1rem;
-}
-
-.studentCard {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid var(--gray-light);
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
-    background-color: var(--background-color);
-}
-
-.studentCard:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.avatarContainer {
-    width: 100%;
-    height: 150px;
-    background-color: var(--background-primary);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.studentInfo {
-    padding: 1rem;
-    flex: 1;
-}
-
-.studentInfo h4 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    color: var(--text-color);
-    font-family: var(--font-primary), 'Oswald', sans-serif;
-}
-
-.studentInfo p {
-    margin: 0.25rem 0;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.addButton {
-    padding: 0.75rem;
-    background-color: var(--primary-color);
-    color: var(--text-lighter);
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s;
-    font-family: var(--font-secondary), 'Montserrat', sans-serif;
-}
-
-.addButton:hover {
-    background-color: var(--primary-dark);
-}
-
-.detailButton {
-    padding: 0.75rem;
-    background-color: var(--background-primary);
-    color: var(--text-color);
-    border: none;
-    border-top: 1px solid var(--gray-light);
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s;
-    font-family: var(--font-secondary), 'Montserrat', sans-serif;
-}
-
-.detailButton:hover {
-    background-color: var(--background-secondary);
-}
-
-/* Modal */
+/* Modal Styling */
 .modal {
     position: fixed;
     top: 0;
@@ -440,7 +724,7 @@
 .deleteButton {
     padding: 0.75rem 1.5rem;
     background-color: var(--error-color);
-    color: var(--text-lighter);
+    color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -465,4 +749,35 @@
 
 .cancelButton:hover {
     background-color: var(--background-secondary);
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .studentsListHeader {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filterControls {
+        width: 100%;
+    }
+
+    .searchFilter {
+        flex: 1;
+    }
+
+    .filterInput {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .studentDetail {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .detailInfo {
+        margin-top: 1rem;
+    }
 }

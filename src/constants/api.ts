@@ -12,6 +12,7 @@ export const USER_API = {
     GET_CURRENT_USER: '/user/me',
     GET_USERS: '/user',
     GET_USER_BY_ID: '/user/',
+    FIND_USER: '/user/find',
 }
 
 export const PROJECT_API = {
@@ -30,10 +31,12 @@ export const PROJECT_API = {
 export const COURSE_API = {
     GET_COURSES: '/course',
     GET_COURSE_BY_ID: '/course/',
+    GET_COUESE_BY_STUDENT_ID: '/course/member/',
+    GET_COUESE_BY_TEACHER_ID: '/course/teacher/',
     CREATE_COURSE: '/course',
     UPDATE_COURSE: '/course/',
     DELETE_COURSE: '/course/',
-    GET_STUDENT_BY_COURSE_ID: '/course/member/',
+    GET_STUDENT_BY_COURSE_ID: '/course/member/list-member/',
     ADD_STUDENT: '/course/add-student'
 }
 
@@ -42,8 +45,8 @@ export const LESSON_API = {
     GET_LESSONS_COURSE_ID: '/lesson/course/',
     GET_LESSON_BY_ID: '/lesson/:id',
     CREATE_LESSON: '/lesson/course/',
-    UPDATE_LESSON: '/lesson/:id',
-    DELETE_LESSON: '/lesson/:id',
+    UPDATE_LESSON: '/lesson/',
+    DELETE_LESSON: '/lesson/',
 }
 
 export const EXERCISE_API = {

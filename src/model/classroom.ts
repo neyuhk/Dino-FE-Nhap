@@ -28,6 +28,7 @@ export interface Lesson {
     title: string;
     description: string;
     video_url: string;
+    status: string;
     images: string[];
     body: string;
     course_id: string;
@@ -80,7 +81,8 @@ export interface Teacher {
 
 export interface Course {
     _id: string;
-    teacherId: string;
+    course_type: string;
+    teacher_id: string;
     title: string;
     description: string;
     images: string[];

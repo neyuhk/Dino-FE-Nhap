@@ -2,6 +2,7 @@ import { COURSE_API } from '../constants/api.ts'
 import http from '@/services/http/http'
 import httpFile from '@/services/http/httpFile'
 import axios from 'axios'
+import httpAuth from './http/httpAuth.ts'
 
 export const getCourses = async () => {
     return (await http.get(COURSE_API.GET_COURSES)).data
@@ -29,4 +30,12 @@ export const getStudentByCourseId = async (id: string) => {
 
 export const addStudent = async (data: any) => {
     return (await http.post(COURSE_API.ADD_STUDENT, data)).data;
+}
+
+export const getCourseByUserId = async (userId: string) => {
+    return (await httpAuth.get(COURSE_API.GET_COUESE_BY_STUDENT_ID + userId)).data
+}
+
+export const getCourseByTeacherId = async (userId: string) => {
+    return (await httpAuth.get(COURSE_API.GET_COUESE_BY_TEACHER_ID + userId)).data
 }

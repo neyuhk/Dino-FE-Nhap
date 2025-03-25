@@ -26,6 +26,10 @@ export const addLesson = async (courseId: string, lessonData: FormData) => {
     }
 };
 
+export const editLesson = async (lessonId: string ,data: any) => {
+    return (await httpFile.put(LESSON_API.UPDATE_LESSON + lessonId, data)).data;
+}
+
 export const addQuiz = async (payload: any) => {
     return (await httpFile.post(EXERCISE_API.ADD_QUIZ, payload)).data
 }
@@ -42,6 +46,11 @@ export const deleteExercise = async (id: string) => {
     return (await http.delete(EXERCISE_API.DELETE_EXERCISE + id)).data
 }
 
+export const deleteLesson = async (id: string) => {
+    return (await httpAuth.delete(LESSON_API.DELETE_LESSON + id)).data
+}
+
+
 export  const getQuiz = async (id: string) => {
     return (await http.get(EXERCISE_API.GET_QUIZ_BY_EXERCISE_ID + id)).data
 }
@@ -52,17 +61,6 @@ export const getQuizByExerciseId = async (exerciseId: string) => {
 export const getAnsweredQuiz = async (submitAnswerReq : SubmitAnswerReq) => {
     return (await http.post(EXERCISE_API.GET_ANSWER_QUIZ, submitAnswerReq)).data
 }
-
-
-// services/student.ts
-
-// const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
-
-// For now, we'll use mock data since the API doesn't exist yet
-export const getStudentsByCourseId = async (courseId: string) => {
-    // Simulate API call with mock data
-    return mockStudents
-};
 
 export const addStudentToCourse = async (courseId: string, studentData: Partial<Student>) => {
     // Simulate API call

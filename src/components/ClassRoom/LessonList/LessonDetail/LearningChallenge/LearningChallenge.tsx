@@ -9,6 +9,7 @@ import TestComponent from './TestComponent/TestComponent.tsx'
 import { useSelector } from 'react-redux'
 import RequireAuth from '../../../../commons/RequireAuth/RequireAuth.tsx'
 import ConfirmationPopup from './PopupComponent/ConfirmationPopup.tsx'
+import EmptyStateNotification from '../../../Teacher/common/EmptyStateNotification/EmptyStateNotification.tsx'
 
 const LearningChallenge: React.FC = () => {
     const location = useLocation();
@@ -185,12 +186,20 @@ const LearningChallenge: React.FC = () => {
 
             <main className={styles.mainContent}>
                 {showConfirmation ? (
-                    <ConfirmationPopup
-                        exercise={exercise}
-                        quizCount={quizList.length}
-                        onConfirm={handleConfirmExercise}
-                        onCancel={() => navigate(-1)}
-                    />
+                    quizList.length > 0 ? (
+                        <ConfirmationPopup
+                            exercise={exercise}
+                            quizCount={quizList.length}
+                            onConfirm={handleConfirmExercise}
+                            onCancel={() => navigate(-1)}
+                        />
+                    ) : (
+                        <EmptyStateNotification
+                            title="Chưa có bài tập"
+                            message="Chưa có bài tập được thêm, hãy liên hệ với giáo viên của bạn nhé!"
+                            image="https://i.pinimg.com/originals/9f/7c/90/9f7c9024044595556cf3025fa510e369.gif"
+                        />
+                    )
                 ) : exercise.type === 'quiz' ? (
                     currentQuiz ? (
                         <QuizComponent
