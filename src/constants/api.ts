@@ -57,6 +57,7 @@ export const EXERCISE_API = {
     DELETE_EXERCISE: '/exercise/',
     GET_QUIZ_BY_EXERCISE_ID: '/quiz/exercise/',
     GET_ANSWER_QUIZ: '/quiz/answer',
+    GET_EXERCISE_FOR_TEACHER: 'quiz/exercise/teacher/',
 }
 
 export const COMMENT_API = {

@@ -58,6 +58,11 @@ export  const getQuiz = async (id: string) => {
 export const getQuizByExerciseId = async (exerciseId: string) => {
     return (await http.get(EXERCISE_API.GET_QUIZ_BY_EXERCISE_ID + exerciseId)).data
 }
+
+export const getQuizForTeacher = async (exerciseId: string) => {
+    return (await http.get(EXERCISE_API.GET_EXERCISE_FOR_TEACHER + exerciseId)).data
+}
+
 export const getAnsweredQuiz = async (submitAnswerReq : SubmitAnswerReq) => {
     return (await http.post(EXERCISE_API.GET_ANSWER_QUIZ, submitAnswerReq)).data
 }
