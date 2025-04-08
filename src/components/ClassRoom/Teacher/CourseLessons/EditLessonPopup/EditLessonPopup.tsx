@@ -91,7 +91,7 @@ const EditLessonPopup: React.FC<EditLessonPopupProps> = ({
             const formData = new FormData();
             formData.append('title', title);
             formData.append('description', description);
-            formData.append('video_url', videoUrl);
+            formData.append('videoUrl', videoUrl);
             formData.append('body', body);
             formData.append('status', status);
             formData.append('isDeleteImg', isDeleteImg ? 'true' : 'false');
@@ -100,6 +100,7 @@ const EditLessonPopup: React.FC<EditLessonPopupProps> = ({
                 formData.append('images', image);
             }
 
+            console.log('edit lesson',formData.values());
             await editLesson(lessonId, formData);
             onSuccess();
             onClose();

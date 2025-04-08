@@ -116,9 +116,6 @@ const LessonDetail: React.FC = () => {
         }
     };
 
-
-
-// Thay thế hàm handleDeleteExercise hiện tại với hàm này
     const handleDeleteExercise = (exercise) => {
         setDeleteConfirm({
             show: true,
@@ -174,6 +171,29 @@ const LessonDetail: React.FC = () => {
             description: ''
         });
     };
+
+    const getYoutubeEmbedUrl = (url) => {
+        if (!url) return '';
+        let videoId = '';
+        const watchRegex = /youtube\.com\/watch\?v=([^&]+)/;
+        const shortRegex = /youtu\.be\/([^?]+)/;
+        const embedRegex = /youtube\.com\/embed\/([^?]+)/;
+
+        const watchMatch = url.match(watchRegex);
+        const shortMatch = url.match(shortRegex);
+        const embedMatch = url.match(embedRegex);
+
+        if (watchMatch && watchMatch[1]) {
+            videoId = watchMatch[1];
+        } else if (shortMatch && shortMatch[1]) {
+            videoId = shortMatch[1];
+        } else if (embedMatch && embedMatch[1]) {
+            videoId = embedMatch[1];
+        } else {
+            return url;
+        }
+        return `https://www.youtube.com/embed/${videoId}`;
+    };
     const formatDuration = (minutes: number) => {
         const hours = Math.floor(minutes / 60);
         const mins = minutes % 60;
@@ -201,14 +221,14 @@ const LessonDetail: React.FC = () => {
                         {currentLesson.video_url ? (
                             <div className={styles.videoContainer}>
                                 <iframe
-                                    src={currentLesson.video_url}
+                                    src={getYoutubeEmbedUrl(currentLesson.video_url)}
                                     title={currentLesson.title}
                                     className={styles.videoFrame}
                                     allowFullScreen
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 />
                             </div>
-                        ) : currentLesson.images &&
-                          currentLesson.images.length > 0 ? (
+                        ) : currentLesson.images && currentLesson.images.length > 0 ? (
                             <div className={styles.imageContainer}>
                                 <img
                                     src={

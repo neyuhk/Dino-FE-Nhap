@@ -49,6 +49,16 @@ export const LESSON_API = {
     DELETE_LESSON: '/lesson/',
 }
 
+export const SCORE_API = {
+    GET_SCORES: '/score',
+    GET_SCORE_BY_USER_ID: '/score/user/',
+    GET_SCORE_BY_LESSON_ID: '/score/lesson/',
+    GET_SCORE_BY_EXERCISE_ID: '/score/exercise/',
+    CREATE_SCORE: '/score',
+    UPDATE_SCORE: '/score/',
+    DELETE_SCORE: '/score/',
+}
+
 export const EXERCISE_API = {
     NEW_EXERCISE: '/exercise',
     GET_QUIZ: '/quiz',
