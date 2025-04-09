@@ -616,3 +616,19 @@ forBlock['wait_until'] = function(
     // Generate code for waiting until a condition is met
     return `while(!(${condition})) {\n  delay(1);\n}\n`;
 };
+
+forBlock['setup'] = function (
+    block: Blockly.Block,
+    generator: Blockly.CodeGenerator,
+) {
+    const setupCode = generator.statementToCode(block, 'SETUP_CODE');
+    return `void setup() {\n${setupCode}}\n`;
+};
+
+forBlock['loop'] = function (
+    block: Blockly.Block,
+    generator: Blockly.CodeGenerator,
+) {
+    const loopCode = generator.statementToCode(block, 'LOOP_CODE');
+    return `void loop() {\n${loopCode}}\n`;
+};

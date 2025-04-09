@@ -1266,9 +1266,40 @@ const waitUntil = {
     helpUrl: ""
 };
 
+const setup = {
+    type: "setup",
+    message0: "Setup",
+    message1: "%1",
+    args1: [
+        {
+            type: "input_statement",
+            name: "SETUP_CODE"
+        }
+    ],
+    colour: 230,
+    tooltip: "Code to run once at the start",
+    helpUrl: ""
+};
+
+const loop = {
+    type: "loop",
+    message0: "Loop",
+    message1: "%1",
+    args1: [
+        {
+            type: "input_statement",
+            name: "LOOP_CODE"
+        }
+    ],
+    colour: 230,
+    tooltip: "Code to run repeatedly",
+    helpUrl: ""
+};
+
 export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   simulateLed,
-
+    setup,
+    loop,
   addText,
   logText,
     printResultBlock,

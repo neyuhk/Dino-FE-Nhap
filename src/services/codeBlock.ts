@@ -9,5 +9,8 @@ export const getLastestCodeBlock = async () => {
 }
 
 export const pushCodeToDb = async (code: string) => {
-    return await http.post('/code-block/push', code);
+    const payload = {
+        code: code
+    };
+    return await http.post('/code-block/push', payload);
 }

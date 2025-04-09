@@ -103,10 +103,19 @@ export const toolbox = {
         {
             kind: 'category',
             name: 'Arduino',
-            categorystyle: 'arduino_category',
+            colour: '#ff27d5',
+            // categorystyle: 'arduino_category',
             contents: [
                 { kind: 'block', type: 'simulate_led' },
-
+                {kind: 'block', type: 'simulate_led'},
+                {
+                    kind: 'block',
+                    type: 'setup',
+                },
+                {
+                    kind: 'block',
+                    type: 'loop',
+                },
                 { kind: 'block', type: 'inout_pin_mode' },
                 { kind: 'block', type: 'inout_digital_write' },
                 { kind: 'block', type: 'inout_digital_read' },
