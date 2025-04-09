@@ -15,7 +15,7 @@ import { Project } from '../../model/model.ts'
 import { useSelector } from 'react-redux'
 import { logout } from '../../stores/authSlice.ts'
 import store from '../../stores'
-import { saveCodeBlock } from '../../services/codeBlock.ts'
+import {pushCodeToDb, saveCodeBlock} from '../../services/codeBlock.ts'
 
 const { Header, Content } = Layout
 const { Title } = Typography
@@ -114,19 +114,20 @@ const BlocklyPage: React.FC = () => {
     const executeCode = () => {
         if (workspace) {
             const code = javascriptGenerator.workspaceToCode(workspace);
-            const outputDiv = document.getElementById('output');
-            if (outputDiv) outputDiv.innerHTML = '';
-            try {
-                const execFunc = new Function(code);
-                execFunc();
-            } catch (error) {
-                if (outputDiv) outputDiv.innerHTML = `<span style="color: red">Error: ${error.message}</span>`;
-                console.error("Code execution error:", error);
-            }
+            // const outputDiv = document.getElementById('output');
+            // if (outputDiv) outputDiv.innerHTML = '';
+            // try {
+            //     const execFunc = new Function(code);
+            //     execFunc();
+            // } catch (error) {
+            //     if (outputDiv) outputDiv.innerHTML = `<span style="color: red">Error: ${error.message}</span>`;
+            //     console.error("Code execution error:", error);
+            // }
+            console.log('Executing code: ', code)
         }
     };
 
-    const saveCodeBlockToDB = async () => {
+    const pushCodeBlock = () => {
         if (workspace) {
             const javascriptCode = javascriptGenerator.workspaceToCode(workspace)
             const jsonCode = JSON.stringify(Blockly.serialization.workspaces.save(workspace), null, 2)
@@ -139,8 +140,16 @@ const BlocklyPage: React.FC = () => {
                 xmlCode,
             }
 
+            console.log('Pushing code block:', payload)
+        }
+    }
+
+    const saveCodeBlockToDB = async () => {
+        if (workspace) {
+            const javascriptCode = javascriptGenerator.workspaceToCode(workspace)
+            console.log('Generated JavaScript code:', javascriptCode)
             try {
-                await saveCodeBlock(payload)
+                await pushCodeToDb(javascriptCode)
                 console.log('Code block saved successfully')
             } catch (e) {
                 console.error('Error saving code block', e)
@@ -517,7 +526,7 @@ const BlocklyPage: React.FC = () => {
                         <h3>LED Simulator</h3>
                         <div id="simulated-led" className={ledState}></div>
 
-                        <button id="executeButton" onClick={executeCode}>
+                        <button id="executeButton" onClick={saveCodeBlockToDB}>
                             <PlayCircleOutlined /> Chạy và xem kết quả
                         </button>
 
