@@ -397,23 +397,24 @@ forBlock['controls_whileUntil'] = function (
 
 // Generator for controls_for.
 forBlock['controls_for'] = function (
-  block: Blockly.Block,
-  generator: Blockly.CodeGenerator,
+    block: Blockly.Block,
+    generator: any,
 ) {
-  // Use the variable name from the block.
-  // (Assumes generator.nameDB_ is available for unique names.)
-  const variable = generator.nameDB_ ? generator.nameDB_.getName(
-    block.getFieldValue('VAR'), Blockly.VARIABLE_CATEGORY_NAME) : block.getFieldValue('VAR');
-  const from = generator.valueToCode(block, 'FROM', Order.NONE) || '0';
-  const to = generator.valueToCode(block, 'TO', Order.NONE) || '0';
-  const by = generator.valueToCode(block, 'BY', Order.NONE) || '1';
-  const branch = generator.statementToCode(block, 'DO');
-  const code = 'for (int ' + variable + ' = ' + from + '; ' +
-               variable + ' <= ' + to + '; ' +
-               variable + ' += ' + by + ') {\n' +
-               branch +
-               '}\n';
-  return code;
+    // Lấy tên biến từ khối
+    const variable = generator.nameDB_ ? generator.nameDB_.getName(
+        block.getFieldValue('VAR'), Blockly.VARIABLE_CATEGORY_NAME) : block.getFieldValue('VAR');
+    const from = generator.valueToCode(block, 'FROM', generator.ORDER_NONE) || '0';
+    const to = generator.valueToCode(block, 'TO', generator.ORDER_NONE) || '0';
+    const by = generator.valueToCode(block, 'BY', generator.ORDER_NONE) || '1';
+    const branch = generator.statementToCode(block, 'DO');
+
+    // Bỏ từ khóa "int" để không khai báo lại biến, chỉ sử dụng biến đã có
+    const code = 'for (' + variable + ' = ' + from + '; ' +
+        variable + ' <= ' + to + '; ' +
+        variable + ' += ' + by + ') {\n' +
+        branch +
+        '}\n';
+    return code;
 };
 
 // Generator for controls_forEach.
@@ -447,36 +448,215 @@ forBlock['controls_flow_statements'] = function (
   }
   return code;
 };
-forBlock['simulate_led'] = function (
-  block: Blockly.Block,
-  generator: Blockly.CodeGenerator,
+forBlock['simulate_led'] = function(
+    block: Blockly.Block,
+    generator: any, // Sử dụng any thay vì Blockly.CodeGenerator
 ) {
-  const state = block.getFieldValue('STATE');
-  // Provide the simulateLED function definition only once.
-  const simLEDFunc = generator.provideFunction_(
-    'simulateLED',
-    `function ${generator.FUNCTION_NAME_PLACEHOLDER_}(state) {
-  const ledElement = document.getElementById('simulated-led');
-  if (ledElement) {
-    // When state is 'HIGH', set the LED element's background to yellow; otherwise, black.
-    ledElement.style.backgroundColor = state === 'HIGH' ? 'yellow' : 'black';
-  }
-  console.log('LED state:', state);
-}`
-  );
-  return `${simLEDFunc}('${state}');\n`;
+    const pin = generator.valueToCode(block, 'PIN', Order.ATOMIC) || '13';
+    const state = block.getFieldValue('STATE');
+
+    // Kiểm tra xem generator có thuộc tính setups_ không
+    if (generator.setups_ !== undefined) {
+        // Add pin mode setup to setup section
+        const pinSetupCode = `pinMode(${pin}, OUTPUT);`;
+        if (generator.setups_['setup_output_' + pin] === undefined) {
+            generator.setups_['setup_output_' + pin] = pinSetupCode;
+        }
+    } else {
+        // Nếu không có setups_, thêm code pinMode vào trước digitalWrite
+        return `pinMode(${pin}, OUTPUT);\ndigitalWrite(${pin}, ${state});\n`;
+    }
+
+    // Generate digitalWrite code
+    return `digitalWrite(${pin}, ${state});\n`;
 };
+
 // RGB LED Control Block Generator
 forBlock['rgb_led_control'] = function(
     block: Blockly.Block,
-    generator: Blockly.CodeGenerator,
+    generator: any,
 ) {
-    const red = generator.valueToCode(block, 'RED', Order.NONE) || '0';
-    const green = generator.valueToCode(block, 'GREEN', Order.NONE) || '0';
-    const blue = generator.valueToCode(block, 'BLUE', Order.NONE) || '0';
+    const redPin = block.getFieldValue('RED_PIN') || '9';
+    const greenPin = block.getFieldValue('GREEN_PIN') || '10';
+    const bluePin = block.getFieldValue('BLUE_PIN') || '11';
+    const red = Number(block.getFieldValue('RED')) || 0;
+    const green = Number(block.getFieldValue('GREEN')) || 0;
+    const blue = Number(block.getFieldValue('BLUE')) || 0;
 
-    // Generate code that would typically set RGB LED values
-    return `setRGBLed(${red}, ${green}, ${blue});\n`;
+    let code = '';
+
+    if (generator.setups_ !== undefined) {
+        // Setup pin modes in setup section
+        generator.setups_['setup_rgb_' + redPin] = `pinMode(${redPin}, OUTPUT);`;
+        generator.setups_['setup_rgb_' + greenPin] = `pinMode(${greenPin}, OUTPUT);`;
+        generator.setups_['setup_rgb_' + bluePin] = `pinMode(${bluePin}, OUTPUT);`;
+    } else {
+        // Nếu không có setups_, thêm code pinMode trực tiếp
+        code += `pinMode(${redPin}, OUTPUT);\n`;
+        code += `pinMode(${greenPin}, OUTPUT);\n`;
+        code += `pinMode(${bluePin}, OUTPUT);\n`;
+    }
+
+    // Generate code that sets RGB LED values
+    code += `analogWrite(${redPin}, ${red});\n`;
+    code += `analogWrite(${greenPin}, ${green});\n`;
+    code += `analogWrite(${bluePin}, ${blue});\n`;
+
+    return code;
+};
+
+forBlock['rgb_led_setup'] = function(
+    block: Blockly.Block,
+    generator: any,
+) {
+    const redPin = block.getFieldValue('RED_PIN') || '9';
+    const greenPin = block.getFieldValue('GREEN_PIN') || '10';
+    const bluePin = block.getFieldValue('BLUE_PIN') || '11';
+
+    let code = '';
+
+    if (generator.setups_ !== undefined) {
+        // Setup pin modes in setup section
+        generator.setups_['setup_rgb_' + redPin] = `pinMode(${redPin}, OUTPUT);`;
+        generator.setups_['setup_rgb_' + greenPin] = `pinMode(${greenPin}, OUTPUT);`;
+        generator.setups_['setup_rgb_' + bluePin] = `pinMode(${bluePin}, OUTPUT);`;
+
+        // Khởi tạo đèn tắt ban đầu
+        generator.setups_['init_rgb_' + redPin] = `digitalWrite(${redPin}, LOW);`;
+        generator.setups_['init_rgb_' + greenPin] = `digitalWrite(${greenPin}, LOW);`;
+        generator.setups_['init_rgb_' + bluePin] = `digitalWrite(${bluePin}, LOW);`;
+    } else {
+        // Nếu không có setups_, thêm code pinMode trực tiếp
+        code += `pinMode(${redPin}, OUTPUT);\n`;
+        code += `pinMode(${greenPin}, OUTPUT);\n`;
+        code += `pinMode(${bluePin}, OUTPUT);\n`;
+
+        // Khởi tạo đèn tắt ban đầu
+        code += `digitalWrite(${redPin}, LOW);\n`;
+        code += `digitalWrite(${greenPin}, LOW);\n`;
+        code += `digitalWrite(${bluePin}, LOW);\n`;
+    }
+
+    // Lưu các giá trị pin vào biến toàn cục
+    if (generator.definitions_ !== undefined) {
+        generator.definitions_['rgb_led_pins'] = `int rgbLedRedPin = ${redPin};\nint rgbLedGreenPin = ${greenPin};\nint rgbLedBluePin = ${bluePin};`;
+    }
+
+    return code;
+};
+forBlock['rgb_led_set_color'] = function(
+    block: Blockly.Block,
+    generator: any,
+) {
+    const red = Number(block.getFieldValue('RED')) || 0;
+    const green = Number(block.getFieldValue('GREEN')) || 0;
+    const blue = Number(block.getFieldValue('BLUE')) || 0;
+
+    let code = '';
+
+    // Kiểm tra nếu có khởi tạo biến toàn cục cho chân
+    if (generator.definitions_ && generator.definitions_['rgb_led_pins']) {
+        // Sử dụng các biến toàn cục
+        code += `analogWrite(rgbLedRedPin, ${red});\n`;
+        code += `analogWrite(rgbLedGreenPin, ${green});\n`;
+        code += `analogWrite(rgbLedBluePin, ${blue});\n`;
+    } else {
+        // Nếu không có biến toàn cục, sử dụng giá trị mặc định
+        code += `// Lưu ý: Bạn nên sử dụng khối "Setup RGB LED" trước\n`;
+        code += `analogWrite(9, ${red});\n`;
+        code += `analogWrite(10, ${green});\n`;
+        code += `analogWrite(11, ${blue});\n`;
+    }
+
+    return code;
+};
+forBlock['rgb_led_set_color_with_pins'] = function(
+    block: Blockly.Block,
+    generator: any,
+) {
+    const redPin = block.getFieldValue('RED_PIN') || '9';
+    const greenPin = block.getFieldValue('GREEN_PIN') || '10';
+    const bluePin = block.getFieldValue('BLUE_PIN') || '11';
+    const red = Number(block.getFieldValue('RED')) || 0;
+    const green = Number(block.getFieldValue('GREEN')) || 0;
+    const blue = Number(block.getFieldValue('BLUE')) || 0;
+
+    let code = '';
+
+    // Generate code that sets RGB LED values directly to specified pins
+    code += `analogWrite(${redPin}, ${red});\n`;
+    code += `analogWrite(${greenPin}, ${green});\n`;
+    code += `analogWrite(${bluePin}, ${blue});\n`;
+
+    return code;
+};
+forBlock['rgb_led_variable_control'] = function(
+    block: Blockly.Block,
+    generator: any,
+) {
+    // Sử dụng valueToCode để lấy giá trị từ các khối được kết nối hoặc biến được gán
+    // Order.ATOMIC đảm bảo các biểu thức được đánh giá đúng thứ tự
+    const redPin = generator.valueToCode(block, 'RED_PIN', generator.ORDER_ATOMIC) || '9';
+    const greenPin = generator.valueToCode(block, 'GREEN_PIN', generator.ORDER_ATOMIC) || '10';
+    const bluePin = generator.valueToCode(block, 'BLUE_PIN', generator.ORDER_ATOMIC) || '11';
+    const redValue = generator.valueToCode(block, 'RED_VALUE', generator.ORDER_ATOMIC) || '0';
+    const greenValue = generator.valueToCode(block, 'GREEN_VALUE', generator.ORDER_ATOMIC) || '0';
+    const blueValue = generator.valueToCode(block, 'BLUE_VALUE', generator.ORDER_ATOMIC) || '0';
+
+    let code = '';
+
+    // Kiểm tra xem đây là lần đầu sử dụng các chân này hay không
+    // Nếu sử dụng biến, chúng ta cần đảm bảo pinMode được thiết lập đúng
+    code += `// Đảm bảo chân đèn được đặt là OUTPUT\n`;
+    code += `pinMode(${redPin}, OUTPUT);\n`;
+    code += `pinMode(${greenPin}, OUTPUT);\n`;
+    code += `pinMode(${bluePin}, OUTPUT);\n\n`;
+
+    // Thiết lập giá trị màu cho đèn LED
+    code += `analogWrite(${redPin}, ${redValue});\n`;
+    code += `analogWrite(${greenPin}, ${greenValue});\n`;
+    code += `analogWrite(${bluePin}, ${blueValue});\n`;
+
+    return code;
+};
+forBlock['rgb_led_variable_info'] = function(
+    block: Blockly.Block,
+    generator: any,
+) {
+    return '// Thông tin đèn RGB: Chân từ 2-13, A0-A5; Màu từ 0-255\n';
+};
+
+forBlock['rgb_led_fixed_pin_variable_color'] = function(
+    block: Blockly.Block,
+    generator: any,
+) {
+    const redPin = block.getFieldValue('RED_PIN') || '9';
+    const greenPin = block.getFieldValue('GREEN_PIN') || '10';
+    const bluePin = block.getFieldValue('BLUE_PIN') || '11';
+    const redValue = generator.valueToCode(block, 'RED_VALUE', generator.ORDER_ATOMIC) || '0';
+    const greenValue = generator.valueToCode(block, 'GREEN_VALUE', generator.ORDER_ATOMIC) || '0';
+    const blueValue = generator.valueToCode(block, 'BLUE_VALUE', generator.ORDER_ATOMIC) || '0';
+
+    let code = '';
+
+    if (generator.setups_ !== undefined) {
+        // Setup pin modes in setup section
+        generator.setups_['setup_rgb_' + redPin] = `pinMode(${redPin}, OUTPUT);`;
+        generator.setups_['setup_rgb_' + greenPin] = `pinMode(${greenPin}, OUTPUT);`;
+        generator.setups_['setup_rgb_' + bluePin] = `pinMode(${bluePin}, OUTPUT);`;
+    } else {
+        // Đặt pinMode vào trong code nếu không có setups_
+        code += `pinMode(${redPin}, OUTPUT);\n`;
+        code += `pinMode(${greenPin}, OUTPUT);\n`;
+        code += `pinMode(${bluePin}, OUTPUT);\n\n`;
+    }
+
+    // Thiết lập giá trị màu cho đèn LED
+    code += `analogWrite(${redPin}, ${redValue});\n`;
+    code += `analogWrite(${greenPin}, ${greenValue});\n`;
+    code += `analogWrite(${bluePin}, ${blueValue});\n`;
+
+    return code;
 };
 
 // DHT Sensor Block Generator
@@ -632,20 +812,6 @@ forBlock['loop'] = function (
     const loopCode = generator.statementToCode(block, 'LOOP_CODE');
     return `void loop() {\n${loopCode}}\n`;
 };
-forBlock['servo_setup'] = function (
-    block: Blockly.Block,
-    generator: Blockly.CodeGenerator,
-) {
-    const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
-
-    // Thêm thư viện Servo.h vào phần định nghĩa
-    generator.definitions_['include_servo'] = '#include <Servo.h>';
-
-    // Định nghĩa đối tượng servo
-    generator.definitions_[`servo_${pin}`] = `Servo servo${pin};`;
-
-    return `servo${pin}.attach(${pin});\n`;
-};
 
 forBlock['servo_rotate'] = function (
     block: Blockly.Block,
@@ -727,4 +893,68 @@ forBlock['servo_stop'] = function (
     const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
 
     return `servo${pin}.write(90);\ndelay(15);\n`;
+};
+
+forBlock['function_wrapper'] = function(
+    block: Blockly.Block,
+    generator: any,
+) {
+    // Lấy nội dung các khối function bên trong
+    const functions = generator.statementToCode(block, 'FUNCTIONS');
+
+    // Nếu có generator.definitions_, thêm mã vào đó
+    if (generator.definitions_) {
+        // Thêm các hàm vào phần định nghĩa để chúng xuất hiện ở đầu chương trình
+        generator.definitions_['user_functions'] = functions;
+        return '';  // Không trả về mã trong vị trí hiện tại
+    } else {
+        // Nếu không có generator.definitions_, trả về mã trực tiếp
+        return functions;
+    }
+};
+forBlock['function_definition'] = function(
+    block: Blockly.Block,
+    generator: any,
+) {
+    // Lấy tên hàm và tham số
+    let funcName = block.getFieldValue('NAME');
+    const params = block.getFieldValue('PARAMS');
+
+    // Ngăn chặn tên hàm trống
+    if (funcName.length === 0) {
+        funcName = 'unnamed';
+    }
+
+    // Lấy nội dung thân hàm
+    let branch = generator.statementToCode(block, 'STACK');
+    if (branch.length > 0) {
+        branch = generator.prefixLines(generator.indent(branch), generator.INDENT);
+    }
+
+    // Tạo mã hàm
+    const code = 'void ' + funcName + '(' + params + ') {\n' + branch + '}\n\n';
+    return code;
+};
+forBlock['custom_function_block'] = function(
+    block: Blockly.Block,
+    generator: any,
+) {
+    const functionCode = block.getFieldValue('FUNCTION_CODE');
+    return functionCode + '\n';
+};
+
+forBlock['custom_function_block'] = function(
+    block: Blockly.Block,
+    generator: any,
+) {
+    const functionCode = block.data || "void myFunction() {\n  // Viết mã hàm ở đây\n}\n";
+    return functionCode + '\n';
+};
+
+forBlock['custom_code_block'] = function(
+    block: Blockly.Block,
+    generator: any,
+) {
+    const code = block.data || "// Viết mã tùy chỉnh ở đây\n";
+    return code + '\n';
 };

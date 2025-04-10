@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux'
 import { logout } from '../../stores/authSlice.ts'
 import store from '../../stores'
 import {pushCodeToDb, saveCodeBlock} from '../../services/codeBlock.ts'
+import styles from './BlocklyPage.module.css'
 
 const { Header, Content } = Layout
 const { Title } = Typography
@@ -114,15 +115,15 @@ const BlocklyPage: React.FC = () => {
     const executeCode = () => {
         if (workspace) {
             const code = javascriptGenerator.workspaceToCode(workspace);
-            // const outputDiv = document.getElementById('output');
-            // if (outputDiv) outputDiv.innerHTML = '';
-            // try {
-            //     const execFunc = new Function(code);
-            //     execFunc();
-            // } catch (error) {
-            //     if (outputDiv) outputDiv.innerHTML = `<span style="color: red">Error: ${error.message}</span>`;
-            //     console.error("Code execution error:", error);
-            // }
+            const outputDiv = document.getElementById('output');
+            if (outputDiv) outputDiv.innerHTML = '';
+            try {
+                const execFunc = new Function(code);
+                execFunc();
+            } catch (error) {
+                if (outputDiv) outputDiv.innerHTML = `<span style="color: red">Error: ${error.message}</span>`;
+                console.error("Code execution error:", error);
+            }
             console.log('Executing code: ', code)
         }
     };
@@ -143,11 +144,31 @@ const BlocklyPage: React.FC = () => {
             console.log('Pushing code block:', payload)
         }
     }
-
     const saveCodeBlockToDB = async () => {
+        executeCode()
+
         if (workspace) {
+            // 🛠️ Override finish() ngay tại đây
+            javascriptGenerator.finish = function (code: string): string {
+                const definitions = this.definitions_ || {}
+
+                const includes: string[] = []
+                const others: string[] = []
+
+                for (const [_, value] of Object.entries(definitions)) {
+                    if (value.trim().startsWith('#include')) {
+                        includes.push(value)
+                    } else {
+                        others.push(value)
+                    }
+                }
+
+                return includes.join('\n') + '\n\n' + others.join('\n') + '\n\n' + code
+            }
+
             const javascriptCode = javascriptGenerator.workspaceToCode(workspace)
             console.log('Generated JavaScript code:', javascriptCode)
+
             try {
                 await pushCodeToDb(javascriptCode)
                 console.log('Code block saved successfully')
@@ -454,7 +475,13 @@ const BlocklyPage: React.FC = () => {
     }
 
     return (
-        <Layout style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+        <Layout
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100vh',
+            }}
+        >
             <Header className="header-blockly">
                 <div className="header-content">
                     <div className="logo-title">
@@ -464,8 +491,15 @@ const BlocklyPage: React.FC = () => {
                     </div>
 
                     <div className="menu-section">
-                        <Dropdown menu={{ items: taptinn }} trigger={['click']} onOpenChange={handleMenuClick}>
-                            <a className="dropdown-menu white-text" onClick={(e) => e.preventDefault()}>
+                        <Dropdown
+                            menu={{ items: taptinn }}
+                            trigger={['click']}
+                            onOpenChange={handleMenuClick}
+                        >
+                            <a
+                                className="dropdown-menu white-text"
+                                onClick={(e) => e.preventDefault()}
+                            >
                                 <Space>
                                     File
                                     <DownOutlined />
@@ -473,8 +507,15 @@ const BlocklyPage: React.FC = () => {
                             </a>
                         </Dropdown>
 
-                        <Dropdown menu={{ items: chinhsuaa }} trigger={['click']} onOpenChange={handleMenuClick}>
-                            <a className="dropdown-menu white-text" onClick={(e) => e.preventDefault()}>
+                        <Dropdown
+                            menu={{ items: chinhsuaa }}
+                            trigger={['click']}
+                            onOpenChange={handleMenuClick}
+                        >
+                            <a
+                                className="dropdown-menu white-text"
+                                onClick={(e) => e.preventDefault()}
+                            >
                                 <Space>
                                     Edit
                                     <DownOutlined />
@@ -482,8 +523,15 @@ const BlocklyPage: React.FC = () => {
                             </a>
                         </Dropdown>
 
-                        <Dropdown menu={{ items: hoatdong }} trigger={['click']} onOpenChange={handleMenuClick}>
-                            <a className="dropdown-menu white-text" onClick={(e) => e.preventDefault()}>
+                        <Dropdown
+                            menu={{ items: hoatdong }}
+                            trigger={['click']}
+                            onOpenChange={handleMenuClick}
+                        >
+                            <a
+                                className="dropdown-menu white-text"
+                                onClick={(e) => e.preventDefault()}
+                            >
                                 <Space>
                                     Action
                                     <DownOutlined />
@@ -500,18 +548,27 @@ const BlocklyPage: React.FC = () => {
                         />
                     </div>
 
-                    <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        style={{ display: 'none' }}
+                        onChange={handleFileChange}
+                    />
 
                     <div>
                         {isAuthenticated ? (
                             <Dropdown overlay={userMenu} trigger={['click']}>
                                 <div className="user-info">
                                     <Avatar icon={<UserOutlined />} />
-                                    <span className="username">{user.username}</span>
+                                    <span className="username">
+                                        {user.username}
+                                    </span>
                                 </div>
                             </Dropdown>
                         ) : (
-                            <Link to="/login" className="white-text">Đăng nhập</Link>
+                            <Link to="/login" className="white-text">
+                                Đăng nhập
+                            </Link>
                         )}
                     </div>
                 </div>
@@ -521,16 +578,24 @@ const BlocklyPage: React.FC = () => {
                 <div id="pageContainer">
                     <div id="outputPane">
                         <h3>Dịch khối thành mã nguồn</h3>
-                        <pre id="generatedCode"><code></code></pre>
+                        <pre id="generatedCode">
+                            <code></code>
+                        </pre>
 
                         <h3>LED Simulator</h3>
                         <div id="simulated-led" className={ledState}></div>
 
-                        <button id="executeButton" onClick={saveCodeBlockToDB}>
+                        <button className={styles.saveDBbutton} id="saveCodeBlockToDB" onClick={saveCodeBlockToDB}>
+                            <PlayCircleOutlined /> Chạy trên phần cứng
+                        </button>
+                        <button className={styles.executeCode} id="executeButton" onClick={executeCode}>
                             <PlayCircleOutlined /> Chạy và xem kết quả
                         </button>
 
-                        <button id="sendFileButton" onClick={sendFileToPythonBackend}>
+                        <button
+                            id="sendFileButton"
+                            onClick={sendFileToPythonBackend}
+                        >
                             <SaveOutlined /> Lưu tệp của bạn vào hệ thống
                         </button>
 

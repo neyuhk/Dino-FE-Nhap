@@ -1,5 +1,4 @@
 import * as Blockly from 'blockly/core';
-
 // Custom text blocks.
 const addText = {
     type: 'add_text',
@@ -13,7 +12,7 @@ const addText = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 160,
+    colour: '#FFAB19',
     tooltip: 'Thêm văn bản vào chương trình',
     helpUrl: '',
 };
@@ -30,7 +29,7 @@ const logText = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 160,
+    colour: '#FFAB19',
     tooltip: 'Ghi nội dung văn bản ra nhật ký (log)',
     helpUrl: '',
 };
@@ -46,7 +45,7 @@ const printResultBlock = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 160,
+    colour: '#FFAB19',
     tooltip: 'In giá trị ra màn hình Serial Monitor',
     helpUrl: '',
 };
@@ -77,7 +76,7 @@ const inoutDigitalWrite = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Gửi tín hiệu HIGH hoặc LOW đến một chân digital",
     helpUrl: "http://arduino.cc/en/Reference/DigitalWrite"
 };
@@ -99,7 +98,7 @@ const inoutDigitalRead = {
         }
     ],
     output: "Boolean",
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Đọc tín hiệu digital (HIGH/LOW) từ một chân",
     helpUrl: "http://arduino.cc/en/Reference/DigitalRead"
 };
@@ -232,7 +231,7 @@ const inoutAnalogWrite = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Gửi giá trị analog (0-255) đến chân được chọn",
     helpUrl: "http://arduino.cc/en/Reference/AnalogWrite"
 };
@@ -244,7 +243,7 @@ const inoutAnalogRead = {
         { type: "field_dropdown", name: "PIN", options: [["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]] }
     ],
     output: "Number",
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Đọc giá trị analog (0-1023) từ chân cảm biến",
     helpUrl: "http://arduino.cc/en/Reference/AnalogRead"
 };
@@ -257,7 +256,7 @@ const inoutBuildinLed = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 190,
+    colour: '#00979C',
     tooltip: "Bật hoặc tắt đèn LED có sẵn trên mạch",
     helpUrl: "http://arduino.cc/en/Reference/DigitalWrite"
 };
@@ -290,7 +289,7 @@ const inoutPinMode = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Chọn chế độ vào hoặc ra cho chân (PIN)",
     helpUrl: "http://arduino.cc/en/Reference/pinMode"
 };
@@ -308,7 +307,7 @@ const baseDelay = {
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 120,
+    colour: '#00979C',
     tooltip: "Dừng chương trình trong một khoảng thời gian (miligiây)",
     helpUrl: "http://arduino.cc/en/Reference/delay"
 };
@@ -330,7 +329,7 @@ const baseMap = {
     ],
     inputsInline: true,
     output: null,
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Chuyển một số từ khoảng 0-1024 sang khoảng khác",
     helpUrl: "http://arduino.cc/en/Reference/map"
 };
@@ -359,7 +358,7 @@ const inoutTone = {
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Phát ra âm thanh tại chân được chọn với tần số xác định",
     helpUrl: "http://www.arduino.cc/en/Reference/Tone"
 };
@@ -383,7 +382,7 @@ const inoutNotone = {
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Tắt âm thanh phát ra tại chân được chọn",
     helpUrl: "http://www.arduino.cc/en/Reference/NoTone"
 };
@@ -402,7 +401,7 @@ const inoutHighlow = {
         }
     ],
     output: "Boolean",
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Giá trị HIGH (bật) hoặc LOW (tắt)",
     helpUrl: "http://arduino.cc/en/Reference/Constants"
 };
@@ -438,7 +437,7 @@ const servoMove = {
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 190,
+    colour: '#ff65f3',
     tooltip: "Điều khiển servo quay từ 0 đến 180 độ",
     helpUrl: "http://www.arduino.cc/playground/ComponentLib/servo"
 };
@@ -467,7 +466,7 @@ const servoReadDegrees = {
         }
     ],
     output: "Number",
-    colour: 190,
+    colour: '#ff65f3',
     tooltip: "Đọc góc quay hiện tại của servo (góc vừa điều khiển)",
     helpUrl: "http://www.arduino.cc/playground/ComponentLib/servo"
 };
@@ -484,7 +483,7 @@ const serialPrint = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Gửi dữ liệu ra màn hình Serial (giống như in ra để xem)",
     helpUrl: "http://www.arduino.cc/en/Serial/Print"
 };
@@ -562,7 +561,7 @@ const millisBlock = {
     type: "millis",
     message0: "milliseconds passed",
     output: "Number",
-    colour: 120,
+    colour: '#00979C',
     tooltip: "Trả về số mili giây kể từ khi chương trình bắt đầu chạy",
     helpUrl: "http://arduino.cc/en/Reference/Millis"
 };
@@ -576,7 +575,7 @@ const delayMicrosecondsBlock = {
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 120,
+    colour: '#00979C',
     tooltip: "Dừng chương trình trong khoảng thời gian rất ngắn (micro giây)",
     helpUrl: "http://arduino.cc/en/Reference/DelayMicroseconds"
 };
@@ -589,7 +588,7 @@ const serialPrintln = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 230,
+    colour: '#00979C',
     tooltip: "In ra dữ liệu và xuống dòng trong màn hình Serial",
     helpUrl: "http://www.arduino.cc/en/Serial/Println"
 };
@@ -628,7 +627,7 @@ const controlsFor = {
     previousStatement: null,
     nextStatement: null,
     colour: 120,
-    tooltip: "Lặp lại từ số bắt đầu đến số kết thúc với bước nhảy",
+    tooltip: "Lặp lại từ số bắt đầu đến số kết thúc với bước nhảy. Sử dụng biến đã được khai báo từ trước.",
     helpUrl: ""
 };
 
@@ -668,10 +667,331 @@ const controlsFlowStatements = {
     helpUrl: ""
 };
 
+const rgbLedControl = {
+    type: "rgb_led_control",
+    message0: "Setup RGB LED on pins\nR: %1 G: %2 B: %3\nwith values\nR: %4 G: %5 B: %6",
+    args0: [
+        {
+            type: "field_dropdown",
+            name: "RED_PIN",
+            options: [
+                ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"],
+                ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "field_dropdown",
+            name: "GREEN_PIN",
+            options: [
+                ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"],
+                ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "field_dropdown",
+            name: "BLUE_PIN",
+            options: [
+                ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"],
+                ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "field_number",
+            name: "RED",
+            value: 0,
+            min: 0,
+            max: 255,
+            precision: 1
+        },
+        {
+            type: "field_number",
+            name: "GREEN",
+            value: 0,
+            min: 0,
+            max: 255,
+            precision: 1
+        },
+        {
+            type: "field_number",
+            name: "BLUE",
+            value: 0,
+            min: 0,
+            max: 255,
+            precision: 1
+        }
+    ],
+    inputsInline: false,
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#FF6F00',
+    tooltip: "Chuẩn bị đèn RGB với các thiết lập sẵn có để bắt đầu điều khiển.",
+    helpUrl: ""
+};
+const rgbLedSetup = {
+    type: "rgb_led_setup",
+    message0: "Setup RGB LED on pins R:%1 G:%2 B:%3",
+    args0: [
+        {
+            type: "field_dropdown",
+            name: "RED_PIN",
+            options: [
+                ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"],
+                ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "field_dropdown",
+            name: "GREEN_PIN",
+            options: [
+                ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"],
+                ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "field_dropdown",
+            name: "BLUE_PIN",
+            options: [
+                ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"],
+                ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]
+            ]
+        }
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#FF6F00',
+    tooltip: "Cài đặt đèn LED RGB bằng cách chọn chân kết nối cho đèn đỏ, xanh lá, và xanh dương",
+    helpUrl: ""
+};
+const rgbLedSetColor = {
+    type: "rgb_led_set_color",
+    message0: "Set RGB LED color to R:%1 G:%2 B:%3",
+    args0: [
+        {
+            type: "field_number",
+            name: "RED",
+            value: 0,
+            min: 0,
+            max: 255,
+            precision: 1
+        },
+        {
+            type: "field_number",
+            name: "GREEN",
+            value: 0,
+            min: 0,
+            max: 255,
+            precision: 1
+        },
+        {
+            type: "field_number",
+            name: "BLUE",
+            value: 0,
+            min: 0,
+            max: 255,
+            precision: 1
+        }
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#FF6F00',
+    tooltip: "Điều chỉnh màu sắc của đèn LED RGB bằng cách đặt giá trị (0-255) cho màu đỏ, xanh lá và xanh dương",
+    helpUrl: ""
+};
+const rgbLedSetColorWithPins = {
+    type: "rgb_led_set_color_with_pins",
+    message0: "Set RGB LED on pins\nR: %1 G: %2 B: %3\nwith values\nR: %4 G: %5 B: %6",
+    args0: [
+        {
+            type: "field_dropdown",
+            name: "RED_PIN",
+            options: [
+                ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"],
+                ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "field_dropdown",
+            name: "GREEN_PIN",
+            options: [
+                ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"],
+                ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "field_dropdown",
+            name: "BLUE_PIN",
+            options: [
+                ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"],
+                ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "field_number",
+            name: "RED",
+            value: 0,
+            min: 0,
+            max: 255,
+            precision: 1
+        },
+        {
+            type: "field_number",
+            name: "GREEN",
+            value: 0,
+            min: 0,
+            max: 255,
+            precision: 1
+        },
+        {
+            type: "field_number",
+            name: "BLUE",
+            value: 0,
+            min: 0,
+            max: 255,
+            precision: 1
+        }
+    ],
+    inputsInline: false,
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#FF6F00',
+    tooltip: "Điều chỉnh màu sắc của đèn LED RGB bằng cách chọn chân kết nối và đặt giá trị (0-255) cho màu đỏ, xanh lá và xanh dương",
+    helpUrl: ""
+};
+const rgbLedVariableControl = {
+    type: "rgb_led_variable_control",
+    message0: "Setup RGB LED on pins\n R:%1 G:%2 B:%3 with values\n R:%4 G:%5 B:%6",
+    args0: [
+        {
+            type: "input_value",
+            name: "RED_PIN",
+            check: ["Number", "String"]
+        },
+        {
+            type: "input_value",
+            name: "GREEN_PIN",
+            check: ["Number", "String"]
+        },
+        {
+            type: "input_value",
+            name: "BLUE_PIN",
+            check: ["Number", "String"]
+        },
+        {
+            type: "input_value",
+            name: "RED_VALUE",
+            check: "Number"
+        },
+        {
+            type: "input_value",
+            name: "GREEN_VALUE",
+            check: "Number"
+        },
+        {
+            type: "input_value",
+            name: "BLUE_VALUE",
+            check: "Number"
+        }
+    ],
+    inputsInline: false,
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#FF6F00',
+    tooltip: "Điều khiển đèn LED RGB với chân và giá trị màu có thể được điều chỉnh bằng biến. Chân đèn có thể là 2-13 hoặc A0-A5, và giá trị màu từ 0-255.",
+    helpUrl: ""
+};
+const rgbLedFixedPinVariableColor = {
+    type: "rgb_led_fixed_pin_variable_color",
+    message0: "Set RGB LED on pins\n R:%1 G:%2 B:%3 with variable colors\n R:%4 G:%5 B:%6",
+    args0: [
+        {
+            type: "field_dropdown",
+            name: "RED_PIN",
+            options: [
+                ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"],
+                ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "field_dropdown",
+            name: "GREEN_PIN",
+            options: [
+                ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"],
+                ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "field_dropdown",
+            name: "BLUE_PIN",
+            options: [
+                ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"],
+                ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "input_value",
+            name: "RED_VALUE",
+            check: "Number"
+        },
+        {
+            type: "input_value",
+            name: "GREEN_VALUE",
+            check: "Number"
+        },
+        {
+            type: "input_value",
+            name: "BLUE_VALUE",
+            check: "Number"
+        }
+    ],
+    inputsInline: false,
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#FF6F00',
+    tooltip: "Điều khiển đèn LED RGB với chân cố định nhưng giá trị màu có thể điều chỉnh bằng biến (0-255).",
+    helpUrl: ""
+};
+const rgbLedVariableInfo = {
+    type: "rgb_led_variable_info",
+    message0: "Thông tin về đèn RGB %1 %2 Chân: 2-13, A0-A5 %3 Màu: 0-255",
+    args0: [
+        {
+            type: "input_dummy"
+        },
+        {
+            type: "input_dummy"
+        },
+        {
+            type: "input_dummy"
+        }
+    ],
+    colour: '#FF6F00',
+    tooltip: "Thông tin về phạm vi giá trị hợp lệ cho chân và màu của đèn RGB",
+    helpUrl: ""
+};
+
 const simulateLed = {
     type: "simulate_led",
-    message0: "LED state: %1",
+    message0: "LED on pin %1 set to %2",
     args0: [
+        {
+            type: "input_value",
+            name: "PIN",
+            check: "Number"
+        },
         {
             type: "field_dropdown",
             name: "STATE",
@@ -683,8 +1003,8 @@ const simulateLed = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: "#808080",
-    tooltip: "Mô phỏng trạng thái LED (bật/tắt)",
+    colour: '#FF6F00',
+    tooltip: "Set LED state (ON/OFF) on specified pin",
     helpUrl: "",
     onchange: function(this: Blockly.Block) {
         if (!this.workspace) return;
@@ -692,53 +1012,33 @@ const simulateLed = {
         this.setColour(state === "HIGH" ? "#FFD700" : "#808080");
     }
 };
-
-const rgbLedControl = {
-    type: "rgb_led_control",
-    message0: "RGB LED R:%1 G:%2 B:%3",
-    args0: [
-        { type: "input_value", name: "RED", check: "Number" },
-        { type: "input_value", name: "GREEN", check: "Number" },
-        { type: "input_value", name: "BLUE", check: "Number" }
-    ],
-    inputsInline: true,
-    previousStatement: null,
-    nextStatement: null,
-    colour: 160,
-    tooltip: "Thiết lập màu đèn LED RGB bằng giá trị R, G, B (0~255)",
-    helpUrl: ""
-};
-
 const dhtSensor = {
     type: "dht_sensor",
-    message0: "get %1 from DHT on PIN %2",
+    message0: "DHT%1 sensor on pin %2 read %3",
     args0: [
         {
             type: "field_dropdown",
-            name: "DHT_VALUE",
+            name: "TYPE",
             options: [
-                ["temperature (°C)", "TEMP"],
-                ["humidity (%)", "HUM"]
+                ["11", "DHT11"],
+                ["22", "DHT22"]
             ]
         },
+        { type: "input_value", name: "PIN", check: "Number" },
         {
             type: "field_dropdown",
-            name: "PIN",
+            name: "READING",
             options: [
-                ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
-                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
-                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
-                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
-                ["A4", "A4"], ["A5", "A5"]
+                ["temperature", "TEMPERATURE"],
+                ["humidity", "HUMIDITY"]
             ]
         }
     ],
     output: "Number",
-    colour: 180,
-    tooltip: "Đọc nhiệt độ hoặc độ ẩm từ cảm biến DHT11/DHT22",
+    colour: '#FF6F00',
+    tooltip: "Read temperature or humidity from DHT sensor",
     helpUrl: ""
 };
-
 const ultrasonicSensor = {
     type: "ultrasonic_sensor",
     message0: "distance from ultrasonic (cm) TRIG: %1 ECHO: %2",
@@ -766,12 +1066,10 @@ const ultrasonicSensor = {
             ]}
     ],
     output: "Number",
-    colour: 180,
+    colour: '#FF6F00',
     tooltip: "Đo khoảng cách bằng cảm biến siêu âm HC-SR04",
     helpUrl: ""
 };
-
-// 4. Khối điều khiển động cơ DC
 const dcMotorControl = {
     type: "dc_motor_control",
     message0: "Set DC motor PIN1: %1 PIN2: %2 direction: %3 speed: %4",
@@ -792,7 +1090,7 @@ const dcMotorControl = {
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 200,
+    colour: '#FF6F00',
     tooltip: "Điều khiển chiều quay và tốc độ của động cơ DC (tốc độ từ 0 đến 255)",
     helpUrl: ""
 };
@@ -816,7 +1114,7 @@ const lcdDisplay = {
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 160,
+    colour: '#FF6F00',
     tooltip: "Hiển thị chữ lên màn hình LCD tại hàng và cột đã chọn",
     helpUrl: ""
 };
@@ -828,7 +1126,7 @@ const lightSensor = {
         { type: "field_dropdown", name: "PIN", options: [["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]] }
     ],
     output: "Number",
-    colour: 180,
+    colour: '#FF6F00',
     tooltip: "Đọc giá trị ánh sáng từ cảm biến quang trở (LDR)",
     helpUrl: ""
 };
@@ -844,7 +1142,7 @@ const pirMotionSensor = {
                 ["A4", "A4"], ["A5", "A5"]] }
     ],
     output: "Boolean",
-    colour: 180,
+    colour: '#FF6F00',
     tooltip: "Phát hiện chuyển động bằng cảm biến PIR (trả về đúng/sai)",
     helpUrl: ""
 };
@@ -861,7 +1159,7 @@ const debouncedButton = {
         { type: "input_value", name: "DEBOUNCE_TIME", check: "Number" }
     ],
     output: "Boolean",
-    colour: 180,
+    colour: '#FF6F00',
     tooltip: "Đọc trạng thái nút nhấn với thời gian chống nhiễu (debounce)",
     helpUrl: ""
 };
@@ -876,7 +1174,7 @@ const stepperMotorControl = {
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 200,
+    colour: '#FF6F00',
     tooltip: "Điều khiển motor bước (dương: quay phải, âm: quay trái)",
     helpUrl: ""
 };
@@ -901,7 +1199,7 @@ const serialBegin = {
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Bắt đầu giao tiếp Serial với tốc độ baud đã chọn",
     helpUrl: "http://arduino.cc/en/Serial/Begin"
 };
@@ -918,7 +1216,7 @@ const mapExtended = {
     ],
     inputsInline: true,
     output: "Number",
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Chuyển đổi giá trị từ khoảng này sang khoảng khác (hàm map)",
     helpUrl: "http://arduino.cc/en/Reference/Map"
 };
@@ -931,7 +1229,7 @@ const waitUntil = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 120,
+    colour: '#00979C',
     tooltip: "Dừng lại và đợi cho đến khi điều kiện đúng",
     helpUrl: ""
 };
@@ -943,7 +1241,7 @@ const setup = {
     args1: [
         { type: "input_statement", name: "SETUP_CODE" }
     ],
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Chạy một lần duy nhất khi bắt đầu chương trình",
     helpUrl: ""
 };
@@ -955,7 +1253,7 @@ const loop = {
     args1: [
         { type: "input_statement", name: "LOOP_CODE" }
     ],
-    colour: 230,
+    colour: '#00979C',
     tooltip: "Lặp lại mã này liên tục",
     helpUrl: ""
 };
@@ -969,7 +1267,7 @@ const servoRotate = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 120,
+    colour: '#ff65f3',
     tooltip: "Xoay servo đến góc chỉ định (từ 0 đến 180 độ)",
     helpUrl: ""
 };
@@ -987,7 +1285,7 @@ const servoSetup = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 120,
+    colour: '#ff65f3',
     tooltip: 'Chuẩn bị để dùng servo tại chân được chọn',
     helpUrl: '',
 };
@@ -1010,7 +1308,7 @@ const servoContinuous = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 120,
+    colour: '#ff65f3',
     tooltip: 'Xoay servo liên tục với tốc độ từ -100 (xoay ngược) đến 100 (xoay xuôi)',
     helpUrl: '',
 };
@@ -1028,12 +1326,149 @@ const servoStop = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 120,
+    colour: '#ff65f3',
     tooltip: 'Ngừng quay servo tại chân được chọn',
     helpUrl: '',
 };
+const functionWrapper = {
+    type: "function_wrapper",
+    message0: "Function Container %1 %2",
+    args0: [
+        {
+            type: "input_dummy"
+        },
+        {
+            type: "input_statement",
+            name: "FUNCTIONS",
+            check: "function_input"  // Xác định loại khối có thể kết nối
+        }
+    ],
+    colour: 290,
+    tooltip: "Khối bao bọc các hàm (function) để giúp học sinh hiểu được thứ tự thực thi của mã. Các hàm bên trong sẽ được định nghĩa trước khi chương trình chính chạy.",
+    helpUrl: ""
+};
+const functionDefinition = {
+    type: "function_definition",
+    message0: "Define function %1 %2 with parameters %3 %4",
+    args0: [
+        {
+            type: "field_input",
+            name: "NAME",
+            text: "myFunction"
+        },
+        {
+            type: "input_dummy"
+        },
+        {
+            type: "field_input",
+            name: "PARAMS",
+            text: ""
+        },
+        {
+            type: "input_statement",
+            name: "STACK"
+        }
+    ],
+    output: null,  // Loại bỏ output
+    previousStatement: "function_input",  // Cho phép kết nối với function_wrapper
+    nextStatement: "function_input",  // Cho phép kết nối với các function khác
+    colour: 290,
+    tooltip: "Định nghĩa một hàm với tên và tham số. Hàm này có thể được gọi từ các khối khác trong chương trình.",
+    helpUrl: ""
+};
+const customCodeBlock = {
+    type: "custom_code_block",
+    message0: "Custom Code %1",
+    args0: [
+        {
+            type: "input_dummy"
+        }
+    ],
+    message1: "%1",
+    args1: [
+        {
+            type: "field_image",
+            src: "https://www.gstatic.com/codesite/ph/images/pencil.png",
+            width: 15,
+            height: 15,
+            alt: "Edit",
+            flipRtl: false,
+            onClick: function() {
+                const block = this.getSourceBlock();
+                const currentCode = block.data || "// Viết mã tùy chỉnh ở đây\n";
 
+                // Hiển thị hộp thoại để người dùng nhập code
+                const newCode = window.prompt("Nhập mã tùy chỉnh:", currentCode);
+                if (newCode !== null) {
+                    block.data = newCode;
+                }
+            }
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 160,
+    tooltip: "Viết mã Arduino tùy chỉnh khi các khối không đáp ứng được nhu cầu. Mã sẽ được thêm vào chương trình chính một cách nguyên bản.",
+    helpUrl: ""
+};
 
+// Định nghĩa khối function tùy chỉnh với nút chỉnh sửa
+const customFunctionBlock = {
+    type: "custom_function_block",
+    message0: "Custom Function %1",
+    args0: [
+        {
+            type: "input_dummy"
+        }
+    ],
+    message1: "%1",
+    args1: [
+        {
+            type: "field_image",
+            src: "https://www.gstatic.com/codesite/ph/images/pencil.png",
+            width: 15,
+            height: 15,
+            alt: "Edit",
+            flipRtl: false,
+            onClick: function() {
+                const block = this.getSourceBlock();
+                const currentCode = block.data || "void myFunction() {\n  // Viết mã hàm ở đây\n}\n";
+
+                // Hiển thị hộp thoại để người dùng nhập code
+                const newCode = window.prompt("Nhập mã hàm:", currentCode);
+                if (newCode !== null) {
+                    block.data = newCode;
+                }
+            }
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 290,
+    tooltip: "Định nghĩa một hàm tùy chỉnh bằng cách viết mã Arduino trực tiếp. Hàm này có thể được gọi từ các khối khác trong chương trình.",
+    helpUrl: ""
+};
+const functionCall = {
+    type: "function_call",
+    message0: "Call function %1 with params %2",
+    args0: [
+        {
+            type: "field_input",
+            name: "NAME",
+            text: "myFunction"
+        },
+        {
+            type: "field_input",
+            name: "PARAMS",
+            text: ""
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 290,
+    tooltip: "Gọi một hàm đã được định nghĩa với các tham số.",
+    helpUrl: ""
+};
 export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   simulateLed,
     setup,
@@ -1077,6 +1512,12 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   controlsFlowStatements,
 
     rgbLedControl,
+    rgbLedSetup,
+    rgbLedSetColor,
+    rgbLedSetColorWithPins,
+    rgbLedVariableControl,
+    rgbLedVariableInfo,
+    rgbLedFixedPinVariableColor,
     dhtSensor,
     ultrasonicSensor,
     dcMotorControl,
@@ -1091,5 +1532,10 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     servoRotate,
     servoSetup,
     servoContinuous,
-    servoStop
+    servoStop,
+    functionWrapper,
+    functionDefinition,
+    customFunctionBlock,
+    functionCall,
+    customCodeBlock,
 ]);
