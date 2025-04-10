@@ -638,6 +638,7 @@ export const toolbox = {
 
                 // { kind: 'block', type: 'function_wrapper' },
                 { kind: 'block', type: 'function_definition' },
+                { kind: 'block', type: 'code_text' },
                 { kind: 'block', type: 'custom_code_block' },
                 { kind: 'block', type: 'custom_function_block' },
                 { kind: 'block', type: 'function_call' },

@@ -1376,76 +1376,55 @@ const functionDefinition = {
     tooltip: "Định nghĩa một hàm với tên và tham số. Hàm này có thể được gọi từ các khối khác trong chương trình.",
     helpUrl: ""
 };
+const codeTextBlock = {
+    type: "code_text",
+    message0: "Code C %1",
+    args0: [
+        {
+            type: "field_input",
+            name: "CODE_TEXT",
+            text: "// Viết mã C ở đây"
+        }
+    ],
+    output: "String",
+    colour: 65,
+    tooltip: "Nhập mã C tùy chỉnh vào đây",
+    helpUrl: ""
+};
+
+// Định nghĩa khối custom code nhận khối text code
 const customCodeBlock = {
     type: "custom_code_block",
     message0: "Custom Code %1",
     args0: [
         {
-            type: "input_dummy"
-        }
-    ],
-    message1: "%1",
-    args1: [
-        {
-            type: "field_image",
-            src: "https://www.gstatic.com/codesite/ph/images/pencil.png",
-            width: 15,
-            height: 15,
-            alt: "Edit",
-            flipRtl: false,
-            onClick: function() {
-                const block = this.getSourceBlock();
-                const currentCode = block.data || "// Viết mã tùy chỉnh ở đây\n";
-
-                // Hiển thị hộp thoại để người dùng nhập code
-                const newCode = window.prompt("Nhập mã tùy chỉnh:", currentCode);
-                if (newCode !== null) {
-                    block.data = newCode;
-                }
-            }
+            type: "input_value",
+            name: "CODE",
+            check: "String"
         }
     ],
     previousStatement: null,
     nextStatement: null,
     colour: 160,
-    tooltip: "Viết mã Arduino tùy chỉnh khi các khối không đáp ứng được nhu cầu. Mã sẽ được thêm vào chương trình chính một cách nguyên bản.",
+    tooltip: "Thêm mã C tùy chỉnh vào chương trình chính",
     helpUrl: ""
 };
 
-// Định nghĩa khối function tùy chỉnh với nút chỉnh sửa
+// Định nghĩa khối custom function nhận khối text code
 const customFunctionBlock = {
     type: "custom_function_block",
     message0: "Custom Function %1",
     args0: [
         {
-            type: "input_dummy"
-        }
-    ],
-    message1: "%1",
-    args1: [
-        {
-            type: "field_image",
-            src: "https://www.gstatic.com/codesite/ph/images/pencil.png",
-            width: 15,
-            height: 15,
-            alt: "Edit",
-            flipRtl: false,
-            onClick: function() {
-                const block = this.getSourceBlock();
-                const currentCode = block.data || "void myFunction() {\n  // Viết mã hàm ở đây\n}\n";
-
-                // Hiển thị hộp thoại để người dùng nhập code
-                const newCode = window.prompt("Nhập mã hàm:", currentCode);
-                if (newCode !== null) {
-                    block.data = newCode;
-                }
-            }
+            type: "input_value",
+            name: "FUNCTION_CODE",
+            check: "String"
         }
     ],
     previousStatement: null,
     nextStatement: null,
     colour: 290,
-    tooltip: "Định nghĩa một hàm tùy chỉnh bằng cách viết mã Arduino trực tiếp. Hàm này có thể được gọi từ các khối khác trong chương trình.",
+    tooltip: "Định nghĩa một hàm C tùy chỉnh",
     helpUrl: ""
 };
 const functionCall = {
@@ -1536,6 +1515,7 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     functionWrapper,
     functionDefinition,
     customFunctionBlock,
+    codeTextBlock,
     functionCall,
     customCodeBlock,
 ]);

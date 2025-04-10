@@ -943,18 +943,30 @@ forBlock['custom_function_block'] = function(
     return functionCode + '\n';
 };
 
-forBlock['custom_function_block'] = function(
+forBlock['code_text'] = function(
     block: Blockly.Block,
-    generator: any,
+    generator: any
 ) {
-    const functionCode = block.data || "void myFunction() {\n  // Viết mã hàm ở đây\n}\n";
-    return functionCode + '\n';
+    const code = block.getFieldValue('CODE_TEXT');
+    return [code, generator.ORDER_ATOMIC];
 };
 
+// Generator functions cho custom code block
 forBlock['custom_code_block'] = function(
     block: Blockly.Block,
     generator: any,
 ) {
-    const code = block.data || "// Viết mã tùy chỉnh ở đây\n";
-    return code + '\n';
+    const codeValue = generator.valueToCode(block, 'CODE', generator.ORDER_NONE) ||
+        "// Không có mã được cung cấp";
+    return codeValue + '\n';
+};
+
+// Generator functions cho custom function block
+forBlock['custom_function_block'] = function(
+    block: Blockly.Block,
+    generator: any,
+) {
+    const functionCode = generator.valueToCode(block, 'FUNCTION_CODE', generator.ORDER_NONE) ||
+        "void emptyFunction() {}\n";
+    return functionCode + '\n';
 };
