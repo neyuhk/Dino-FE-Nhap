@@ -2,37 +2,37 @@ import * as Blockly from 'blockly/core';
 
 // Custom text blocks.
 const addText = {
-  type: 'add_text',
-  message0: 'Add text %1',
-  args0: [
-    {
-      type: 'input_value',
-      name: 'TEXT',
-      check: 'String',
-    },
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: 160,
-  tooltip: '',
-  helpUrl: '',
+    type: 'add_text',
+    message0: 'Add text %1',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'TEXT',
+            check: 'String',
+        },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 160,
+    tooltip: 'Thêm văn bản vào chương trình',
+    helpUrl: '',
 };
 
 const logText = {
-  type: 'log_text',
-  message0: 'Log text %1',
-  args0: [
-    {
-      type: 'input_value',
-      name: 'TEXT',
-      check: 'String',
-    },
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: 160,
-  tooltip: '',
-  helpUrl: '',
+    type: 'log_text',
+    message0: 'Log text %1',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'TEXT',
+            check: 'String',
+        },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 160,
+    tooltip: 'Ghi nội dung văn bản ra nhật ký (log)',
+    helpUrl: '',
 };
 
 const printResultBlock = {
@@ -47,120 +47,118 @@ const printResultBlock = {
     previousStatement: null,
     nextStatement: null,
     colour: 160,
-    tooltip: 'In ra kết quả ra màn hình',
+    tooltip: 'In giá trị ra màn hình Serial Monitor',
     helpUrl: '',
 };
 
-
-// Arduino analog/digital block definitions.
-
 const inoutDigitalWrite = {
-  type: "inout_digital_write",
-  message0: "DigitalWrite PIN# %1 Stat %2",
-  args0: [
-    {
-      type: "field_dropdown",
-      name: "PIN",
-      options: [
-        ["0", "0"],
-        ["1", "1"],
-        ["2", "2"],
-        ["3", "3"]
-      ]
-    },
-    {
-      type: "field_dropdown",
-      name: "STAT",
-      options: [
-        ["HIGH", "HIGH"],
-        ["LOW", "LOW"]
-      ]
-    }
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: 230,
-  tooltip: "Write digital value to a specific port",
-  helpUrl: "http://arduino.cc/en/Reference/DigitalWrite"
+    type: "inout_digital_write",
+    message0: "DigitalWrite PIN# %1 Stat %2",
+    args0: [
+        {
+            type: "field_dropdown",
+            name: "PIN",
+            options: [
+                ["0", "0"],
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"]
+            ]
+        },
+        {
+            type: "field_dropdown",
+            name: "STAT",
+            options: [
+                ["HIGH", "HIGH"],
+                ["LOW", "LOW"]
+            ]
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 230,
+    tooltip: "Gửi tín hiệu HIGH hoặc LOW đến một chân digital",
+    helpUrl: "http://arduino.cc/en/Reference/DigitalWrite"
 };
 
 const inoutDigitalRead = {
-  type: "inout_digital_read",
-  message0: "DigitalRead PIN# %1",
-  args0: [
-    {
-      type: "field_dropdown",
-      name: "PIN",
-      options: [
-        ["0", "0"],
-        ["1", "1"],
-        ["2", "2"],
-        ["3", "3"]
-      ]
-    }
-  ],
-  output: "Boolean",
-  colour: 230,
-  tooltip: "Read digital value from a specific port",
-  helpUrl: "http://arduino.cc/en/Reference/DigitalRead"
+    type: "inout_digital_read",
+    message0: "DigitalRead PIN# %1",
+    args0: [
+        {
+            type: "field_dropdown",
+            name: "PIN",
+            options: [
+                ["0", "0"],
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"]
+            ]
+        }
+    ],
+    output: "Boolean",
+    colour: 230,
+    tooltip: "Đọc tín hiệu digital (HIGH/LOW) từ một chân",
+    helpUrl: "http://arduino.cc/en/Reference/DigitalRead"
 };
+
 const logicIf = {
-  type: 'controls_if',
-  message0: 'if %1 then',
-  args0: [
-    {
-      type: 'input_value',
-      name: 'IF0',
-      check: 'Boolean'
-    }
-  ],
-  message1: 'do %1',
-  args1: [
-    {
-      type: 'input_statement',
-      name: 'DO0'
-    }
-  ],
-  // This simplified version does not include else/elseif.
-  previousStatement: null,
-  nextStatement: null,
-  colour: 210,
-  tooltip: 'If condition is true, execute statements.',
-  helpUrl: ''
+    type: 'controls_if',
+    message0: 'if %1 then',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'IF0',
+            check: 'Boolean'
+        }
+    ],
+    message1: 'do %1',
+    args1: [
+        {
+            type: 'input_statement',
+            name: 'DO0'
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 210,
+    tooltip: 'Nếu điều kiện đúng thì thực hiện hành động',
+    helpUrl: ''
 };
 
 const logicCompare = {
-  type: 'logic_compare',
-  message0: '%1 %2 %3',
-  args0: [
-    {
-      type: 'input_value',
-      name: 'A',
-      check: 'Number'
-    },
-    {
-      type: 'field_dropdown',
-      name: 'OP',
-      options: [
-        ['=', 'EQ'],
-        ['\u2260', 'NEQ'],
-        ['<', 'LT'],
-        ['\u2264', 'LTE'],
-        ['>', 'GT'],
-        ['\u2265', 'GTE']
-      ]
-    },
-    {
-      type: 'input_value',
-      name: 'B',
-      check: 'Number'
-    }
-  ],
-  output: 'Boolean',
-  colour: 210,
-  tooltip: 'Compare two numbers.',
-  helpUrl: ''
+    type: 'logic_compare',
+    message0: '%1 %2 %3',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'A',
+            check: 'Number'
+        },
+        {
+            type: 'field_dropdown',
+            name: 'OP',
+            options: [
+                ['=', 'EQ'],
+                ['≠', 'NEQ'],
+                ['<', 'LT'],
+                ['≤', 'LTE'],
+                ['>', 'GT'],
+                ['≥', 'GTE']
+            ]
+        },
+        {
+            type: 'input_value',
+            name: 'B',
+            check: 'Number'
+        }
+    ],
+    output: 'Boolean',
+    colour: 210,
+    tooltip: 'So sánh hai giá trị số',
+    helpUrl: ''
 };
+
 
 const logicOperation = {
   type: 'logic_operation',
@@ -698,30 +696,6 @@ const serialPrintln = {
   tooltip: "Print data to the serial port with a newline.",
   helpUrl: "http://www.arduino.cc/en/Serial/Println"
 };
-// const controlsRepeat = {
-//   type: "controls_repeat",
-//   message0: "repeat %1 times",
-//   args0: [
-//     {
-//       type: "field_input",
-//       name: "TIMES",
-//       text: "10"
-//     }
-//   ],
-//   // Add these lines for the DO statement
-//   message1: "do %1",
-//   args1: [
-//     {
-//       type: "input_statement",
-//       name: "DO"
-//     }
-//   ],
-//   previousStatement: null,
-//   nextStatement: null,
-//   colour: 120,
-//   tooltip: "Repeat a set of statements a specific number of times.",
-//   helpUrl: ""
-// };
 const controlsRepeatExt = {
   type: "controls_repeat_ext",
   message0: "repeat %1 times",
@@ -746,39 +720,6 @@ const controlsRepeatExt = {
   tooltip: "Repeat a set of statements a specific number of times.",
   helpUrl: ""
 };
-
-// const controlsWhileUntil = {
-//   type: "controls_whileUntil",
-//   message0: "%1 %2",
-//   args0: [
-//     {
-//       type: "field_dropdown",
-//       name: "MODE",
-//       options: [
-//         ["while", "WHILE"],
-//         ["until", "UNTIL"]
-//       ]
-//     },
-//     {
-//       type: "input_value",
-//       name: "BOOL",
-//       check: "Boolean"
-//     }
-//   ],
-//   message1: "do %1",
-//   args1: [
-//     {
-//       type: "input_statement",
-//       name: "DO"
-//     }
-//   ],
-//   previousStatement: null,
-//   nextStatement: null,
-//   colour: 120,
-//   tooltip: "Repeat while/until a condition is met.",
-//   helpUrl: ""
-// };
-
 const controlsFor = {
   type: "controls_for",
   message0: "for %1 from %2 to %3 by %4",
@@ -1296,6 +1237,89 @@ const loop = {
     helpUrl: ""
 };
 
+// Block: Servo rotate to angle
+const servoRotate = {
+    type: 'servo_rotate',
+    message0: 'Rotate servo %1 to angle %2',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'SERVO_PIN',
+            check: 'Number',
+        },
+        {
+            type: 'input_value',
+            name: 'ANGLE',
+            check: 'Number',
+        },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 120,
+    tooltip: 'Xoay servo đến một góc nhất định từ 0 đến 180 độ',
+    helpUrl: '',
+};
+
+// Block: Servo setup
+const servoSetup = {
+    type: 'servo_setup',
+    message0: 'Setup servo at pin %1',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'SERVO_PIN',
+            check: 'Number',
+        },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 120,
+    tooltip: 'Chuẩn bị để dùng servo tại chân được chọn',
+    helpUrl: '',
+};
+
+// Block: Servo continuous rotation
+const servoContinuous = {
+    type: 'servo_continuous',
+    message0: 'Rotate servo %1 at speed %2',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'SERVO_PIN',
+            check: 'Number',
+        },
+        {
+            type: 'input_value',
+            name: 'SPEED',
+            check: 'Number',
+        },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 120,
+    tooltip: 'Xoay servo liên tục với tốc độ từ -100 (xoay ngược) đến 100 (xoay xuôi)',
+    helpUrl: '',
+};
+
+// Block: Servo stop
+const servoStop = {
+    type: 'servo_stop',
+    message0: 'Stop servo %1',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'SERVO_PIN',
+            check: 'Number',
+        },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 120,
+    tooltip: 'Ngừng quay servo tại chân được chọn',
+    helpUrl: '',
+};
+
+
 export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   simulateLed,
     setup,
@@ -1349,5 +1373,9 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     stepperMotorControl,
     serialBegin,
     mapExtended,
-    waitUntil
+    waitUntil,
+    servoRotate,
+    servoSetup,
+    servoContinuous,
+    servoStop
 ]);

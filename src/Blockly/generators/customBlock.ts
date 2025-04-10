@@ -632,3 +632,99 @@ forBlock['loop'] = function (
     const loopCode = generator.statementToCode(block, 'LOOP_CODE');
     return `void loop() {\n${loopCode}}\n`;
 };
+forBlock['servo_setup'] = function (
+    block: Blockly.Block,
+    generator: Blockly.CodeGenerator,
+) {
+    const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
+
+    // Thêm thư viện Servo.h vào phần định nghĩa
+    generator.definitions_['include_servo'] = '#include <Servo.h>';
+
+    // Định nghĩa đối tượng servo
+    generator.definitions_[`servo_${pin}`] = `Servo servo${pin};`;
+
+    return `servo${pin}.attach(${pin});\n`;
+};
+
+forBlock['servo_rotate'] = function (
+    block: Blockly.Block,
+    generator: Blockly.CodeGenerator,
+) {
+    const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
+    const angle = generator.valueToCode(block, 'ANGLE', Order.ATOMIC) || '90';
+
+    return `servo${pin}.write(${angle});\ndelay(15);\n`;
+};
+
+forBlock['servo_continuous'] = function (
+    block: Blockly.Block,
+    generator: Blockly.CodeGenerator,
+) {
+    const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
+    const speed = generator.valueToCode(block, 'SPEED', Order.ATOMIC) || '50';
+
+    return `int mappedSpeed = map(${speed}, -100, 100, 0, 180);\nservo${pin}.write(mappedSpeed);\n`;
+};
+
+forBlock['servo_stop'] = function (
+    block: Blockly.Block,
+    generator: Blockly.CodeGenerator,
+) {
+    const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
+
+    return `servo${pin}.write(90);\ndelay(15);\n`;
+};
+
+forBlock['servo_setup'] = function (
+    block: Blockly.Block,
+    generator: Blockly.CodeGenerator,
+) {
+    const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
+
+    // Sử dụng addReservedWords để thêm biến servo
+    generator.addReservedWords(`servo${pin}`);
+
+    // Sử dụng provideFunction_ để thêm thư viện và định nghĩa servo
+    const includeServo = generator.provideFunction_(
+        'include_servo',
+        `#include <Servo.h>\n`
+    );
+
+    // Định nghĩa đối tượng servo
+    const defineServo = generator.provideFunction_(
+        `define_servo_${pin}`,
+        `Servo servo${pin};\n`
+    );
+
+    return `servo${pin}.attach(${pin});\n`;
+};
+
+forBlock['servo_rotate'] = function (
+    block: Blockly.Block,
+    generator: Blockly.CodeGenerator,
+) {
+    const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
+    const angle = generator.valueToCode(block, 'ANGLE', Order.ATOMIC) || '90';
+
+    return `servo${pin}.write(${angle});\ndelay(15);\n`;
+};
+
+forBlock['servo_continuous'] = function (
+    block: Blockly.Block,
+    generator: Blockly.CodeGenerator,
+) {
+    const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
+    const speed = generator.valueToCode(block, 'SPEED', Order.ATOMIC) || '50';
+
+    return `int mappedSpeed = map(${speed}, -100, 100, 0, 180);\nservo${pin}.write(mappedSpeed);\n`;
+};
+
+forBlock['servo_stop'] = function (
+    block: Blockly.Block,
+    generator: Blockly.CodeGenerator,
+) {
+    const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
+
+    return `servo${pin}.write(90);\ndelay(15);\n`;
+};
