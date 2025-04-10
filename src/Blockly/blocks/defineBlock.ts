@@ -59,10 +59,11 @@ const inoutDigitalWrite = {
             type: "field_dropdown",
             name: "PIN",
             options: [
-                ["0", "0"],
-                ["1", "1"],
-                ["2", "2"],
-                ["3", "3"]
+                ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]
             ]
         },
         {
@@ -89,10 +90,11 @@ const inoutDigitalRead = {
             type: "field_dropdown",
             name: "PIN",
             options: [
-                ["0", "0"],
-                ["1", "1"],
-                ["2", "2"],
-                ["3", "3"]
+                ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]
             ]
         }
     ],
@@ -161,857 +163,653 @@ const logicCompare = {
 
 
 const logicOperation = {
-  type: 'logic_operation',
-  message0: '%1 %2 %3',
-  args0: [
-    {
-      type: 'input_value',
-      name: 'A',
-      check: 'Boolean'
-    },
-    {
-      type: 'field_dropdown',
-      name: 'OP',
-      options: [
-        ['and', 'AND'],
-        ['or', 'OR']
-      ]
-    },
-    {
-      type: 'input_value',
-      name: 'B',
-      check: 'Boolean'
-    }
-  ],
-  output: 'Boolean',
-  colour: 210,
-  tooltip: 'Perform logical operations on two booleans.',
-  helpUrl: ''
+    type: 'logic_operation',
+    message0: '%1 %2 %3',
+    args0: [
+        { type: 'input_value', name: 'A', check: 'Boolean' },
+        { type: 'field_dropdown', name: 'OP', options: [['and', 'AND'], ['or', 'OR']] },
+        { type: 'input_value', name: 'B', check: 'Boolean' }
+    ],
+    output: 'Boolean',
+    colour: 210,
+    tooltip: 'Kiểm tra 2 điều kiện đúng cùng lúc (và) hoặc 1 trong 2 đúng (hoặc)',
+    helpUrl: ''
 };
 
 const logicNegate = {
-  type: 'logic_negate',
-  message0: 'not %1',
-  args0: [
-    {
-      type: 'input_value',
-      name: 'BOOL',
-      check: 'Boolean'
-    }
-  ],
-  output: 'Boolean',
-  colour: 210,
-  tooltip: 'Returns the opposite of a boolean value.',
-  helpUrl: ''
+    type: 'logic_negate',
+    message0: 'not %1',
+    args0: [
+        { type: 'input_value', name: 'BOOL', check: 'Boolean' }
+    ],
+    output: 'Boolean',
+    colour: 210,
+    tooltip: 'Đảo ngược giá trị đúng/sai của điều kiện',
+    helpUrl: ''
 };
 
 const logicBoolean = {
-  type: 'logic_boolean',
-  message0: '%1',
-  args0: [
-    {
-      type: 'field_dropdown',
-      name: 'BOOL',
-      options: [
-        ['true', 'TRUE'],
-        ['false', 'FALSE']
-      ]
-    }
-  ],
-  output: 'Boolean',
-  colour: 210,
-  tooltip: 'Boolean value: true or false.',
-  helpUrl: ''
+    type: 'logic_boolean',
+    message0: '%1',
+    args0: [
+        { type: 'field_dropdown', name: 'BOOL', options: [['true', 'TRUE'], ['false', 'FALSE']] }
+    ],
+    output: 'Boolean',
+    colour: 210,
+    tooltip: 'Giá trị đúng hoặc sai (true/false)',
+    helpUrl: ''
 };
 
 const logicNull = {
-  type: 'logic_null',
-  message0: 'null',
-  output: null,
-  colour: 210,
-  tooltip: 'Null value.',
-  helpUrl: ''
+    type: 'logic_null',
+    message0: 'null',
+    output: null,
+    colour: 210,
+    tooltip: 'Không có giá trị (null)',
+    helpUrl: ''
 };
 
 const logicTernary = {
-  type: 'logic_ternary',
-  message0: 'if %1 then %2 else %3',
-  args0: [
-    {
-      type: 'input_value',
-      name: 'IF',
-      check: 'Boolean'
-    },
-    {
-      type: 'input_value',
-      name: 'THEN'
-    },
-    {
-      type: 'input_value',
-      name: 'ELSE'
-    }
-  ],
-  output: null,
-  colour: 210,
-  tooltip: 'Select one of two values based on a condition.',
-  helpUrl: ''
+    type: 'logic_ternary',
+    message0: 'if %1 then %2 else %3',
+    args0: [
+        { type: 'input_value', name: 'IF', check: 'Boolean' },
+        { type: 'input_value', name: 'THEN' },
+        { type: 'input_value', name: 'ELSE' }
+    ],
+    output: null,
+    colour: 210,
+    tooltip: 'Chọn kết quả theo điều kiện đúng hay sai',
+    helpUrl: ''
 };
+
 const inoutAnalogWrite = {
-  type: "inout_analog_write",
-  message0: "AnalogWrite PIN# %1 value %2",
-  args0: [
-    {
-      // PWM-capable pins.
-      type: "field_dropdown",
-      name: "PIN",
-      options: [
-        ["3", "3"],
-        ["5", "5"],
-        ["6", "6"],
-        ["9", "9"],
-        ["10", "10"],
-        ["11", "11"]
-      ]
-    },
-    {
-      type: "input_value",
-      name: "NUM",
-      check: "Number"
-    }
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: 230,
-  tooltip: "Write analog value (0-255) to a specific port",
-  helpUrl: "http://arduino.cc/en/Reference/AnalogWrite"
+    type: "inout_analog_write",
+    message0: "AnalogWrite PIN# %1 value %2",
+    args0: [
+        { type: "field_dropdown", name: "PIN", options: [["3", "3"], ["5", "5"], ["6", "6"], ["9", "9"], ["10", "10"], ["11", "11"]] },
+        { type: "input_value", name: "NUM", check: "Number" }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 230,
+    tooltip: "Gửi giá trị analog (0-255) đến chân được chọn",
+    helpUrl: "http://arduino.cc/en/Reference/AnalogWrite"
 };
 
 const inoutAnalogRead = {
-  type: "inout_analog_read",
-  message0: "AnalogRead PIN# %1",
-  args0: [
-    {
-      // Typical analog input pins.
-      type: "field_dropdown",
-      name: "PIN",
-      options: [
-        ["A0", "A0"],
-        ["A1", "A1"],
-        ["A2", "A2"],
-        ["A3", "A3"],
-        ["A4", "A4"],
-        ["A5", "A5"]
-      ]
-    }
-  ],
-  output: "Number",
-  colour: 230,
-  tooltip: "Return analog value (0-1024)",
-  helpUrl: "http://arduino.cc/en/Reference/AnalogRead"
+    type: "inout_analog_read",
+    message0: "AnalogRead PIN# %1",
+    args0: [
+        { type: "field_dropdown", name: "PIN", options: [["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]] }
+    ],
+    output: "Number",
+    colour: 230,
+    tooltip: "Đọc giá trị analog (0-1023) từ chân cảm biến",
+    helpUrl: "http://arduino.cc/en/Reference/AnalogRead"
 };
 
 const inoutBuildinLed = {
-  type: "inout_buildin_led",
-  message0: "Build-in LED Stat %1",
-  args0: [
-    {
-      type: "field_dropdown",
-      name: "STAT",
-      options: [
-        ["HIGH", "HIGH"],
-        ["LOW", "LOW"]
-      ]
-    }
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: 190,
-  tooltip: "Turn the build-in LED on or off",
-  helpUrl: "http://arduino.cc/en/Reference/DigitalWrite"
+    type: "inout_buildin_led",
+    message0: "Build-in LED Stat %1",
+    args0: [
+        { type: "field_dropdown", name: "STAT", options: [["HIGH", "HIGH"], ["LOW", "LOW"]] }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 190,
+    tooltip: "Bật hoặc tắt đèn LED có sẵn trên mạch",
+    helpUrl: "http://arduino.cc/en/Reference/DigitalWrite"
 };
 
 // New block: Pin mode (set the mode of a pin)
 const inoutPinMode = {
-  type: "inout_pin_mode",
-  message0: "Set PIN# %1 mode %2",
-  args0: [
-    {
-      type: "field_dropdown",
-      name: "PIN",
-      options: [
-        ["0", "0"],
-        ["1", "1"],
-        ["2", "2"],
-        ["3", "3"],
-        ["4", "4"],
-        ["5", "5"],
-        ["6", "6"],
-        ["7", "7"],
-        ["8", "8"],
-        ["9", "9"],
-        ["10", "10"],
-        ["11", "11"],
-        ["12", "12"],
-        ["13", "13"],
-        ["A0", "A0"],
-        ["A1", "A1"],
-        ["A2", "A2"],
-        ["A3", "A3"],
-        ["A4", "A4"],
-        ["A5", "A5"]
-      ]
-    },
-    {
-      type: "field_dropdown",
-      name: "MODE",
-      options: [
-        ["INPUT", "INPUT"],
-        ["OUTPUT", "OUTPUT"],
-        ["INPUT_PULLUP", "INPUT_PULLUP"]
-      ]
-    }
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: 230,
-  tooltip: "Set the pin mode",
-  helpUrl: "http://arduino.cc/en/Reference/pinMode"
+    type: "inout_pin_mode",
+    message0: "Set pin %1 as %2",
+    args0: [
+        {
+            type: "field_dropdown",
+            name: "PIN",
+            options: [
+                ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "field_dropdown",
+            name: "MODE",
+            options: [
+                ["input", "INPUT"],
+                ["output", "OUTPUT"],
+                ["input with pull-up", "INPUT_PULLUP"]
+            ]
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 230,
+    tooltip: "Chọn chế độ vào hoặc ra cho chân (PIN)",
+    helpUrl: "http://arduino.cc/en/Reference/pinMode"
 };
-
-// Additional Arduino blocks from base.js
 
 const baseDelay = {
-  type: "base_delay",
-  message0: "Delay %1",
-  args0: [
-    {
-      type: "input_value",
-      name: "DELAY_TIME",
-      check: "Number"
-    }
-  ],
-  inputsInline: true,
-  previousStatement: null,
-  nextStatement: null,
-  colour: 120,
-  tooltip: "Delay specific time",
-  helpUrl: "http://arduino.cc/en/Reference/delay"
-};
-
-const baseMap = {
-  type: "base_map",
-  message0: "Map %1 value to [0-%2]",
-  args0: [
-    {
-      type: "input_value",
-      name: "NUM",
-      check: "Number"
-    },
-    {
-      type: "input_value",
-      name: "DMAX",
-      check: "Number"
-    }
-  ],
-  inputsInline: true,
-  output: null,  // output block
-  colour: 230,
-  tooltip: "Re-map a number from [0-1024] to another range",
-  helpUrl: "http://arduino.cc/en/Reference/map"
-};
-
-const inoutTone = {
-  type: "inout_tone",
-  message0: "Tone PIN# %1 frequency %2",
-  args0: [
-    {
-      type: "field_dropdown",
-      name: "PIN",
-      options: [
-        ["0", "0"],
-        ["1", "1"],
-        ["2", "2"],
-        ["3", "3"]
-      ]
-    },
-    {
-      type: "input_value",
-      name: "NUM",
-      check: "Number"
-    }
-  ],
-  inputsInline: true,
-  previousStatement: null,
-  nextStatement: null,
-  colour: 230,
-  tooltip: "Generate audio tones on a pin",
-  helpUrl: "http://www.arduino.cc/en/Reference/Tone"
-};
-
-const inoutNotone = {
-  type: "inout_notone",
-  message0: "No tone PIN# %1",
-  args0: [
-    {
-      type: "field_dropdown",
-      name: "PIN",
-      options: [
-        ["0", "0"],
-        ["1", "1"],
-        ["2", "2"],
-        ["3", "3"]
-      ]
-    }
-  ],
-  inputsInline: true,
-  previousStatement: null,
-  nextStatement: null,
-  colour: 230,
-  tooltip: "Stop generating a tone on a pin",
-  helpUrl: "http://www.arduino.cc/en/Reference/NoTone"
-};
-
-const inoutHighlow = {
-  type: "inout_highlow",
-  message0: "%1",
-  args0: [
-    {
-      type: "field_dropdown",
-      name: "BOOL",
-      options: [
-        ["HIGH", "HIGH"],
-        ["LOW", "LOW"]
-      ]
-    }
-  ],
-  output: "Boolean",
-  colour: 230,
-  tooltip: "",
-  helpUrl: "http://arduino.cc/en/Reference/Constants"
-};
-
-const servoMove = {
-  type: "servo_move",
-  message0: "Servo %1 PIN# %2 Degree (0~180) %3",
-  args0: [
-    {
-      type: "field_image",
-      src: "https://statics3.seeedstudio.com/images/product/EMAX%20Servo.jpg",
-      width: 64,
-      height: 64,
-      alt: "Servo"
-    },
-    {
-      type: "field_dropdown",
-      name: "PIN",
-      options: [
-        ["0", "0"],
-        ["1", "1"],
-        ["2", "2"],
-        ["3", "3"]
-      ]
-    },
-    {
-      type: "input_value",
-      name: "DEGREE",
-      check: "Number"
-    }
-  ],
-  inputsInline: true,
-  previousStatement: null,
-  nextStatement: null,
-  colour: 190,
-  tooltip: "Move servo between 0~180 degree",
-  helpUrl: "http://www.arduino.cc/playground/ComponentLib/servo"
-};
-
-const servoReadDegrees = {
-  type: "servo_read_degrees",
-  message0: "Servo %1 PIN# %2 Read Degrees",
-  args0: [
-    {
-      type: "field_image",
-      src: "https://statics3.seeedstudio.com/images/product/EMAX%20Servo.jpg",
-      width: 64,
-      height: 64,
-      alt: "Servo"
-    },
-    {
-      type: "field_dropdown",
-      name: "PIN",
-      options: [
-        ["0", "0"],
-        ["1", "1"],
-        ["2", "2"],
-        ["3", "3"]
-      ]
-    }
-  ],
-  output: "Number",
-  colour: 190,
-  tooltip: "Return the last moved servo degree",
-  helpUrl: "http://www.arduino.cc/playground/ComponentLib/servo"
-};
-
-const serialPrint = {
-  type: "serial_print",
-  message0: "Serial Print %1",
-  args0: [
-    {
-      type: "input_value",
-      name: "CONTENT",
-      check: "String"
-    }
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: 230,
-  tooltip: "Print data to the console/serial port",
-  helpUrl: "http://www.arduino.cc/en/Serial/Print"
-};
-
-// Colour blocks.
-
-const COLOUR_HUE = 20;
-
-const colourPicker = {
-  type: 'colour_picker',
-  message0: '%1',
-  args0: [
-    {
-      type: 'field_colour',
-      name: 'COLOUR',
-      colour: '#ff0000'
-    }
-  ],
-  output: 'Colour',
-  colour: COLOUR_HUE,
-  tooltip: 'Choose a colour',
-  helpUrl: ''
-};
-
-const colourRandom = {
-  type: 'colour_random',
-  message0: 'random colour',
-  output: 'Colour',
-  colour: COLOUR_HUE,
-  tooltip: 'Get a random colour',
-  helpUrl: ''
-};
-
-const colourRGB = {
-  type: 'colour_rgb',
-  message0: 'colour with red %1 green %2 blue %3',
-  args0: [
-    {
-      type: 'input_value',
-      name: 'RED',
-      check: 'Number'
-    },
-    {
-      type: 'input_value',
-      name: 'GREEN',
-      check: 'Number'
-    },
-    {
-      type: 'input_value',
-      name: 'BLUE',
-      check: 'Number'
-    }
-  ],
-  output: 'Colour',
-  colour: COLOUR_HUE,
-  tooltip: 'Create a colour with the given RGB components (0-255).',
-  helpUrl: ''
-};
-
-const colourBlend = {
-  type: 'colour_blend',
-  message0: 'blend colour %1 with colour %2 at ratio %3',
-  args0: [
-    {
-      type: 'input_value',
-      name: 'COLOUR1',
-      check: 'Colour'
-    },
-    {
-      type: 'input_value',
-      name: 'COLOUR2',
-      check: 'Colour'
-    },
-    {
-      type: 'input_value',
-      name: 'RATIO',
-      check: 'Number'
-    }
-  ],
-  output: 'Colour',
-  colour: COLOUR_HUE,
-  tooltip: 'Blend two colours together at the given ratio (0.0 - 1.0).',
-  helpUrl: ''
-};
-// New block: millis
-const millisBlock = {
-  type: "millis",
-  message0: "millis()",
-  output: "Number",
-  colour: 120,
-  tooltip: "Returns the number of milliseconds since the program started.",
-  helpUrl: "http://arduino.cc/en/Reference/Millis"
-};
-
-// New block: delayMicroseconds
-const delayMicrosecondsBlock = {
-  type: "delay_microseconds",
-  message0: "delayMicroseconds %1",
-  args0: [
-    {
-      type: "input_value",
-      name: "DELAY_US",
-      check: "Number"
-    }
-  ],
-  inputsInline: true,
-  previousStatement: null,
-  nextStatement: null,
-  colour: 120,
-  tooltip: "Delay the program for a specified number of microseconds.",
-  helpUrl: "http://arduino.cc/en/Reference/DelayMicroseconds"
-};
-
-// New block: Serial.println
-const serialPrintln = {
-  type: "serial_println",
-  message0: "Serial.println %1",
-  args0: [
-    {
-      type: "input_value",
-      name: "CONTENT",
-      check: "String"
-    }
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: 230,
-  tooltip: "Print data to the serial port with a newline.",
-  helpUrl: "http://www.arduino.cc/en/Serial/Println"
-};
-const controlsRepeatExt = {
-  type: "controls_repeat_ext",
-  message0: "repeat %1 times",
-  args0: [
-    {
-      type: "input_value",
-      name: "TIMES",
-      check: "Number"
-    }
-  ],
-  // Add these lines for the DO statement
-  message1: "do %1",
-  args1: [
-    {
-      type: "input_statement",
-      name: "DO"
-    }
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: 120,
-  tooltip: "Repeat a set of statements a specific number of times.",
-  helpUrl: ""
-};
-const controlsFor = {
-  type: "controls_for",
-  message0: "for %1 from %2 to %3 by %4",
-  args0: [
-    { type: "field_variable", name: "VAR", variable: "i" },
-    { type: "input_value", name: "FROM", check: "Number" },
-    { type: "input_value", name: "TO", check: "Number" },
-    { type: "input_value", name: "BY", check: "Number" }
-  ],
-  // Add this section for the DO input
-  message1: "do %1",
-  args1: [{ type: "input_statement", name: "DO" }],
-  inputsInline: true,
-  previousStatement: null,
-  nextStatement: null,
-  colour: 120,
-  tooltip: "Count from a start number to an end number by a given increment.",
-  helpUrl: ""
-};
-
-const controlsForEach = {
-  type: "controls_forEach",
-  message0: "for each %1 in list %2",
-  args0: [
-    {
-      type: "field_variable",
-      name: "VAR",
-      variable: "item"
-    },
-    {
-      type: "input_value",
-      name: "LIST",
-      check: "Array"
-    }
-  ],
-  // Add these lines for the DO statement
-  message1: "do %1",
-  args1: [
-    {
-      type: "input_statement",
-      name: "DO"
-    }
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: 120,
-  tooltip: "For each item in a list, do some statements.",
-  helpUrl: ""
-};
-
-const controlsFlowStatements = {
-  type: "controls_flow_statements",
-  message0: "%1",
-  args0: [
-    {
-      type: "field_dropdown",
-      name: "FLOW",
-      options: [
-        ["break", "BREAK"],
-        ["continue", "CONTINUE"]
-      ]
-    }
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: 120,
-  tooltip: "Break out of or continue a loop.",
-  helpUrl: ""
-};
-const simulateLed = {
-  type: "simulate_led",
-  message0: "simulate LED %1",
-  args0: [
-    {
-      type: "field_dropdown",
-      name: "STATE",
-      options: [
-        ["HIGH", "HIGH"],
-        ["LOW", "LOW"]
-      ]
-    }
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  // Set an initial color (e.g., grey).
-  colour: "#808080",
-  tooltip: "Simulate LED output. If HIGH, the LED lights up; if LOW, it turns off.",
-  helpUrl: "",
-  // When the block changes, update its color based on the field value.
-  onchange: function(this: Blockly.Block) {
-    // Only update if the block is in a workspace.
-    if (!this.workspace) return;
-    const state = this.getFieldValue("STATE");
-    if (state === "HIGH") {
-      this.setColour("#FFD700"); // Gold for HIGH.
-    } else {
-      this.setColour("#808080"); // Grey for LOW.
-    }
-  }
-};
-
-const rgbLedControl = {
-    type: "rgb_led_control",
-    message0: "Set RGB LED R:%1 G:%2 B:%3",
+    type: "base_delay",
+    message0: "Wait %1 ms",
     args0: [
         {
             type: "input_value",
-            name: "RED",
-            check: "Number"
-        },
-        {
-            type: "input_value",
-            name: "GREEN",
-            check: "Number"
-        },
-        {
-            type: "input_value",
-            name: "BLUE",
+            name: "DELAY_TIME",
             check: "Number"
         }
     ],
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 160,
-    tooltip: "Set RGB LED colors (values 0-255)",
+    colour: 120,
+    tooltip: "Dừng chương trình trong một khoảng thời gian (miligiây)",
+    helpUrl: "http://arduino.cc/en/Reference/delay"
+};
+
+const baseMap = {
+    type: "base_map",
+    message0: "Convert %1 to range [0-%2]",
+    args0: [
+        {
+            type: "input_value",
+            name: "NUM",
+            check: "Number"
+        },
+        {
+            type: "input_value",
+            name: "DMAX",
+            check: "Number"
+        }
+    ],
+    inputsInline: true,
+    output: null,
+    colour: 230,
+    tooltip: "Chuyển một số từ khoảng 0-1024 sang khoảng khác",
+    helpUrl: "http://arduino.cc/en/Reference/map"
+};
+
+const inoutTone = {
+    type: "inout_tone",
+    message0: "Play tone at pin %1 with frequency %2",
+    args0: [
+        {
+            type: "field_dropdown",
+            name: "PIN",
+            options: [
+                ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "input_value",
+            name: "NUM",
+            check: "Number"
+        }
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: 230,
+    tooltip: "Phát ra âm thanh tại chân được chọn với tần số xác định",
+    helpUrl: "http://www.arduino.cc/en/Reference/Tone"
+};
+
+const inoutNotone = {
+    type: "inout_notone",
+    message0: "Stop tone at pin %1",
+    args0: [
+        {
+            type: "field_dropdown",
+            name: "PIN",
+            options: [
+                ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]
+            ]
+        }
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: 230,
+    tooltip: "Tắt âm thanh phát ra tại chân được chọn",
+    helpUrl: "http://www.arduino.cc/en/Reference/NoTone"
+};
+
+const inoutHighlow = {
+    type: "inout_highlow",
+    message0: "%1",
+    args0: [
+        {
+            type: "field_dropdown",
+            name: "BOOL",
+            options: [
+                ["HIGH", "HIGH"],
+                ["LOW", "LOW"]
+            ]
+        }
+    ],
+    output: "Boolean",
+    colour: 230,
+    tooltip: "Giá trị HIGH (bật) hoặc LOW (tắt)",
+    helpUrl: "http://arduino.cc/en/Reference/Constants"
+};
+
+const servoMove = {
+    type: "servo_move",
+    message0: "Move servo %1 at pin %2 to %3°",
+    args0: [
+        {
+            type: "field_image",
+            src: "https://statics3.seeedstudio.com/images/product/EMAX%20Servo.jpg",
+            width: 64,
+            height: 64,
+            alt: "Servo"
+        },
+        {
+            type: "field_dropdown",
+            name: "PIN",
+            options: [
+                ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]
+            ]
+        },
+        {
+            type: "input_value",
+            name: "DEGREE",
+            check: "Number"
+        }
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: 190,
+    tooltip: "Điều khiển servo quay từ 0 đến 180 độ",
+    helpUrl: "http://www.arduino.cc/playground/ComponentLib/servo"
+};
+
+const servoReadDegrees = {
+    type: "servo_read_degrees",
+    message0: "Get angle of servo %1 at pin %2",
+    args0: [
+        {
+            type: "field_image",
+            src: "https://statics3.seeedstudio.com/images/product/EMAX%20Servo.jpg",
+            width: 64,
+            height: 64,
+            alt: "Servo"
+        },
+        {
+            type: "field_dropdown",
+            name: "PIN",
+            options: [
+                ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]
+            ]
+        }
+    ],
+    output: "Number",
+    colour: 190,
+    tooltip: "Đọc góc quay hiện tại của servo (góc vừa điều khiển)",
+    helpUrl: "http://www.arduino.cc/playground/ComponentLib/servo"
+};
+
+const serialPrint = {
+    type: "serial_print",
+    message0: "Print to serial: %1",
+    args0: [
+        {
+            type: "input_value",
+            name: "CONTENT",
+            check: "String"
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 230,
+    tooltip: "Gửi dữ liệu ra màn hình Serial (giống như in ra để xem)",
+    helpUrl: "http://www.arduino.cc/en/Serial/Print"
+};
+
+// Colour blocks
+
+const COLOUR_HUE = 20;
+
+const colourPicker = {
+    type: 'colour_picker',
+    message0: '%1',
+    args0: [
+        {
+            type: 'field_colour',
+            name: 'COLOUR',
+            colour: '#ff0000'
+        }
+    ],
+    output: 'Colour',
+    colour: COLOUR_HUE,
+    tooltip: 'Chọn màu bất kỳ',
+    helpUrl: ''
+};
+
+const colourRandom = {
+    type: 'colour_random',
+    message0: 'Random colour',
+    output: 'Colour',
+    colour: COLOUR_HUE,
+    tooltip: 'Tạo một màu ngẫu nhiên',
+    helpUrl: ''
+};
+
+const colourRGB = {
+    type: 'colour_rgb',
+    message0: 'Make colour with red %1 green %2 blue %3',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'RED',
+            check: 'Number'
+        },
+        {
+            type: 'input_value',
+            name: 'GREEN',
+            check: 'Number'
+        },
+        {
+            type: 'input_value',
+            name: 'BLUE',
+            check: 'Number'
+        }
+    ],
+    output: 'Colour',
+    colour: COLOUR_HUE,
+    tooltip: 'Tạo màu theo thành phần RGB (0-255)',
+    helpUrl: ''
+};
+
+const colourBlend = {
+    type: 'colour_blend',
+    message0: 'Mix colour %1 and %2 with ratio %3',
+    args0: [
+        { type: 'input_value', name: 'COLOUR1', check: 'Colour' },
+        { type: 'input_value', name: 'COLOUR2', check: 'Colour' },
+        { type: 'input_value', name: 'RATIO', check: 'Number' }
+    ],
+    output: 'Colour',
+    colour: COLOUR_HUE,
+    tooltip: 'Trộn 2 màu lại với nhau theo tỉ lệ (0.0 đến 1.0)',
+    helpUrl: ''
+};
+
+const millisBlock = {
+    type: "millis",
+    message0: "milliseconds passed",
+    output: "Number",
+    colour: 120,
+    tooltip: "Trả về số mili giây kể từ khi chương trình bắt đầu chạy",
+    helpUrl: "http://arduino.cc/en/Reference/Millis"
+};
+
+const delayMicrosecondsBlock = {
+    type: "delay_microseconds",
+    message0: "wait %1 microseconds",
+    args0: [
+        { type: "input_value", name: "DELAY_US", check: "Number" }
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: 120,
+    tooltip: "Dừng chương trình trong khoảng thời gian rất ngắn (micro giây)",
+    helpUrl: "http://arduino.cc/en/Reference/DelayMicroseconds"
+};
+
+const serialPrintln = {
+    type: "serial_println",
+    message0: "Serial println %1",
+    args0: [
+        { type: "input_value", name: "CONTENT", check: "String" }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 230,
+    tooltip: "In ra dữ liệu và xuống dòng trong màn hình Serial",
+    helpUrl: "http://www.arduino.cc/en/Serial/Println"
+};
+
+const controlsRepeatExt = {
+    type: "controls_repeat_ext",
+    message0: "repeat %1 times",
+    args0: [
+        { type: "input_value", name: "TIMES", check: "Number" }
+    ],
+    message1: "do %1",
+    args1: [
+        { type: "input_statement", name: "DO" }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 120,
+    tooltip: "Lặp lại các hành động bên trong nhiều lần",
     helpUrl: ""
 };
 
-// 2. Khối cảm biến DHT (nhiệt độ, độ ẩm)
+const controlsFor = {
+    type: "controls_for",
+    message0: "count %1 from %2 to %3 by %4",
+    args0: [
+        { type: "field_variable", name: "VAR", variable: "i" },
+        { type: "input_value", name: "FROM", check: "Number" },
+        { type: "input_value", name: "TO", check: "Number" },
+        { type: "input_value", name: "BY", check: "Number" }
+    ],
+    message1: "do %1",
+    args1: [
+        { type: "input_statement", name: "DO" }
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: 120,
+    tooltip: "Lặp lại từ số bắt đầu đến số kết thúc với bước nhảy",
+    helpUrl: ""
+};
+
+const controlsForEach = {
+    type: "controls_forEach",
+    message0: "for each %1 in list %2",
+    args0: [
+        { type: "field_variable", name: "VAR", variable: "item" },
+        { type: "input_value", name: "LIST", check: "Array" }
+    ],
+    message1: "do %1",
+    args1: [{ type: "input_statement", name: "DO" }],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 120,
+    tooltip: "Lặp qua từng phần tử trong danh sách",
+    helpUrl: ""
+};
+
+const controlsFlowStatements = {
+    type: "controls_flow_statements",
+    message0: "%1",
+    args0: [
+        {
+            type: "field_dropdown",
+            name: "FLOW",
+            options: [
+                ["stop loop", "BREAK"],
+                ["skip to next", "CONTINUE"]
+            ]
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 120,
+    tooltip: "Dừng vòng lặp hoặc chuyển sang lần lặp tiếp theo",
+    helpUrl: ""
+};
+
+const simulateLed = {
+    type: "simulate_led",
+    message0: "LED state: %1",
+    args0: [
+        {
+            type: "field_dropdown",
+            name: "STATE",
+            options: [
+                ["ON", "HIGH"],
+                ["OFF", "LOW"]
+            ]
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: "#808080",
+    tooltip: "Mô phỏng trạng thái LED (bật/tắt)",
+    helpUrl: "",
+    onchange: function(this: Blockly.Block) {
+        if (!this.workspace) return;
+        const state = this.getFieldValue("STATE");
+        this.setColour(state === "HIGH" ? "#FFD700" : "#808080");
+    }
+};
+
+const rgbLedControl = {
+    type: "rgb_led_control",
+    message0: "RGB LED R:%1 G:%2 B:%3",
+    args0: [
+        { type: "input_value", name: "RED", check: "Number" },
+        { type: "input_value", name: "GREEN", check: "Number" },
+        { type: "input_value", name: "BLUE", check: "Number" }
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: 160,
+    tooltip: "Thiết lập màu đèn LED RGB bằng giá trị R, G, B (0~255)",
+    helpUrl: ""
+};
+
 const dhtSensor = {
     type: "dht_sensor",
-    message0: "Read %1 from DHT sensor on PIN# %2",
+    message0: "get %1 from DHT on PIN %2",
     args0: [
         {
             type: "field_dropdown",
             name: "DHT_VALUE",
             options: [
-                ["Temperature (°C)", "TEMP"],
-                ["Humidity (%)", "HUM"]
+                ["temperature (°C)", "TEMP"],
+                ["humidity (%)", "HUM"]
             ]
         },
         {
             type: "field_dropdown",
             name: "PIN",
             options: [
-                ["2", "2"],
-                ["3", "3"],
-                ["4", "4"],
-                ["5", "5"],
-                ["6", "6"],
-                ["7", "7"],
-                ["8", "8"]
+                ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]
             ]
         }
     ],
     output: "Number",
     colour: 180,
-    tooltip: "Read temperature or humidity from DHT11/DHT22 sensor",
+    tooltip: "Đọc nhiệt độ hoặc độ ẩm từ cảm biến DHT11/DHT22",
     helpUrl: ""
 };
 
-// 3. Khối cảm biến siêu âm (đo khoảng cách)
 const ultrasonicSensor = {
     type: "ultrasonic_sensor",
-    message0: "Read distance (cm) from ultrasonic sensor TRIG PIN# %1 ECHO PIN# %2",
+    message0: "distance from ultrasonic (cm) TRIG: %1 ECHO: %2",
     args0: [
         {
             type: "field_dropdown",
             name: "TRIG_PIN",
             options: [
-                ["2", "2"],
-                ["3", "3"],
-                ["4", "4"],
-                ["5", "5"],
-                ["6", "6"],
-                ["7", "7"],
-                ["8", "8"]
+                ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]
             ]
         },
         {
             type: "field_dropdown",
             name: "ECHO_PIN",
             options: [
-                ["2", "2"],
-                ["3", "3"],
-                ["4", "4"],
-                ["5", "5"],
-                ["6", "6"],
-                ["7", "7"],
-                ["8", "8"]
-            ]
-        }
+                ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]
+            ]}
     ],
     output: "Number",
     colour: 180,
-    tooltip: "Measure distance using HC-SR04 ultrasonic sensor",
+    tooltip: "Đo khoảng cách bằng cảm biến siêu âm HC-SR04",
     helpUrl: ""
 };
 
 // 4. Khối điều khiển động cơ DC
 const dcMotorControl = {
     type: "dc_motor_control",
-    message0: "Set DC motor on PIN1# %1 PIN2# %2 direction %3 speed %4",
+    message0: "Set DC motor PIN1: %1 PIN2: %2 direction: %3 speed: %4",
     args0: [
-        {
-            type: "field_dropdown",
-            name: "PIN1",
-            options: [
-                ["2", "2"],
-                ["3", "3"],
-                ["4", "4"],
-                ["5", "5"],
-                ["6", "6"],
-                ["7", "7"],
-                ["8", "8"]
-            ]
-        },
-        {
-            type: "field_dropdown",
-            name: "PIN2",
-            options: [
-                ["2", "2"],
-                ["3", "3"],
-                ["4", "4"],
-                ["5", "5"],
-                ["6", "6"],
-                ["7", "7"],
-                ["8", "8"]
-            ]
-        },
-        {
-            type: "field_dropdown",
-            name: "DIRECTION",
-            options: [
-                ["Forward", "FORWARD"],
-                ["Backward", "BACKWARD"],
-                ["Stop", "STOP"]
-            ]
-        },
-        {
-            type: "input_value",
-            name: "SPEED",
-            check: "Number"
-        }
+        { type: "field_dropdown", name: "PIN1", options: [["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]] },
+        { type: "field_dropdown", name: "PIN2", options: [["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]] },
+        { type: "field_dropdown", name: "DIRECTION", options: [["Forward", "FORWARD"], ["Backward", "BACKWARD"], ["Stop", "STOP"]] },
+        { type: "input_value", name: "SPEED", check: "Number" }
     ],
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
     colour: 200,
-    tooltip: "Control DC motor direction and speed (0-255)",
+    tooltip: "Điều khiển chiều quay và tốc độ của động cơ DC (tốc độ từ 0 đến 255)",
     helpUrl: ""
 };
 
-// 5. Khối điều khiển màn hình LCD
 const lcdDisplay = {
     type: "lcd_display",
-    message0: "LCD display text %1 at row %2 column %3",
+    message0: "Show text %1 at row %2 column %3 on LCD",
     args0: [
+        { type: "input_value", name: "TEXT", check: "String" },
+        { type: "field_dropdown", name: "ROW", options: [["0", "0"], ["1", "1"]] },
         {
-            type: "input_value",
-            name: "TEXT",
-            check: "String"
-        },
-        {
-            type: "field_dropdown",
-            name: "ROW",
-            options: [
-                ["0", "0"],
-                ["1", "1"]
-            ]
-        },
-        {
-            type: "field_dropdown",
-            name: "COL",
-            options: [
-                ["0", "0"],
-                ["1", "1"],
-                ["2", "2"],
-                ["3", "3"],
-                ["4", "4"],
-                ["5", "5"],
-                ["6", "6"],
-                ["7", "7"],
-                ["8", "8"],
-                ["9", "9"],
-                ["10", "10"],
-                ["11", "11"],
-                ["12", "12"],
-                ["13", "13"],
-                ["14", "14"],
-                ["15", "15"]
+            type: "field_dropdown", name: "COL", options: [
+                ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]
             ]
         }
     ],
@@ -1019,117 +817,74 @@ const lcdDisplay = {
     previousStatement: null,
     nextStatement: null,
     colour: 160,
-    tooltip: "Display text on LCD screen at specified position",
+    tooltip: "Hiển thị chữ lên màn hình LCD tại hàng và cột đã chọn",
     helpUrl: ""
 };
 
-// 6. Khối cảm biến ánh sáng
 const lightSensor = {
     type: "light_sensor",
-    message0: "Read light level from LDR on PIN# %1",
+    message0: "Read light level from LDR at PIN %1",
     args0: [
-        {
-            type: "field_dropdown",
-            name: "PIN",
-            options: [
-                ["A0", "A0"],
-                ["A1", "A1"],
-                ["A2", "A2"],
-                ["A3", "A3"],
-                ["A4", "A4"],
-                ["A5", "A5"]
-            ]
-        }
+        { type: "field_dropdown", name: "PIN", options: [["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"], ["A4", "A4"], ["A5", "A5"]] }
     ],
     output: "Number",
     colour: 180,
-    tooltip: "Read analog value from Light Dependent Resistor (LDR)",
+    tooltip: "Đọc giá trị ánh sáng từ cảm biến quang trở (LDR)",
     helpUrl: ""
 };
 
-// 7. Khối cảm biến chuyển động PIR
 const pirMotionSensor = {
     type: "pir_motion_sensor",
-    message0: "Motion detected on PIR sensor PIN# %1",
+    message0: "PIR motion detected at PIN %1",
     args0: [
-        {
-            type: "field_dropdown",
-            name: "PIN",
-            options: [
-                ["2", "2"],
-                ["3", "3"],
-                ["4", "4"],
-                ["5", "5"],
-                ["6", "6"],
-                ["7", "7"],
-                ["8", "8"]
-            ]
-        }
+        { type: "field_dropdown", name: "PIN", options: [["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]] }
     ],
     output: "Boolean",
     colour: 180,
-    tooltip: "Detect motion using PIR sensor (returns true/false)",
+    tooltip: "Phát hiện chuyển động bằng cảm biến PIR (trả về đúng/sai)",
     helpUrl: ""
 };
 
-// 8. Khối nút nhấn với debounce
 const debouncedButton = {
     type: "debounced_button",
-    message0: "Button pressed on PIN# %1 with debounce %2 ms",
+    message0: "Button at PIN %1 pressed? (debounce %2 ms)",
     args0: [
-        {
-            type: "field_dropdown",
-            name: "PIN",
-            options: [
-                ["2", "2"],
-                ["3", "3"],
-                ["4", "4"],
-                ["5", "5"],
-                ["6", "6"],
-                ["7", "7"],
-                ["8", "8"]
-            ]
-        },
-        {
-            type: "input_value",
-            name: "DEBOUNCE_TIME",
-            check: "Number"
-        }
+        { type: "field_dropdown", name: "PIN", options: [["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
+                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
+                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
+                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
+                ["A4", "A4"], ["A5", "A5"]] },
+        { type: "input_value", name: "DEBOUNCE_TIME", check: "Number" }
     ],
     output: "Boolean",
     colour: 180,
-    tooltip: "Read button state with debounce to prevent false triggers",
+    tooltip: "Đọc trạng thái nút nhấn với thời gian chống nhiễu (debounce)",
     helpUrl: ""
 };
 
-// 9. Khối điều khiển stepper motor
 const stepperMotorControl = {
     type: "stepper_motor_control",
-    message0: "Move stepper motor steps %1 speed %2",
+    message0: "Move stepper motor %1 steps at speed %2",
     args0: [
-        {
-            type: "input_value",
-            name: "STEPS",
-            check: "Number"
-        },
-        {
-            type: "input_value",
-            name: "SPEED",
-            check: "Number"
-        }
+        { type: "input_value", name: "STEPS", check: "Number" },
+        { type: "input_value", name: "SPEED", check: "Number" }
     ],
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
     colour: 200,
-    tooltip: "Control stepper motor movement (positive:clockwise, negative:counterclockwise)",
+    tooltip: "Điều khiển motor bước (dương: quay phải, âm: quay trái)",
     helpUrl: ""
 };
 
 // 10. Khối thiết lập Serial
 const serialBegin = {
     type: "serial_begin",
-    message0: "Begin Serial communication at baud rate %1",
+    message0: "Start Serial at %1 baud",
     args0: [
         {
             type: "field_dropdown",
@@ -1147,117 +902,76 @@ const serialBegin = {
     previousStatement: null,
     nextStatement: null,
     colour: 230,
-    tooltip: "Initialize Serial communication with specified baud rate",
+    tooltip: "Bắt đầu giao tiếp Serial với tốc độ baud đã chọn",
     helpUrl: "http://arduino.cc/en/Serial/Begin"
 };
 
-// 11. Khối hàm ánh xạ map() mở rộng
 const mapExtended = {
     type: "map_extended",
-    message0: "Map value %1 from range [%2 - %3] to range [%4 - %5]",
+    message0: "Map %1 from [%2 - %3] to [%4 - %5]",
     args0: [
-        {
-            type: "input_value",
-            name: "VALUE",
-            check: "Number"
-        },
-        {
-            type: "input_value",
-            name: "FROM_LOW",
-            check: "Number"
-        },
-        {
-            type: "input_value",
-            name: "FROM_HIGH",
-            check: "Number"
-        },
-        {
-            type: "input_value",
-            name: "TO_LOW",
-            check: "Number"
-        },
-        {
-            type: "input_value",
-            name: "TO_HIGH",
-            check: "Number"
-        }
+        { type: "input_value", name: "VALUE", check: "Number" },
+        { type: "input_value", name: "FROM_LOW", check: "Number" },
+        { type: "input_value", name: "FROM_HIGH", check: "Number" },
+        { type: "input_value", name: "TO_LOW", check: "Number" },
+        { type: "input_value", name: "TO_HIGH", check: "Number" }
     ],
     inputsInline: true,
     output: "Number",
     colour: 230,
-    tooltip: "Re-map a number from one range to another",
+    tooltip: "Chuyển đổi giá trị từ khoảng này sang khoảng khác (hàm map)",
     helpUrl: "http://arduino.cc/en/Reference/Map"
 };
 
-// 12. Khối chờ đến khi điều kiện thỏa mãn
 const waitUntil = {
     type: "wait_until",
-    message0: "Wait until %1",
+    message0: "Wait until %1 is true",
     args0: [
-        {
-            type: "input_value",
-            name: "CONDITION",
-            check: "Boolean"
-        }
+        { type: "input_value", name: "CONDITION", check: "Boolean" }
     ],
     previousStatement: null,
     nextStatement: null,
     colour: 120,
-    tooltip: "Wait until a condition becomes true",
+    tooltip: "Dừng lại và đợi cho đến khi điều kiện đúng",
     helpUrl: ""
 };
 
 const setup = {
     type: "setup",
-    message0: "Setup",
+    message0: "When program starts",
     message1: "%1",
     args1: [
-        {
-            type: "input_statement",
-            name: "SETUP_CODE"
-        }
+        { type: "input_statement", name: "SETUP_CODE" }
     ],
     colour: 230,
-    tooltip: "Code to run once at the start",
+    tooltip: "Chạy một lần duy nhất khi bắt đầu chương trình",
     helpUrl: ""
 };
 
 const loop = {
     type: "loop",
-    message0: "Loop",
+    message0: "Repeat forever",
     message1: "%1",
     args1: [
-        {
-            type: "input_statement",
-            name: "LOOP_CODE"
-        }
+        { type: "input_statement", name: "LOOP_CODE" }
     ],
     colour: 230,
-    tooltip: "Code to run repeatedly",
+    tooltip: "Lặp lại mã này liên tục",
     helpUrl: ""
 };
 
-// Block: Servo rotate to angle
 const servoRotate = {
-    type: 'servo_rotate',
-    message0: 'Rotate servo %1 to angle %2',
+    type: "servo_rotate",
+    message0: "Rotate servo at PIN %1 to angle %2",
     args0: [
-        {
-            type: 'input_value',
-            name: 'SERVO_PIN',
-            check: 'Number',
-        },
-        {
-            type: 'input_value',
-            name: 'ANGLE',
-            check: 'Number',
-        },
+        { type: "input_value", name: "SERVO_PIN", check: "Number" },
+        { type: "input_value", name: "ANGLE", check: "Number" }
     ],
     previousStatement: null,
     nextStatement: null,
     colour: 120,
-    tooltip: 'Xoay servo đến một góc nhất định từ 0 đến 180 độ',
-    helpUrl: '',
+    tooltip: "Xoay servo đến góc chỉ định (từ 0 đến 180 độ)",
+    helpUrl: ""
 };
 
 // Block: Servo setup

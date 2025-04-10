@@ -166,7 +166,7 @@ export const toolbox = {
               { kind: 'block', type: 'wait_until' },
             ],
           },
-          
+
         {
             kind: 'category',
             name: 'Math',
@@ -757,6 +757,24 @@ export const toolbox = {
                 },
                 {
                     kind: 'block',
+                    type: 'servo_rotate_variable',
+                    inputs: {
+                        SERVO_PIN: {
+                            shadow: {
+                                type: 'math_number',
+                                fields: { NUM: 9 }
+                            }
+                        },
+                        ANGLE: {
+                            shadow: {
+                                type: 'math_number',
+                                fields: { NUM: 90 }
+                            }
+                        }
+                    }
+                },
+                {
+                    kind: 'block',
                     type: 'servo_continuous',
                     inputs: {
                         SERVO_PIN: {
@@ -789,5 +807,5 @@ export const toolbox = {
         }
 
     ],
-    
+
 }
