@@ -2,7 +2,7 @@ import { Order } from 'blockly/javascript';
 import * as Blockly from 'blockly/core';
 
 export const forBlock = Object.create(null);
-
+const C = new Blockly.Generator('C');
 const simulateLED = (state: string) => {
     const ledElement = document.getElementById('simulated-led');
     if (ledElement) {
@@ -394,46 +394,54 @@ forBlock['controls_whileUntil'] = function (
                '}\n';
   return code;
 };
-
-// Generator for controls_for.
-forBlock['controls_for'] = function (
+forBlock['variable_declare'] = function(
     block: Blockly.Block,
-    generator: any,
-) {
-    // Lấy tên biến từ khối
-    const variable = generator.nameDB_ ? generator.nameDB_.getName(
-        block.getFieldValue('VAR'), Blockly.VARIABLE_CATEGORY_NAME) : block.getFieldValue('VAR');
+    generator: Blockly.CodeGenerator) {
+    const variable = generator.nameDB_
+        ? generator.nameDB_.getName(block.getFieldValue('VAR'), Blockly.VARIABLE_CATEGORY_NAME)
+        : block.getFieldValue('VAR');
+
+    // Khai báo biến int trong C
+    return `int ${variable};\n`;
+};
+// Generator for controls_for.
+forBlock['controls_for'] = function (block, generator) {
+    const varName = generator.valueToCode(block, 'INT', generator.ORDER_NONE) || 'i';
     const from = generator.valueToCode(block, 'FROM', generator.ORDER_NONE) || '0';
     const to = generator.valueToCode(block, 'TO', generator.ORDER_NONE) || '0';
     const by = generator.valueToCode(block, 'BY', generator.ORDER_NONE) || '1';
     const branch = generator.statementToCode(block, 'DO');
 
-    // Bỏ từ khóa "int" để không khai báo lại biến, chỉ sử dụng biến đã có
-    const code = 'for (' + variable + ' = ' + from + '; ' +
-        variable + ' <= ' + to + '; ' +
-        variable + ' += ' + by + ') {\n' +
-        branch +
-        '}\n';
-    return code;
+    const loop = `for (${varName} = ${from}; ${varName} <= ${to}; ${varName} += ${by}) {\n${branch}}\n`;
+    return loop;
 };
 
-// Generator for controls_forEach.
-// For simulation, assume the list is an array and its length is given by list_length.
-forBlock['controls_forEach'] = function (
-  block: Blockly.Block,
-  generator: Blockly.CodeGenerator,
+forBlock['variable_declare'] = function (
+    block: Blockly.Block,
+    generator: Blockly.CodeGenerator,
 ) {
-  const variable = generator.nameDB_ ? generator.nameDB_.getName(
-    block.getFieldValue('VAR'), Blockly.VARIABLE_CATEGORY_NAME) : block.getFieldValue('VAR');
-  const list = generator.valueToCode(block, 'LIST', Order.NONE) || 'array';
-  const branch = generator.statementToCode(block, 'DO');
-  const code = 'for (int i = 0; i < ' + list + '_length; i++) {\n' +
-               variable + ' = ' + list + '[i];\n' +
-               branch +
-               '}\n';
-  return code;
-};
+    const variable = generator.nameDB_
+        ? generator.nameDB_.getName(block.getFieldValue('VAR'), Blockly.VARIABLE_CATEGORY_NAME)
+        : block.getFieldValue('VAR');
 
+    // Khai báo biến int trong C
+    return `int ${variable};\n`;
+};
+forBlock['controls_for'] = function (
+    block: Blockly.Block,
+    generator: Blockly.CodeGenerator,
+) {
+    // Lấy biến từ khối đầu vào
+    const variableCode = generator.valueToCode(block, 'VAR', 0); // 0 tương đương với ORDER_ATOMIC
+
+    const from = generator.valueToCode(block, 'FROM', 0); // 0 thay cho ORDER_NONE
+    const to = generator.valueToCode(block, 'TO', 0);
+    const by = generator.valueToCode(block, 'BY', 0);
+    const branch = generator.statementToCode(block, 'DO');
+
+    // Sử dụng biến trong vòng lặp
+    return `for (${variableCode} = ${from}; ${variableCode} <= ${to}; ${variableCode} += ${by}) {\n${branch}}\n`;
+};
 // Generator for controls_flow_statements.
 forBlock['controls_flow_statements'] = function (
   block: Blockly.Block,
@@ -813,16 +821,6 @@ forBlock['loop'] = function (
     return `void loop() {\n${loopCode}}\n`;
 };
 
-forBlock['servo_rotate'] = function (
-    block: Blockly.Block,
-    generator: Blockly.CodeGenerator,
-) {
-    const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
-    const angle = generator.valueToCode(block, 'ANGLE', Order.ATOMIC) || '90';
-
-    return `servo${pin}.write(${angle});\ndelay(15);\n`;
-};
-
 forBlock['servo_continuous'] = function (
     block: Blockly.Block,
     generator: Blockly.CodeGenerator,
@@ -839,7 +837,7 @@ forBlock['servo_stop'] = function (
 ) {
     const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
 
-    return `servo${pin}.write(90);\ndelay(15);\n`;
+    return `servo${pin}.write(90);\n`;
 };
 
 forBlock['servo_setup'] = function (
@@ -873,7 +871,7 @@ forBlock['servo_rotate'] = function (
     const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
     const angle = generator.valueToCode(block, 'ANGLE', Order.ATOMIC) || '90';
 
-    return `servo${pin}.write(${angle});\ndelay(15);\n`;
+    return `servo${pin}.write(${angle});\n`;
 };
 
 forBlock['servo_continuous'] = function (
@@ -954,19 +952,101 @@ forBlock['code_text'] = function(
 // Generator functions cho custom code block
 forBlock['custom_code_block'] = function(
     block: Blockly.Block,
-    generator: any,
+    generator: any
 ) {
-    const codeValue = generator.valueToCode(block, 'CODE', generator.ORDER_NONE) ||
-        "// Không có mã được cung cấp";
-    return codeValue + '\n';
+    const code = block.getFieldValue('CODE_TEXT') || '';
+    return code + '\n';
 };
 
+
 // Generator functions cho custom function block
-forBlock['custom_function_block'] = function(
-    block: Blockly.Block,
-    generator: any,
-) {
-    const functionCode = generator.valueToCode(block, 'FUNCTION_CODE', generator.ORDER_NONE) ||
-        "void emptyFunction() {}\n";
-    return functionCode + '\n';
+forBlock['custom_function_block'] = function(block, generator) {
+    const functionBody =
+        generator.valueToCode(block, 'FUNCTION_CODE', generator.ORDER_NONE) || '';
+
+    const code =
+        `void customFunction() {
+${functionBody}
+}\n`;
+
+    return code;
+};
+
+//Variables
+forBlock['declare_int_variable'] = function(block: Blockly.Block, generator: any) {
+    const varName = block.getFieldValue('VAR_NAME');
+    const value = generator.valueToCode(block, 'VALUE', generator.ORDER_ATOMIC) || '0';
+    // Ensure we generate the "int" type in the declaration
+    return 'int ' + varName + ' = ' + value*10 + ';\n';
+};
+forBlock['declare_string_variable'] = function(block: Blockly.Block,
+                                               generator: any,) {
+    const varName = block.getFieldValue('VAR_NAME');
+    const value = generator.valueToCode(block, 'VALUE', generator.ORDER_ATOMIC) || '""';
+    // C string declaration
+    return `char ${varName}[100] = ${value};\n`;
+};
+
+forBlock['declare_float_variable'] = function(block: Blockly.Block,
+                                              generator: any,) {
+    const varName = block.getFieldValue('VAR_NAME');
+    const value = generator.valueToCode(block, 'VALUE', generator.ORDER_ATOMIC) || '0.0';
+    // C float declaration
+    return `float ${varName} = ${value};\n`;
+};
+
+forBlock['assign_variable'] = function(block: Blockly.Block,
+                                       generator: any,) {
+    const varName = block.getFieldValue('VAR_NAME');
+    const value = generator.valueToCode(block, 'VALUE', generator.ORDER_ATOMIC) || '0';
+    // C assignment
+    return `${varName} = ${value};\n`;
+};
+
+forBlock['print_variable'] = function(block: Blockly.Block,
+                                      generator: any,) {
+    const varName = block.getFieldValue('VAR_NAME');
+    // Include stdio.h if not already included
+    let code = "";
+    // C printf function
+    return `printf("%d\\n", ${varName});\n`;
+};
+
+forBlock['variable_value'] = function(block: Blockly.Block,
+                                      generator: any,) {
+    const varName = block.getFieldValue('VAR_NAME');
+    // Return variable name for expressions
+    return [varName, generator.ORDER_ATOMIC];
+};
+
+forBlock['declare_constant'] = function(block: Blockly.Block,
+                                        generator: any,) {
+    const constName = block.getFieldValue('CONST_NAME');
+    const value = generator.valueToCode(block, 'VALUE', generator.ORDER_ATOMIC) || '0';
+    // C macro for constant
+    return `#define ${constName} ${value}\n`;
+};
+
+forBlock['increment_variable'] = function(block: Blockly.Block,
+                                          generator: any,) {
+    const varName = block.getFieldValue('VAR_NAME');
+    const value = generator.valueToCode(block, 'VALUE', generator.ORDER_ATOMIC) || '1';
+    // C increment syntax
+    return `${varName} += ${value};\n`;
+};
+
+forBlock['declare_array'] = function(block: Blockly.Block,
+                                     generator: any,) {
+    const varName = block.getFieldValue('VAR_NAME');
+    const size = generator.valueToCode(block, 'SIZE', generator.ORDER_ATOMIC) || '10';
+    // C array declaration
+    return `int ${varName}[${size}];\n`;
+};
+
+forBlock['print_format'] = function(block: Blockly.Block,
+                                    generator: any,) {
+    const format = block.getFieldValue('FORMAT');
+    const varName = block.getFieldValue('VAR_NAME');
+    // C printf with specific format
+    return `printf("${format}\\n", ${varName});\n`;
 };

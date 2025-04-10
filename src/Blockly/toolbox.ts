@@ -213,28 +213,9 @@ export const toolbox = {
                 { kind: 'block', type: 'controls_whileUntil' },
                 {
                     kind: 'block',
-                    type: 'controls_for',
-                    inputs: {
-                        FROM: {
-                            shadow: {
-                                type: 'math_number',
-                                fields: { NUM: 1 },
-                            },
-                        },
-                        TO: {
-                            shadow: {
-                                type: 'math_number',
-                                fields: { NUM: 10 },
-                            },
-                        },
-                        BY: {
-                            shadow: {
-                                type: 'math_number',
-                                fields: { NUM: 1 },
-                            },
-                        },
-                    },
+                    type: 'controls_for'
                 },
+                { kind: 'block', type: 'variable_declare' },
                 { kind: 'block', type: 'controls_forEach' },
                 { kind: 'block', type: 'controls_flow_statements' },
             ],
@@ -623,7 +604,16 @@ export const toolbox = {
             kind: 'category',
             name: 'Variables',
             categorystyle: 'variable_category',
-            custom: 'VARIABLE',
+            contents: [
+                { kind: 'block', type: 'declare_int_variable' },
+                { kind: 'block', type: 'declare_string_variable' },
+                { kind: 'block', type: 'declare_float_variable' },
+                { kind: 'block', type: 'assign_variable' },
+                { kind: 'block', type: 'print_variable' },
+                { kind: 'block', type: 'variable_value' },
+                { kind: 'block', type: 'declare_constant' },
+                { kind: 'block', type: 'increment_variable' },
+            ]
         },
 
         {

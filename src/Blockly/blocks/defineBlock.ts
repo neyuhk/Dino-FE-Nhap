@@ -34,6 +34,227 @@ const logText = {
     helpUrl: '',
 };
 
+// 1. Integer Variable Declaration Block
+const declareIntBlock = {
+    type: "declare_int_variable",
+    message0: "Int %1 = %2",
+    args0: [
+        {
+            type: "field_input",
+            name: "VAR_NAME",
+            text: "myNumber"
+        },
+        {
+            type: "input_value",
+            name: "VALUE",
+            check: "Number"
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#5CA699',
+    tooltip: "Khai báo một biến số nguyên với giá trị ban đầu",
+    helpUrl: ""
+};
+
+// 2. String Variable Declaration Block
+const declareStringBlock = {
+    type: "declare_string_variable",
+    message0: "Declare string %1 = %2",
+    args0: [
+        {
+            type: "field_input",
+            name: "VAR_NAME",
+            text: "myText"
+        },
+        {
+            type: "input_value",
+            name: "VALUE",
+            check: "String"
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#5CA699',
+    tooltip: "Khai báo một biến chuỗi với giá trị ban đầu",
+    helpUrl: ""
+};
+
+// 3. Float Variable Declaration Block
+const declareFloatBlock = {
+    type: "declare_float_variable",
+    message0: "Declare decimal %1 = %2",
+    args0: [
+        {
+            type: "field_input",
+            name: "VAR_NAME",
+            text: "myDecimal"
+        },
+        {
+            type: "input_value",
+            name: "VALUE",
+            check: "Number"
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#5CA699',
+    tooltip: "Khai báo một biến số thập phân với giá trị ban đầu",
+    helpUrl: ""
+};
+
+// 4. Variable Assignment Block
+const assignVariableBlock = {
+    type: "assign_variable",
+    message0: "Set %1 = %2",
+    args0: [
+        {
+            type: "field_input",
+            name: "VAR_NAME",
+            text: "myVar"
+        },
+        {
+            type: "input_value",
+            name: "VALUE"
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#5C81A6',
+    tooltip: "Gán giá trị mới cho biến đã tồn tại",
+    helpUrl: ""
+};
+
+// 5. Print Variable Block
+const printVariableBlock = {
+    type: "print_variable",
+    message0: "Print variable %1",
+    args0: [
+        {
+            type: "field_input",
+            name: "VAR_NAME",
+            text: "myVar"
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#A65C81',
+    tooltip: "In giá trị của biến ra màn hình",
+    helpUrl: ""
+};
+
+// 6. Variable Value Block (to be used in expressions)
+const variableValueBlock = {
+    type: "variable_value",
+    message0: "%1",
+    args0: [
+        {
+            type: "field_input",
+            name: "VAR_NAME",
+            text: "myVar"
+        }
+    ],
+    output: null,
+    colour: '#A68E5C',
+    tooltip: "Lấy giá trị của biến để sử dụng trong biểu thức",
+    helpUrl: ""
+};
+
+// 7. Constant Declaration Block
+const declareConstantBlock = {
+    type: "declare_constant",
+    message0: "Define constant %1 = %2",
+    args0: [
+        {
+            type: "field_input",
+            name: "CONST_NAME",
+            text: "MAX_SIZE"
+        },
+        {
+            type: "input_value",
+            name: "VALUE"
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#A6735C',
+    tooltip: "Khai báo một hằng số với giá trị không thể thay đổi",
+    helpUrl: ""
+};
+
+// 8. Increment Variable Block
+const incrementVariableBlock = {
+    type: "increment_variable",
+    message0: "Increase %1 by %2",
+    args0: [
+        {
+            type: "field_input",
+            name: "VAR_NAME",
+            text: "counter"
+        },
+        {
+            type: "input_value",
+            name: "VALUE",
+            check: "Number"
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#5C81A6',
+    tooltip: "Tăng giá trị của biến lên một lượng nhất định",
+    helpUrl: ""
+};
+
+// 9. Array Declaration Block
+const declareArrayBlock = {
+    type: "declare_array",
+    message0: "Declare array %1 with size %2",
+    args0: [
+        {
+            type: "field_input",
+            name: "VAR_NAME",
+            text: "myArray"
+        },
+        {
+            type: "input_value",
+            name: "SIZE",
+            check: "Number"
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#5CA699',
+    tooltip: "Khai báo một mảng với kích thước xác định",
+    helpUrl: ""
+};
+
+// 10. Printf with Format Block
+const printFormatBlock = {
+    type: "print_format",
+    message0: "Print with format: %1 variable: %2",
+    args0: [
+        {
+            type: "field_dropdown",
+            name: "FORMAT",
+            options: [
+                ["%d (integer)", "%d"],
+                ["%f (decimal)", "%f"],
+                ["%s (string)", "%s"],
+                ["%c (character)", "%c"]
+            ]
+        },
+        {
+            type: "field_input",
+            name: "VAR_NAME",
+            text: "myVar"
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#A65C81',
+    tooltip: "In giá trị của biến với định dạng cụ thể",
+    helpUrl: ""
+};
 const printResultBlock = {
     type: 'print_result',
     message0: 'In ra %1',
@@ -609,12 +830,32 @@ const controlsRepeatExt = {
     tooltip: "Lặp lại các hành động bên trong nhiều lần",
     helpUrl: ""
 };
-
+const variableBlock = {
+    type: "variable_declare",
+    message0: "Khai báo biến %1 kiểu int",
+    args0: [
+        {
+            type: "field_variable",
+            name: "VAR",
+            variable: "i"
+        }
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: 330,
+    tooltip: "Khai báo một biến kiểu int để sử dụng trong chương trình C",
+    helpUrl: ""
+};
 const controlsFor = {
     type: "controls_for",
-    message0: "count %1 from %2 to %3 by %4",
+    message0: "count with %1 from %2 to %3 by %4",
     args0: [
-        { type: "field_variable", name: "VAR", variable: "i" },
+        {
+            type: "input_value",
+            name: "VAR",
+            check: "Variable"  // Kiểm tra đầu vào là một biến
+        },
         { type: "input_value", name: "FROM", check: "Number" },
         { type: "input_value", name: "TO", check: "Number" },
         { type: "input_value", name: "BY", check: "Number" }
@@ -1378,7 +1619,7 @@ const functionDefinition = {
 };
 const codeTextBlock = {
     type: "code_text",
-    message0: "Code C %1",
+    message0: "Code C: %1",
     args0: [
         {
             type: "field_input",
@@ -1386,7 +1627,7 @@ const codeTextBlock = {
             text: "// Viết mã C ở đây"
         }
     ],
-    output: "String",
+    output: "String", // <-- Rất quan trọng!
     colour: 65,
     tooltip: "Nhập mã C tùy chỉnh vào đây",
     helpUrl: ""
@@ -1395,12 +1636,12 @@ const codeTextBlock = {
 // Định nghĩa khối custom code nhận khối text code
 const customCodeBlock = {
     type: "custom_code_block",
-    message0: "Custom Code %1",
+    message0: "Custom Code: %1",
     args0: [
         {
-            type: "input_value",
-            name: "CODE",
-            check: "String"
+            type: "field_input",
+            name: "CODE_TEXT",
+            text: "// Viết mã C ở đây"
         }
     ],
     previousStatement: null,
@@ -1409,6 +1650,7 @@ const customCodeBlock = {
     tooltip: "Thêm mã C tùy chỉnh vào chương trình chính",
     helpUrl: ""
 };
+
 
 // Định nghĩa khối custom function nhận khối text code
 const customFunctionBlock = {
@@ -1454,6 +1696,14 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     loop,
   addText,
   logText,
+    declareIntBlock,
+    declareStringBlock,
+    declareFloatBlock,
+    assignVariableBlock,
+    printVariableBlock,
+    variableValueBlock,
+    declareConstantBlock,
+    incrementVariableBlock,
     printResultBlock,
   inoutDigitalWrite,
   inoutDigitalRead,
@@ -1486,6 +1736,7 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   // controlsRepeat,
   controlsRepeatExt,
   // controlsWhileUntil,
+    variableBlock,
   controlsFor,
   controlsForEach,
   controlsFlowStatements,
