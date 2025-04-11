@@ -1133,3 +1133,337 @@ forBlock['lcd_print_custom_char'] = function(block, generator) {
     const pos = block.getFieldValue('POS');
     return `lcd.write(byte(${pos}));\n`;
 };
+
+//button block
+// Button Press and Hold Block
+forBlock['button_press_hold'] = function(
+    block,
+    generator
+) {
+    const pin = generator.valueToCode(block, 'PIN', 0) || '2';
+    const doCode = generator.statementToCode(block, 'DO');
+
+    // Add setup code using provideFunction_
+    generator.provideFunction_(
+        `button_${pin}_setup`,
+        `void button_${pin}_setup() {
+  pinMode(${pin}, INPUT_PULLUP);
+}
+`
+    );
+
+    return `if (digitalRead(${pin}) == LOW) {\n${doCode}}\n`;
+};
+
+// Toggle Button Block
+forBlock['button_toggle'] = function(
+    block,
+    generator
+) {
+    const pin = generator.valueToCode(block, 'PIN', 0) || '2';
+    const onAction = generator.statementToCode(block, 'ON_ACTION');
+    const offAction = generator.statementToCode(block, 'OFF_ACTION');
+
+    // Reserve variable names
+    generator.addReservedWords(`buttonState_${pin}`);
+    generator.addReservedWords(`lastButtonState_${pin}`);
+    generator.addReservedWords(`toggleState_${pin}`);
+
+    // Define variables
+    generator.provideFunction_(
+        `toggle_button_${pin}_vars`,
+        `// Toggle button variables for pin ${pin}
+bool buttonState_${pin} = HIGH;
+bool lastButtonState_${pin} = HIGH;
+bool toggleState_${pin} = false;
+`
+    );
+
+    // Add setup code
+    generator.provideFunction_(
+        `toggle_button_${pin}_setup`,
+        `void toggle_button_${pin}_setup() {
+  pinMode(${pin}, INPUT_PULLUP);
+}
+`
+    );
+
+    return `
+  // Read the current button state
+  buttonState_${pin} = digitalRead(${pin});
+  
+  // Check if button was just pressed (transition from HIGH to LOW)
+  if (buttonState_${pin} == LOW && lastButtonState_${pin} == HIGH) {
+    toggleState_${pin} = !toggleState_${pin};
+    delay(50); // Simple debounce
+  }
+  
+  // Save current button state for next comparison
+  lastButtonState_${pin} = buttonState_${pin};
+  
+  // Execute the appropriate action based on toggle state
+  if (toggleState_${pin}) {
+    ${onAction}
+  } else {
+    ${offAction}
+  }
+  `;
+};
+
+// Long Press Button Block
+forBlock['button_long_press'] = function(
+    block,
+    generator
+) {
+    const pin = generator.valueToCode(block, 'PIN', 0) || '2';
+    const time = generator.valueToCode(block, 'TIME', 0) || '1000';
+    const shortPressCode = generator.statementToCode(block, 'SHORT_PRESS');
+    const longPressCode = generator.statementToCode(block, 'LONG_PRESS');
+
+    // Reserve variable names
+    generator.addReservedWords(`buttonPressed_${pin}`);
+    generator.addReservedWords(`longPressDetected_${pin}`);
+    generator.addReservedWords(`buttonPressTime_${pin}`);
+
+    // Define variables
+    generator.provideFunction_(
+        `long_press_button_${pin}_vars`,
+        `// Long press button variables for pin ${pin}
+bool buttonPressed_${pin} = false;
+bool longPressDetected_${pin} = false;
+unsigned long buttonPressTime_${pin} = 0;
+`
+    );
+
+    // Add setup code
+    generator.provideFunction_(
+        `long_press_button_${pin}_setup`,
+        `void long_press_button_${pin}_setup() {
+  pinMode(${pin}, INPUT_PULLUP);
+}
+`
+    );
+
+    return `
+  // Check if button is currently pressed
+  if (digitalRead(${pin}) == LOW) {
+    // Button is pressed
+    if (!buttonPressed_${pin}) {
+      // Button was just pressed
+      buttonPressed_${pin} = true;
+      buttonPressTime_${pin} = millis();
+      longPressDetected_${pin} = false;
+    } else {
+      // Check for long press
+      if (!longPressDetected_${pin} && (millis() - buttonPressTime_${pin} > ${time})) {
+        // Long press detected
+        longPressDetected_${pin} = true;
+        ${longPressCode}
+      }
+    }
+  } else {
+    // Button is released
+    if (buttonPressed_${pin}) {
+      // Button was just released
+      buttonPressed_${pin} = false;
+      if (!longPressDetected_${pin}) {
+        // Short press detected
+        ${shortPressCode}
+      }
+    }
+  }
+  `;
+};
+
+// Multi-Press Button Block
+forBlock['button_multi_press'] = function(
+    block,
+    generator
+) {
+    const pin = generator.valueToCode(block, 'PIN', 0) || '2';
+    const timeout = generator.valueToCode(block, 'TIMEOUT', 0) || '800';
+    const press1Code = generator.statementToCode(block, 'PRESS1');
+    const press2Code = generator.statementToCode(block, 'PRESS2');
+    const press3Code = generator.statementToCode(block, 'PRESS3');
+
+    // Reserve variable names
+    generator.addReservedWords(`buttonState_${pin}`);
+    generator.addReservedWords(`lastButtonState_${pin}`);
+    generator.addReservedWords(`pressCount_${pin}`);
+    generator.addReservedWords(`lastPressTime_${pin}`);
+
+    // Define variables
+    generator.provideFunction_(
+        `multi_press_button_${pin}_vars`,
+        `// Multi press button variables for pin ${pin}
+bool buttonState_${pin} = HIGH;
+bool lastButtonState_${pin} = HIGH;
+byte pressCount_${pin} = 0;
+unsigned long lastPressTime_${pin} = 0;
+`
+    );
+
+    // Add setup code
+    generator.provideFunction_(
+        `multi_press_button_${pin}_setup`,
+        `void multi_press_button_${pin}_setup() {
+  pinMode(${pin}, INPUT_PULLUP);
+}
+`
+    );
+
+    return `
+  // Read button state
+  buttonState_${pin} = digitalRead(${pin});
+  
+  // Check for button press (transition from HIGH to LOW)
+  if (buttonState_${pin} == LOW && lastButtonState_${pin} == HIGH) {
+    pressCount_${pin}++;
+    lastPressTime_${pin} = millis();
+    delay(50); // Simple debounce
+  }
+  
+  // Check if it's time to process multiple presses
+  if (pressCount_${pin} > 0 && (millis() - lastPressTime_${pin} > ${timeout})) {
+    // Execute action based on press count
+    if (pressCount_${pin} == 1) {
+      ${press1Code}
+    } else if (pressCount_${pin} == 2) {
+      ${press2Code}
+    } else if (pressCount_${pin} >= 3) {
+      ${press3Code}
+    }
+    // Reset press counter
+    pressCount_${pin} = 0;
+  }
+  
+  // Save current button state
+  lastButtonState_${pin} = buttonState_${pin};
+  `;
+};
+
+// Directional Control Buttons Block
+forBlock['button_directional'] = function(
+    block,
+    generator
+) {
+    const upPin = generator.valueToCode(block, 'UP_PIN', 0) || '2';
+    const downPin = generator.valueToCode(block, 'DOWN_PIN', 0) || '3';
+    const leftPin = generator.valueToCode(block, 'LEFT_PIN', 0) || '4';
+    const rightPin = generator.valueToCode(block, 'RIGHT_PIN', 0) || '5';
+    const actionsCode = generator.statementToCode(block, 'ACTIONS');
+
+    // Reserve variable name
+    generator.addReservedWords('direction');
+
+    // Define variables
+    generator.provideFunction_(
+        'direction_variable',
+        `// Direction variable for directional control
+char direction = 0; // 0=none, U=up, D=down, L=left, R=right
+`
+    );
+
+    // Add setup code
+    generator.provideFunction_(
+        'directional_buttons_setup',
+        `void directional_buttons_setup() {
+  pinMode(${upPin}, INPUT_PULLUP);
+  pinMode(${downPin}, INPUT_PULLUP);
+  pinMode(${leftPin}, INPUT_PULLUP);
+  pinMode(${rightPin}, INPUT_PULLUP);
+}
+`
+    );
+
+    return `
+  // Check each button
+  if (digitalRead(${upPin}) == LOW) {
+    direction = 'U';
+  } else if (digitalRead(${downPin}) == LOW) {
+    direction = 'D';
+  } else if (digitalRead(${leftPin}) == LOW) {
+    direction = 'L';
+  } else if (digitalRead(${rightPin}) == LOW) {
+    direction = 'R';
+  } else {
+    direction = 0;
+  }
+  
+  // Execute actions with current direction
+  if (direction != 0) {
+    ${actionsCode}
+    delay(50); // Simple debounce
+  }
+  `;
+};
+
+// LCD/OLED Menu Navigation Block
+forBlock['button_lcd_menu'] = function(
+    block,
+    generator
+) {
+    const pages = generator.valueToCode(block, 'PAGES', 0) || '3';
+    const nextPin = generator.valueToCode(block, 'NEXT_PIN', 0) || '2';
+    const selectPin = generator.valueToCode(block, 'SELECT_PIN', 0) || '3';
+    const pageChangeCode = generator.statementToCode(block, 'PAGE_CHANGE');
+    const selectionCode = generator.statementToCode(block, 'SELECTION');
+
+    // Reserve variable names
+    generator.addReservedWords('currentPage');
+    generator.addReservedWords('totalPages');
+    generator.addReservedWords('nextPressed');
+    generator.addReservedWords('selectPressed');
+    generator.addReservedWords('nextLastState');
+    generator.addReservedWords('selectLastState');
+
+    // Define variables
+    generator.provideFunction_(
+        'lcd_menu_variables',
+        `// LCD menu variables
+int currentPage = 0;
+int totalPages = ${pages};
+bool nextPressed = false;
+bool selectPressed = false;
+bool nextLastState = HIGH;
+bool selectLastState = HIGH;
+`
+    );
+
+    // Add setup code
+    generator.provideFunction_(
+        'lcd_menu_setup',
+        `void lcd_menu_setup() {
+  pinMode(${nextPin}, INPUT_PULLUP);
+  pinMode(${selectPin}, INPUT_PULLUP);
+}
+`
+    );
+
+    return `
+  // Check next button for page navigation
+  bool nextState = digitalRead(${nextPin});
+  if (nextState == LOW && nextLastState == HIGH) {
+    // Next button pressed
+    nextPressed = true;
+    currentPage = (currentPage + 1) % totalPages;
+    ${pageChangeCode}
+    delay(50); // Simple debounce
+  } else {
+    nextPressed = false;
+  }
+  nextLastState = nextState;
+  
+  // Check select button
+  bool selectState = digitalRead(${selectPin});
+  if (selectState == LOW && selectLastState == HIGH) {
+    // Select button pressed
+    selectPressed = true;
+    ${selectionCode}
+    delay(50); // Simple debounce
+  } else {
+    selectPressed = false;
+  }
+  selectLastState = selectState;
+  `;
+};

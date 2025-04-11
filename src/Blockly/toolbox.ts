@@ -175,6 +175,18 @@ export const toolbox = {
                 { kind: 'block', type: 'lcd_print_custom_char' }
             ]
         },
+        {
+            kind: 'category',
+            name: 'Button',
+            colour: 300,
+            contents: [
+                { kind: 'block', type: 'button_press_hold' },
+                { kind: 'block', type: 'button_toggle' },
+                { kind: 'block', type: 'button_long_press' },
+                { kind: 'block', type: 'button_multi_press' },
+                { kind: 'block', type: 'button_directional' },
+            ]
+        },
         // Output & Feedback
         {
             kind: 'category',

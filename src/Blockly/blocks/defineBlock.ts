@@ -1933,6 +1933,218 @@ const lcdPrintCustomCharBlock = {
     tooltip: 'Hiển thị ký tự tùy chỉnh đã tạo trước đó',
     helpUrl: ''
 };
+
+//Button block
+// Button Press and Hold Block
+const buttonPressHold = {
+    type: 'button_press_hold',
+    message0: 'When button on pin %1 is pressed %2 do %3',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'PIN',
+            check: 'Number',
+        },
+        {
+            type: 'input_dummy'
+        },
+        {
+            type: 'input_statement',
+            name: 'DO',
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#4C97FF', // Blue color for input control
+    tooltip: 'Thực hiện hành động khi nút được nhấn giữ, dừng hành động khi thả nút',
+    helpUrl: '',
+};
+
+// Toggle Button Block
+const buttonToggle = {
+    type: 'button_toggle',
+    message0: 'Toggle when button on pin %1 is pressed %2 ON action %3 OFF action %4',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'PIN',
+            check: 'Number',
+        },
+        {
+            type: 'input_dummy'
+        },
+        {
+            type: 'input_statement',
+            name: 'ON_ACTION',
+        },
+        {
+            type: 'input_statement',
+            name: 'OFF_ACTION',
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#5BA55B', // Green color for toggle functionality
+    tooltip: 'Chuyển đổi trạng thái mỗi khi nút được nhấn, lần đầu ON, lần sau OFF',
+    helpUrl: '',
+};
+
+// Long Press Button Block
+const buttonLongPress = {
+    type: 'button_long_press',
+    message0: 'Button on pin %1 long press time %2 ms %3 short press action %4 long press action %5',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'PIN',
+            check: 'Number',
+        },
+        {
+            type: 'input_value',
+            name: 'TIME',
+            check: 'Number',
+        },
+        {
+            type: 'input_dummy'
+        },
+        {
+            type: 'input_statement',
+            name: 'SHORT_PRESS',
+        },
+        {
+            type: 'input_statement',
+            name: 'LONG_PRESS',
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#A55B80', // Purple for advanced functionality
+    tooltip: 'Thực hiện hành động khác nhau dựa vào thời gian nhấn giữ nút',
+    helpUrl: '',
+};
+
+// Multi-Press Button Block
+const buttonMultiPress = {
+    type: 'button_multi_press',
+    message0: 'Count presses on pin %1 reset after %2 ms %3 on press #1 %4 on press #2 %5 on press #3 %6',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'PIN',
+            check: 'Number',
+        },
+        {
+            type: 'input_value',
+            name: 'TIMEOUT',
+            check: 'Number',
+        },
+        {
+            type: 'input_dummy'
+        },
+        {
+            type: 'input_statement',
+            name: 'PRESS1',
+        },
+        {
+            type: 'input_statement',
+            name: 'PRESS2',
+        },
+        {
+            type: 'input_statement',
+            name: 'PRESS3',
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#DA8E3B', // Orange for counting functionality
+    tooltip: 'Đếm số lần nhấn nút và thực hiện các hành động tương ứng',
+    helpUrl: '',
+};
+
+// Directional Control Buttons Block
+const buttonDirectional = {
+    type: 'button_directional',
+    message0: 'Directional control with buttons %1 Up pin %2 Down pin %3 Left pin %4 Right pin %5 %6 When pressed do %7',
+    args0: [
+        {
+            type: 'input_dummy'
+        },
+        {
+            type: 'input_value',
+            name: 'UP_PIN',
+            check: 'Number',
+        },
+        {
+            type: 'input_value',
+            name: 'DOWN_PIN',
+            check: 'Number',
+        },
+        {
+            type: 'input_value',
+            name: 'LEFT_PIN',
+            check: 'Number',
+        },
+        {
+            type: 'input_value',
+            name: 'RIGHT_PIN',
+            check: 'Number',
+        },
+        {
+            type: 'input_dummy'
+        },
+        {
+            type: 'input_statement',
+            name: 'ACTIONS',
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#5B67A5', // Blue-violet for navigation
+    tooltip: 'Thiết lập các nút điều hướng để di chuyển (lên, xuống, trái, phải)',
+    helpUrl: '',
+};
+
+// LCD/OLED Menu Navigation Block
+const buttonLCDMenu = {
+    type: 'button_lcd_menu',
+    message0: 'LCD menu with %1 pages %2 Next button pin %3 Select button pin %4 %5 On page change %6 On selection %7',
+    args0: [
+        {
+            type: 'input_value',
+            name: 'PAGES',
+            check: 'Number',
+        },
+        {
+            type: 'input_dummy'
+        },
+        {
+            type: 'input_value',
+            name: 'NEXT_PIN',
+            check: 'Number',
+        },
+        {
+            type: 'input_value',
+            name: 'SELECT_PIN',
+            check: 'Number',
+        },
+        {
+            type: 'input_dummy'
+        },
+        {
+            type: 'input_statement',
+            name: 'PAGE_CHANGE',
+        },
+        {
+            type: 'input_statement',
+            name: 'SELECTION',
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#31AE27', // Green for display functionality
+    tooltip: 'Tạo menu trên LCD/OLED với hai nút: nút chuyển trang và nút chọn chức năng',
+    helpUrl: '',
+};
 export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   simulateLed,
     setup,
@@ -2020,4 +2232,11 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     lcdBacklightBlock,
     lcdDisplayBlock,
     lcdPrintCustomCharBlock,
+
+    buttonPressHold,
+    buttonToggle,
+    buttonLongPress,
+    buttonMultiPress,
+    buttonDirectional,
+    buttonLCDMenu,
 ]);
