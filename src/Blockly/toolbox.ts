@@ -28,7 +28,19 @@ export const toolbox = {
                     }
                 },
                 { kind: 'block', type: 'millis' },
-                { kind: 'block', type: 'delay_microseconds' },
+                {
+                    kind: 'block',
+                    type: 'delay_microseconds',
+                    inputs: {
+                        DELAY_US: {
+                            shadow: {
+                                type: 'math_number',
+                                fields: { NUM: 100 }
+                            }
+                        }
+                    }
+                }
+                ,
                 { kind: 'block', type: 'inout_highlow' },
                 { kind: 'block', type: 'base_map' },
                 { kind: 'block', type: 'map_extended' },
@@ -73,6 +85,7 @@ export const toolbox = {
             colour: '#FF6F00', // Orange for hardware components
             contents: [
                 // LED controls
+                { kind: 'block', type: 'rgb_led_variable_info' },
                 { kind: 'block', type: 'simulate_led' },
                 { kind: 'block', type: 'rgb_led_control' },
                 { kind: 'block', type: 'rgb_led_setup' },
@@ -80,7 +93,6 @@ export const toolbox = {
                 { kind: 'block', type: 'rgb_led_set_color' },
                 { kind: 'block', type: 'rgb_led_set_color_with_pins' },
                 { kind: 'block', type: 'rgb_led_fixed_pin_variable_color' },
-                { kind: 'block', type: 'rgb_led_variable_info' },
 
                 // Sensors
                 { kind: 'block', type: 'dht_sensor' },
@@ -146,6 +158,8 @@ export const toolbox = {
             name: 'LCD',
             colour: '#00BFFF',
             contents: [
+
+                { kind: 'block', type: 'lcd_instruction_block' },
                 {
                     kind: 'block',
                     type: 'lcd_init',

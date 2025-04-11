@@ -60,7 +60,7 @@ const declareIntBlock = {
 // 2. String Variable Declaration Block
 const declareStringBlock = {
     type: "declare_string_variable",
-    message0: "Declare string %1 = %2",
+    message0: "String %1 = %2",
     args0: [
         {
             type: "field_input",
@@ -83,7 +83,7 @@ const declareStringBlock = {
 // 3. Float Variable Declaration Block
 const declareFloatBlock = {
     type: "declare_float_variable",
-    message0: "Declare decimal %1 = %2",
+    message0: "Double %1 = %2",
     args0: [
         {
             type: "field_input",
@@ -1223,7 +1223,6 @@ const rgbLedVariableInfo = {
     tooltip: "Thông tin về phạm vi giá trị hợp lệ cho chân và màu của đèn RGB",
     helpUrl: ""
 };
-
 const simulateLed = {
     type: "simulate_led",
     message0: "LED on pin %1 set to %2",
@@ -1562,12 +1561,11 @@ const codeTextBlock = {
             text: "// Viết mã C ở đây"
         }
     ],
-    output: "String", // <-- Rất quan trọng!
+    output: null, // Cho phép gắn ở mọi nơi
     colour: 65,
     tooltip: "Nhập mã C tùy chỉnh vào đây",
     helpUrl: ""
 };
-
 // Định nghĩa khối custom code nhận khối text code
 const customCodeBlock = {
     type: "custom_code_block",
@@ -1627,6 +1625,27 @@ const functionCall = {
 };
 
 //LCD
+const lcdInstructionBlock = {
+    type: "lcd_instruction_block",
+    message0: "%1 %2 Cách nối LCD 16x2 (không I2C):\nRS → chân 12\nE → chân 11\nD4 → chân 5\nD5 → chân 4\nD6 → chân 3\nD7 → chân 2\n\nDùng điện trở 10k để chỉnh độ tương phản.",
+    args0: [
+        {
+            type: "field_image",
+            name: "LCD_IMAGE",
+            src: "https://lh3.googleusercontent.com/proxy/_c5wnfW1jIaCCQNd3mVOvTHZWbqXhEJn7SE8CsoTFHEGKae_A0gJI4kkiYD_zzeCeXq49sg2gBovtf16SZriDj-Lb93ip3FC9elHjiiF_qpI3iTSOKdybIXUpszQ", // <- THAY BẰNG LINK ẢNH CỦA BẠN
+            width: 300,
+            height: 150,
+            alt: "*"
+        },
+        {
+            type: "input_dummy"
+        }
+    ],
+    colour: "#00ACC1",
+    tooltip: "Hướng dẫn cách đấu nối LCD 16x2 loại thường (không dùng I2C)",
+    helpUrl: "http://arduino.vn/bai-viet/531-dieu-khien-lcd-bang-arduino-uno"
+};
+
 const lcdInitBlock = {
     type: 'lcd_init',
     message0: 'Initialize LCD (no I2C) with pins\n RS %1 E %2 D4 %3 D5 %4 D6 %5 D7 %6',
@@ -2181,6 +2200,7 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     functionCall,
     customCodeBlock,
 
+    lcdInstructionBlock,
     lcdInitBlock,
     lcdClearBlock,
     lcdPrintBlock,
