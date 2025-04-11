@@ -15,7 +15,18 @@ export const toolbox = {
                     kind: 'block',
                     type: 'loop',
                 },
-                { kind: 'block', type: 'base_delay' },
+                {
+                    kind: 'block',
+                    type: 'base_delay',
+                    inputs: {
+                        DELAY_TIME: {
+                            shadow: {
+                                type: 'math_number',
+                                fields: { NUM: 1000 }
+                            }
+                        }
+                    }
+                },
                 { kind: 'block', type: 'millis' },
                 { kind: 'block', type: 'delay_microseconds' },
                 { kind: 'block', type: 'inout_highlow' },
@@ -128,36 +139,6 @@ export const toolbox = {
                         }
                     }
                 },
-                {
-                    kind: 'block',
-                    type: 'servo_continuous',
-                    inputs: {
-                        SERVO_PIN: {
-                            shadow: {
-                                type: 'math_number',
-                                fields: { NUM: 9 }
-                            }
-                        },
-                        SPEED: {
-                            shadow: {
-                                type: 'math_number',
-                                fields: { NUM: 50 }
-                            }
-                        }
-                    }
-                },
-                {
-                    kind: 'block',
-                    type: 'servo_stop',
-                    inputs: {
-                        SERVO_PIN: {
-                            shadow: {
-                                type: 'math_number',
-                                fields: { NUM: 9 }
-                            }
-                        }
-                    }
-                }
             ]
         },
         {
@@ -165,7 +146,18 @@ export const toolbox = {
             name: 'LCD',
             colour: '#00BFFF',
             contents: [
-                { kind: 'block', type: 'lcd_init' },
+                {
+                    kind: 'block',
+                    type: 'lcd_init',
+                    fields: {
+                        RS: '12',
+                        E: '11',
+                        D4: '5',
+                        D5: '4',
+                        D6: '3',
+                        D7: '2'
+                    }
+                },
                 { kind: 'block', type: 'lcd_clear' },
                 { kind: 'block', type: 'lcd_print' },
                 { kind: 'block', type: 'lcd_set_cursor' },

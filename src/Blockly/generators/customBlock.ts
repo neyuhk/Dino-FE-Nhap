@@ -809,25 +809,6 @@ forBlock['loop'] = function (
     return `void loop() {\n${loopCode}}\n`;
 };
 
-forBlock['servo_continuous'] = function (
-    block: Blockly.Block,
-    generator: Blockly.CodeGenerator,
-) {
-    const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
-    const speed = generator.valueToCode(block, 'SPEED', Order.ATOMIC) || '50';
-
-    return `int mappedSpeed = map(${speed}, -100, 100, 0, 180);\nservo${pin}.write(mappedSpeed);\n`;
-};
-
-forBlock['servo_stop'] = function (
-    block: Blockly.Block,
-    generator: Blockly.CodeGenerator,
-) {
-    const pin = generator.valueToCode(block, 'SERVO_PIN', Order.ATOMIC) || '9';
-
-    return `servo${pin}.write(90);\n`;
-};
-
 forBlock['servo_setup'] = function (
     block: Blockly.Block,
     generator: Blockly.CodeGenerator,
@@ -1061,15 +1042,7 @@ forBlock['lcd_init'] = function (block, generator) {
     generator.provideFunction_('lcd_define', `
 LiquidCrystal lcd(${rs}, ${en}, ${d4}, ${d5}, ${d6}, ${d7});
 `);
-
-    // Hàm setup LCD
-    generator.provideFunction_('lcd_setup', `
-void lcd_setup() {
-  lcd.begin(16, 2);
-}
-`);
-
-    return 'lcd_setup();\n';
+    return 'lcd.begin(16, 2);\n';
 };
 
 
@@ -1136,12 +1109,29 @@ forBlock['lcd_print_custom_char'] = function(block, generator) {
 
 //button block
 // Button Press and Hold Block
+// Button Press and Hold Block - Improved
 forBlock['button_press_hold'] = function(
     block,
     generator
 ) {
     const pin = generator.valueToCode(block, 'PIN', 0) || '2';
     const doCode = generator.statementToCode(block, 'DO');
+
+    // Reserve variable names
+    generator.addReservedWords(`lastDebounceTime_${pin}`);
+    generator.addReservedWords(`buttonState_${pin}`);
+    generator.addReservedWords(`lastButtonState_${pin}`);
+
+    // Define variables
+    generator.provideFunction_(
+        `press_hold_button_${pin}_vars`,
+        `// Press hold button variables for pin ${pin}
+unsigned long lastDebounceTime_${pin} = 0;
+bool buttonState_${pin} = HIGH;
+bool lastButtonState_${pin} = HIGH;
+const unsigned long debounceDelay = 50;
+`
+    );
 
     // Add setup code using provideFunction_
     generator.provideFunction_(
@@ -1152,10 +1142,35 @@ forBlock['button_press_hold'] = function(
 `
     );
 
-    return `if (digitalRead(${pin}) == LOW) {\n${doCode}}\n`;
+    return `
+  // Read the current button state
+  bool reading_${pin} = digitalRead(${pin});
+  
+  // Check if the button state changed
+  if (reading_${pin} != lastButtonState_${pin}) {
+    // Reset the debounce timer
+    lastDebounceTime_${pin} = millis();
+  }
+  
+  // Check if debounce time has passed
+  if ((millis() - lastDebounceTime_${pin}) > debounceDelay) {
+    // If the button state has changed and is stable
+    if (buttonState_${pin} != reading_${pin}) {
+      buttonState_${pin} = reading_${pin};
+      
+      // If button is pressed (LOW for INPUT_PULLUP)
+      if (buttonState_${pin} == LOW) {
+        ${doCode}
+      }
+    }
+  }
+  
+  // Save last button state
+  lastButtonState_${pin} = reading_${pin};
+`;
 };
 
-// Toggle Button Block
+// Toggle Button Block - Improved
 forBlock['button_toggle'] = function(
     block,
     generator
@@ -1168,6 +1183,7 @@ forBlock['button_toggle'] = function(
     generator.addReservedWords(`buttonState_${pin}`);
     generator.addReservedWords(`lastButtonState_${pin}`);
     generator.addReservedWords(`toggleState_${pin}`);
+    generator.addReservedWords(`lastDebounceTime_${pin}`);
 
     // Define variables
     generator.provideFunction_(
@@ -1176,6 +1192,8 @@ forBlock['button_toggle'] = function(
 bool buttonState_${pin} = HIGH;
 bool lastButtonState_${pin} = HIGH;
 bool toggleState_${pin} = false;
+unsigned long lastDebounceTime_${pin} = 0;
+const unsigned long debounceDelay = 50;
 `
     );
 
@@ -1190,16 +1208,29 @@ bool toggleState_${pin} = false;
 
     return `
   // Read the current button state
-  buttonState_${pin} = digitalRead(${pin});
+  bool reading_${pin} = digitalRead(${pin});
   
-  // Check if button was just pressed (transition from HIGH to LOW)
-  if (buttonState_${pin} == LOW && lastButtonState_${pin} == HIGH) {
-    toggleState_${pin} = !toggleState_${pin};
-    delay(50); // Simple debounce
+  // Check if the button state changed
+  if (reading_${pin} != lastButtonState_${pin}) {
+    // Reset the debounce timer
+    lastDebounceTime_${pin} = millis();
   }
   
-  // Save current button state for next comparison
-  lastButtonState_${pin} = buttonState_${pin};
+  // Check if debounce time has passed
+  if ((millis() - lastDebounceTime_${pin}) > debounceDelay) {
+    // If the button state has changed and is stable
+    if (buttonState_${pin} != reading_${pin}) {
+      buttonState_${pin} = reading_${pin};
+      
+      // If button is pressed (LOW for INPUT_PULLUP)
+      if (buttonState_${pin} == LOW) {
+        toggleState_${pin} = !toggleState_${pin};
+      }
+    }
+  }
+  
+  // Save last button state
+  lastButtonState_${pin} = reading_${pin};
   
   // Execute the appropriate action based on toggle state
   if (toggleState_${pin}) {
@@ -1207,10 +1238,10 @@ bool toggleState_${pin} = false;
   } else {
     ${offAction}
   }
-  `;
+`;
 };
 
-// Long Press Button Block
+// Long Press Button Block - Improved
 forBlock['button_long_press'] = function(
     block,
     generator
@@ -1224,6 +1255,9 @@ forBlock['button_long_press'] = function(
     generator.addReservedWords(`buttonPressed_${pin}`);
     generator.addReservedWords(`longPressDetected_${pin}`);
     generator.addReservedWords(`buttonPressTime_${pin}`);
+    generator.addReservedWords(`lastDebounceTime_${pin}`);
+    generator.addReservedWords(`buttonState_${pin}`);
+    generator.addReservedWords(`lastButtonState_${pin}`);
 
     // Define variables
     generator.provideFunction_(
@@ -1232,6 +1266,10 @@ forBlock['button_long_press'] = function(
 bool buttonPressed_${pin} = false;
 bool longPressDetected_${pin} = false;
 unsigned long buttonPressTime_${pin} = 0;
+unsigned long lastDebounceTime_${pin} = 0;
+bool buttonState_${pin} = HIGH;
+bool lastButtonState_${pin} = HIGH;
+const unsigned long debounceDelay = 50;
 `
     );
 
@@ -1245,37 +1283,58 @@ unsigned long buttonPressTime_${pin} = 0;
     );
 
     return `
-  // Check if button is currently pressed
-  if (digitalRead(${pin}) == LOW) {
-    // Button is pressed
-    if (!buttonPressed_${pin}) {
-      // Button was just pressed
-      buttonPressed_${pin} = true;
-      buttonPressTime_${pin} = millis();
-      longPressDetected_${pin} = false;
-    } else {
-      // Check for long press
-      if (!longPressDetected_${pin} && (millis() - buttonPressTime_${pin} > ${time})) {
-        // Long press detected
-        longPressDetected_${pin} = true;
-        ${longPressCode}
-      }
-    }
-  } else {
-    // Button is released
-    if (buttonPressed_${pin}) {
-      // Button was just released
-      buttonPressed_${pin} = false;
-      if (!longPressDetected_${pin}) {
-        // Short press detected
-        ${shortPressCode}
+  // Read the current button state
+  bool reading_${pin} = digitalRead(${pin});
+  
+  // Check if the button state changed
+  if (reading_${pin} != lastButtonState_${pin}) {
+    // Reset the debounce timer
+    lastDebounceTime_${pin} = millis();
+  }
+  
+  // Check if debounce time has passed
+  if ((millis() - lastDebounceTime_${pin}) > debounceDelay) {
+    // If the button state has changed and is stable
+    if (buttonState_${pin} != reading_${pin}) {
+      buttonState_${pin} = reading_${pin};
+      
+      // If button is pressed (LOW for INPUT_PULLUP)
+      if (buttonState_${pin} == LOW) {
+        if (!buttonPressed_${pin}) {
+          // Button was just pressed
+          buttonPressed_${pin} = true;
+          buttonPressTime_${pin} = millis();
+          longPressDetected_${pin} = false;
+        }
+      } else {
+        // Button is released
+        if (buttonPressed_${pin}) {
+          // Button was just released
+          buttonPressed_${pin} = false;
+          if (!longPressDetected_${pin}) {
+            // Short press detected
+            ${shortPressCode}
+          }
+        }
       }
     }
   }
-  `;
+  
+  // Save last button state
+  lastButtonState_${pin} = reading_${pin};
+  
+  // Check for long press if button is currently pressed
+  if (buttonPressed_${pin}) {
+    if (!longPressDetected_${pin} && (millis() - buttonPressTime_${pin} > ${time})) {
+      // Long press detected
+      longPressDetected_${pin} = true;
+      ${longPressCode}
+    }
+  }
+`;
 };
 
-// Multi-Press Button Block
+// Multi-Press Button Block - Improved
 forBlock['button_multi_press'] = function(
     block,
     generator
@@ -1291,6 +1350,8 @@ forBlock['button_multi_press'] = function(
     generator.addReservedWords(`lastButtonState_${pin}`);
     generator.addReservedWords(`pressCount_${pin}`);
     generator.addReservedWords(`lastPressTime_${pin}`);
+    generator.addReservedWords(`lastDebounceTime_${pin}`);
+    generator.addReservedWords(`buttonReady_${pin}`);
 
     // Define variables
     generator.provideFunction_(
@@ -1300,6 +1361,9 @@ bool buttonState_${pin} = HIGH;
 bool lastButtonState_${pin} = HIGH;
 byte pressCount_${pin} = 0;
 unsigned long lastPressTime_${pin} = 0;
+unsigned long lastDebounceTime_${pin} = 0;
+bool buttonReady_${pin} = true;
+const unsigned long debounceDelay = 50;
 `
     );
 
@@ -1314,13 +1378,32 @@ unsigned long lastPressTime_${pin} = 0;
 
     return `
   // Read button state
-  buttonState_${pin} = digitalRead(${pin});
+  bool reading_${pin} = digitalRead(${pin});
   
-  // Check for button press (transition from HIGH to LOW)
-  if (buttonState_${pin} == LOW && lastButtonState_${pin} == HIGH) {
-    pressCount_${pin}++;
-    lastPressTime_${pin} = millis();
-    delay(50); // Simple debounce
+  // Check if the button state changed
+  if (reading_${pin} != lastButtonState_${pin}) {
+    // Reset the debounce timer
+    lastDebounceTime_${pin} = millis();
+  }
+  
+  // Check if debounce time has passed
+  if ((millis() - lastDebounceTime_${pin}) > debounceDelay) {
+    // If the button state has changed and is stable
+    if (buttonState_${pin} != reading_${pin}) {
+      buttonState_${pin} = reading_${pin};
+      
+      // If button is pressed (LOW for INPUT_PULLUP) and ready for next press
+      if (buttonState_${pin} == LOW && buttonReady_${pin}) {
+        buttonReady_${pin} = false;  // Prevent multiple counts on same press
+        pressCount_${pin}++;
+        lastPressTime_${pin} = millis();
+      }
+      
+      // If button is released
+      if (buttonState_${pin} == HIGH) {
+        buttonReady_${pin} = true;  // Ready for next press
+      }
+    }
   }
   
   // Check if it's time to process multiple presses
@@ -1338,11 +1421,11 @@ unsigned long lastPressTime_${pin} = 0;
   }
   
   // Save current button state
-  lastButtonState_${pin} = buttonState_${pin};
-  `;
+  lastButtonState_${pin} = reading_${pin};
+`;
 };
 
-// Directional Control Buttons Block
+// Directional Control Buttons Block - Improved
 forBlock['button_directional'] = function(
     block,
     generator
@@ -1353,14 +1436,19 @@ forBlock['button_directional'] = function(
     const rightPin = generator.valueToCode(block, 'RIGHT_PIN', 0) || '5';
     const actionsCode = generator.statementToCode(block, 'ACTIONS');
 
-    // Reserve variable name
+    // Reserve variable names
     generator.addReservedWords('direction');
+    generator.addReservedWords('lastDirection');
+    generator.addReservedWords('dirLastDebounceTime');
 
     // Define variables
     generator.provideFunction_(
-        'direction_variable',
-        `// Direction variable for directional control
+        'direction_variables',
+        `// Direction variables for directional control
 char direction = 0; // 0=none, U=up, D=down, L=left, R=right
+char lastDirection = 0;
+unsigned long dirLastDebounceTime = 0;
+const unsigned long dirDebounceDelay = 50;
 `
     );
 
@@ -1377,6 +1465,9 @@ char direction = 0; // 0=none, U=up, D=down, L=left, R=right
     );
 
     return `
+  // Previous direction
+  char prevDirection = direction;
+  
   // Check each button
   if (digitalRead(${upPin}) == LOW) {
     direction = 'U';
@@ -1390,15 +1481,22 @@ char direction = 0; // 0=none, U=up, D=down, L=left, R=right
     direction = 0;
   }
   
-  // Execute actions with current direction
-  if (direction != 0) {
-    ${actionsCode}
-    delay(50); // Simple debounce
+  // If direction changed, reset debounce timer
+  if (direction != lastDirection) {
+    dirLastDebounceTime = millis();
   }
-  `;
+  
+  // If debounce time passed and direction is stable
+  if ((millis() - dirLastDebounceTime > dirDebounceDelay) && (direction != 0) && (direction == lastDirection)) {
+    ${actionsCode}
+  }
+  
+  // Save last direction
+  lastDirection = direction;
+`;
 };
 
-// LCD/OLED Menu Navigation Block
+// LCD/OLED Menu Navigation Block - Improved
 forBlock['button_lcd_menu'] = function(
     block,
     generator
@@ -1412,10 +1510,12 @@ forBlock['button_lcd_menu'] = function(
     // Reserve variable names
     generator.addReservedWords('currentPage');
     generator.addReservedWords('totalPages');
-    generator.addReservedWords('nextPressed');
-    generator.addReservedWords('selectPressed');
     generator.addReservedWords('nextLastState');
     generator.addReservedWords('selectLastState');
+    generator.addReservedWords('nextDebounceTime');
+    generator.addReservedWords('selectDebounceTime');
+    generator.addReservedWords('nextButtonState');
+    generator.addReservedWords('selectButtonState');
 
     // Define variables
     generator.provideFunction_(
@@ -1423,10 +1523,13 @@ forBlock['button_lcd_menu'] = function(
         `// LCD menu variables
 int currentPage = 0;
 int totalPages = ${pages};
-bool nextPressed = false;
-bool selectPressed = false;
 bool nextLastState = HIGH;
 bool selectLastState = HIGH;
+unsigned long nextDebounceTime = 0;
+unsigned long selectDebounceTime = 0;
+bool nextButtonState = HIGH;
+bool selectButtonState = HIGH;
+const unsigned long menuDebounceDelay = 50;
 `
     );
 
@@ -1441,29 +1544,49 @@ bool selectLastState = HIGH;
     );
 
     return `
-  // Check next button for page navigation
-  bool nextState = digitalRead(${nextPin});
-  if (nextState == LOW && nextLastState == HIGH) {
-    // Next button pressed
-    nextPressed = true;
-    currentPage = (currentPage + 1) % totalPages;
-    ${pageChangeCode}
-    delay(50); // Simple debounce
-  } else {
-    nextPressed = false;
-  }
-  nextLastState = nextState;
+  // Handle Next button
+  bool nextReading = digitalRead(${nextPin});
   
-  // Check select button
-  bool selectState = digitalRead(${selectPin});
-  if (selectState == LOW && selectLastState == HIGH) {
-    // Select button pressed
-    selectPressed = true;
-    ${selectionCode}
-    delay(50); // Simple debounce
-  } else {
-    selectPressed = false;
+  // Check if the next button state changed
+  if (nextReading != nextLastState) {
+    nextDebounceTime = millis();
   }
-  selectLastState = selectState;
-  `;
+  
+  // If debounce delay passed for next button
+  if ((millis() - nextDebounceTime) > menuDebounceDelay) {
+    // If the state has changed and is stable
+    if (nextButtonState != nextReading) {
+      nextButtonState = nextReading;
+      
+      // If button is pressed (LOW for INPUT_PULLUP)
+      if (nextButtonState == LOW) {
+        currentPage = (currentPage + 1) % totalPages;
+        ${pageChangeCode}
+      }
+    }
+  }
+  nextLastState = nextReading;
+  
+  // Handle Select button
+  bool selectReading = digitalRead(${selectPin});
+  
+  // Check if the select button state changed
+  if (selectReading != selectLastState) {
+    selectDebounceTime = millis();
+  }
+  
+  // If debounce delay passed for select button
+  if ((millis() - selectDebounceTime) > menuDebounceDelay) {
+    // If the state has changed and is stable
+    if (selectButtonState != selectReading) {
+      selectButtonState = selectReading;
+      
+      // If button is pressed (LOW for INPUT_PULLUP)
+      if (selectButtonState == LOW) {
+        ${selectionCode}
+      }
+    }
+  }
+  selectLastState = selectReading;
+`;
 };

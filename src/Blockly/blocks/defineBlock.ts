@@ -694,7 +694,7 @@ const servoReadDegrees = {
 
 const serialPrint = {
     type: "serial_print",
-    message0: "Print to serial: %1",
+    message0: "Serial print: %1",
     args0: [
         {
             type: "input_value",
@@ -1506,47 +1506,6 @@ const servoSetup = {
     tooltip: 'Chuẩn bị để dùng servo tại chân được chọn',
     helpUrl: '',
 };
-
-// Block: Servo continuous rotation
-const servoContinuous = {
-    type: 'servo_continuous',
-    message0: 'Rotate servo %1 at speed %2',
-    args0: [
-        {
-            type: 'input_value',
-            name: 'SERVO_PIN',
-            check: 'Number',
-        },
-        {
-            type: 'input_value',
-            name: 'SPEED',
-            check: 'Number',
-        },
-    ],
-    previousStatement: null,
-    nextStatement: null,
-    colour: '#ff65f3',
-    tooltip: 'Xoay servo liên tục với tốc độ từ -100 (xoay ngược) đến 100 (xoay xuôi)',
-    helpUrl: '',
-};
-
-// Block: Servo stop
-const servoStop = {
-    type: 'servo_stop',
-    message0: 'Stop servo %1',
-    args0: [
-        {
-            type: 'input_value',
-            name: 'SERVO_PIN',
-            check: 'Number',
-        },
-    ],
-    previousStatement: null,
-    nextStatement: null,
-    colour: '#ff65f3',
-    tooltip: 'Ngừng quay servo tại chân được chọn',
-    helpUrl: '',
-};
 const functionWrapper = {
     type: "function_wrapper",
     message0: "Function Container %1 %2",
@@ -2215,8 +2174,6 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     waitUntil,
     servoRotate,
     servoSetup,
-    servoContinuous,
-    servoStop,
     functionWrapper,
     functionDefinition,
     customFunctionBlock,
