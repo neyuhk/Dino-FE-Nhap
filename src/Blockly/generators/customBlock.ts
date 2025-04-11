@@ -202,13 +202,14 @@ forBlock['colour_picker'] = function(
   return [`'${colour}'`, Order.ATOMIC];
 };
 
-// Generator for the random colour block.
-forBlock['colour_random'] = function(
-  block: Blockly.Block,
-  generator: Blockly.CodeGenerator
+const ORDER_ATOMIC = 0;
+
+forBlock['colour_random'] = function (
+    block: Blockly.Block,
+    generator: Blockly.CodeGenerator
 ) {
-  const code = `'#' + ('00000' + (Math.floor(Math.random()*16777215)).toString(16)).slice(-6)`;
-  return [code, Order.ATOMIC];
+    const code = 'rand() % 256';
+    return [code, ORDER_ATOMIC];
 };
 
 // Generator for the colour RGB block.
@@ -709,19 +710,6 @@ forBlock['dc_motor_control'] = function(
     return `controlDCMotor(${pin1}, ${pin2}, ${direction}, ${speed});\n`;
 };
 
-// LCD Display Block Generator
-forBlock['lcd_display'] = function(
-    block: Blockly.Block,
-    generator: Blockly.CodeGenerator,
-) {
-    const text = generator.valueToCode(block, 'TEXT', Order.NONE) || '""';
-    const row = block.getFieldValue('ROW');
-    const col = block.getFieldValue('COL');
-
-    // Generate code for displaying text on LCD
-    return `lcdDisplayText(${text}, ${row}, ${col});\n`;
-};
-
 // Light Sensor Block Generator
 forBlock['light_sensor'] = function(
     block: Blockly.Block,
@@ -977,7 +965,7 @@ forBlock['declare_int_variable'] = function(block: Blockly.Block, generator: any
     const varName = block.getFieldValue('VAR_NAME');
     const value = generator.valueToCode(block, 'VALUE', generator.ORDER_ATOMIC) || '0';
     // Ensure we generate the "int" type in the declaration
-    return 'int ' + varName + ' = ' + value*10 + ';\n';
+    return 'int ' + varName + ' = ' + value + ';\n';
 };
 forBlock['declare_string_variable'] = function(block: Blockly.Block,
                                                generator: any,) {
@@ -1049,4 +1037,99 @@ forBlock['print_format'] = function(block: Blockly.Block,
     const varName = block.getFieldValue('VAR_NAME');
     // C printf with specific format
     return `printf("${format}\\n", ${varName});\n`;
+};
+
+//LCD
+// Define order constants
+const ORDER_NONE = 99;
+
+// Generator for lcd_init
+forBlock['lcd_init'] = function (block, generator) {
+    const rs = block.getFieldValue('RS') || '12';
+    const en = block.getFieldValue('E') || '11';
+    const d4 = block.getFieldValue('D4') || '5';
+    const d5 = block.getFieldValue('D5') || '4';
+    const d6 = block.getFieldValue('D6') || '3';
+    const d7 = block.getFieldValue('D7') || '2';
+
+    // Include thư viện LiquidCrystal
+    generator.provideFunction_('include_lcd_header', `
+#include <LiquidCrystal.h>
+`);
+
+    // Khai báo đối tượng LCD
+    generator.provideFunction_('lcd_define', `
+LiquidCrystal lcd(${rs}, ${en}, ${d4}, ${d5}, ${d6}, ${d7});
+`);
+
+    // Hàm setup LCD
+    generator.provideFunction_('lcd_setup', `
+void lcd_setup() {
+  lcd.begin(16, 2);
+}
+`);
+
+    return 'lcd_setup();\n';
+};
+
+
+// Generator for lcd_clear
+forBlock['lcd_clear'] = function(block, generator) {
+    return 'lcd.clear();\n';
+};
+
+// Generator for lcd_print
+forBlock['lcd_print'] = function(block, generator) {
+    const text = block.getFieldValue('TEXT');
+    const row = block.getFieldValue('ROW');
+    const col = block.getFieldValue('COL');
+
+    // Note: LCD's setCursor takes (col, row) not (row, col)
+    return `lcd.setCursor(${col}, ${row});\nlcd.print("${text}");\n`;
+};
+
+// Generator for lcd_set_cursor
+forBlock['lcd_set_cursor'] = function(block, generator) {
+    const row = block.getFieldValue('ROW');
+    const col = block.getFieldValue('COL');
+
+    // Note: LCD's setCursor takes (col, row) not (row, col)
+    return `lcd.setCursor(${col}, ${row});\n`;
+};
+
+// Generator for lcd_create_char
+forBlock['lcd_create_char'] = function(block, generator) {
+    const pos = block.getFieldValue('POS');
+    const pattern = block.getFieldValue('PATTERN');
+
+    // Generate a unique function name for this custom character
+    const functionName = `create_custom_char_${pos}`;
+
+    generator.provideFunction_(
+        functionName,
+        `void ${functionName}() {
+  byte customChar[8] = ${pattern};
+  lcd.createChar(${pos}, customChar);
+}\n`
+    );
+
+    return `${functionName}();\n`;
+};
+
+// Generator for lcd_backlight
+forBlock['lcd_backlight'] = function(block, generator) {
+    const state = block.getFieldValue('STATE');
+    return state === 'ON' ? 'lcd.backlight();\n' : 'lcd.noBacklight();\n';
+};
+
+// Generator for lcd_display
+forBlock['lcd_display'] = function(block, generator) {
+    const state = block.getFieldValue('STATE');
+    return state === 'ON' ? 'lcd.display();\n' : 'lcd.noDisplay();\n';
+};
+
+// Generator for lcd_print_custom_char
+forBlock['lcd_print_custom_char'] = function(block, generator) {
+    const pos = block.getFieldValue('POS');
+    return `lcd.write(byte(${pos}));\n`;
 };

@@ -1336,30 +1336,6 @@ const dcMotorControl = {
     helpUrl: ""
 };
 
-const lcdDisplay = {
-    type: "lcd_display",
-    message0: "Show text %1 at row %2 column %3 on LCD",
-    args0: [
-        { type: "input_value", name: "TEXT", check: "String" },
-        { type: "field_dropdown", name: "ROW", options: [["0", "0"], ["1", "1"]] },
-        {
-            type: "field_dropdown", name: "COL", options: [
-                ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"],
-                ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"],
-                ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"],
-                ["A0", "A0"], ["A1", "A1"], ["A2", "A2"], ["A3", "A3"],
-                ["A4", "A4"], ["A5", "A5"]
-            ]
-        }
-    ],
-    inputsInline: true,
-    previousStatement: null,
-    nextStatement: null,
-    colour: '#FF6F00',
-    tooltip: "Hiển thị chữ lên màn hình LCD tại hàng và cột đã chọn",
-    helpUrl: ""
-};
-
 const lightSensor = {
     type: "light_sensor",
     message0: "Read light level from LDR at PIN %1",
@@ -1690,6 +1666,273 @@ const functionCall = {
     tooltip: "Gọi một hàm đã được định nghĩa với các tham số.",
     helpUrl: ""
 };
+
+//LCD
+const lcdInitBlock = {
+    type: 'lcd_init',
+    message0: 'Initialize LCD (no I2C) with pins\n RS %1 E %2 D4 %3 D5 %4 D6 %5 D7 %6',
+    args0: [
+        {
+            type: 'field_dropdown',
+            name: 'RS',
+            options: [
+                ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+                ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'],
+                ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13']
+            ]
+        },
+        {
+            type: 'field_dropdown',
+            name: 'E',
+            options: [
+                ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+                ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'],
+                ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13']
+            ]
+        },
+        {
+            type: 'field_dropdown',
+            name: 'D4',
+            options: [
+                ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+                ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'],
+                ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13']
+            ]
+        },
+        {
+            type: 'field_dropdown',
+            name: 'D5',
+            options: [
+                ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+                ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'],
+                ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13']
+            ]
+        },
+        {
+            type: 'field_dropdown',
+            name: 'D6',
+            options: [
+                ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+                ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'],
+                ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13']
+            ]
+        },
+        {
+            type: 'field_dropdown',
+            name: 'D7',
+            options: [
+                ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+                ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'],
+                ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13']
+            ]
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#00BFFF',
+    tooltip: 'Khởi tạo màn hình LCD thường – 16x2 (không dùng I2C)',
+    helpUrl: ''
+};
+
+const lcdClearBlock = {
+    type: 'lcd_clear',
+    message0: 'Clear LCD screen',
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#00BFFF',
+    tooltip: 'Xóa nội dung trên màn hình LCD',
+    helpUrl: ''
+};
+
+const lcdPrintBlock = {
+    type: 'lcd_print',
+    message0: 'Print text %1 at position: \nrow %2 column %3',
+    args0: [
+        {
+            type: 'field_input',
+            name: 'TEXT',
+            text: 'Hello World!'
+        },
+        {
+            type: 'field_dropdown',
+            name: 'ROW',
+            options: [
+                ['0', '0'],
+                ['1', '1'],
+                ['2', '2'],
+                ['3', '3']
+            ]
+        },
+        {
+            type: 'field_dropdown',
+            name: 'COL',
+            options: [
+                ['0', '0'],
+                ['1', '1'],
+                ['2', '2'],
+                ['3', '3'],
+                ['4', '4'],
+                ['5', '5'],
+                ['6', '6'],
+                ['7', '7'],
+                ['8', '8'],
+                ['9', '9'],
+                ['10', '10'],
+                ['11', '11'],
+                ['12', '12'],
+                ['13', '13'],
+                ['14', '14'],
+                ['15', '15']
+            ]
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#00BFFF',
+    tooltip: 'Hiển thị văn bản tại vị trí cụ thể trên màn hình LCD',
+    helpUrl: ''
+};
+
+const lcdSetCursorBlock = {
+    type: 'lcd_set_cursor',
+    message0: 'Set cursor to row %1 column %2',
+    args0: [
+        {
+            type: 'field_dropdown',
+            name: 'ROW',
+            options: [
+                ['0', '0'],
+                ['1', '1'],
+                ['2', '2'],
+                ['3', '3']
+            ]
+        },
+        {
+            type: 'field_dropdown',
+            name: 'COL',
+            options: [
+                ['0', '0'],
+                ['1', '1'],
+                ['2', '2'],
+                ['3', '3'],
+                ['4', '4'],
+                ['5', '5'],
+                ['6', '6'],
+                ['7', '7'],
+                ['8', '8'],
+                ['9', '9'],
+                ['10', '10'],
+                ['11', '11'],
+                ['12', '12'],
+                ['13', '13'],
+                ['14', '14'],
+                ['15', '15']
+            ]
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#00BFFF',
+    tooltip: 'Di chuyển con trỏ đến vị trí cụ thể trên màn hình LCD',
+    helpUrl: ''
+};
+
+const lcdCreateCharBlock = {
+    type: 'lcd_create_char',
+    message0: 'Create custom char at position %1\n with pattern %2',
+    args0: [
+        {
+            type: 'field_dropdown',
+            name: 'POS',
+            options: [
+                ['0', '0'],
+                ['1', '1'],
+                ['2', '2'],
+                ['3', '3'],
+                ['4', '4'],
+                ['5', '5'],
+                ['6', '6'],
+                ['7', '7']
+            ]
+        },
+        {
+            type: 'field_input',
+            name: 'PATTERN',
+            text: '{0x00, 0x0A, 0x15, 0x11, 0x11, 0x0A, 0x04, 0x00}'
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#00BFFF',
+    tooltip: 'Tạo một ký tự tùy chỉnh cho màn hình LCD',
+    helpUrl: ''
+};
+
+const lcdBacklightBlock = {
+    type: 'lcd_backlight',
+    message0: 'Set LCD backlight %1',
+    args0: [
+        {
+            type: 'field_dropdown',
+            name: 'STATE',
+            options: [
+                ['ON', 'ON'],
+                ['OFF', 'OFF']
+            ]
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#00BFFF',
+    tooltip: 'Bật hoặc tắt đèn nền cho màn hình LCD',
+    helpUrl: ''
+};
+
+const lcdDisplayBlock = {
+    type: 'lcd_display',
+    message0: 'Set LCD display %1',
+    args0: [
+        {
+            type: 'field_dropdown',
+            name: 'STATE',
+            options: [
+                ['ON', 'ON'],
+                ['OFF', 'OFF']
+            ]
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#00BFFF',
+    tooltip: 'Bật hoặc tắt hiển thị màn hình LCD',
+    helpUrl: ''
+};
+
+const lcdPrintCustomCharBlock = {
+    type: 'lcd_print_custom_char',
+    message0: 'Print custom char at position %1',
+    args0: [
+        {
+            type: 'field_dropdown',
+            name: 'POS',
+            options: [
+                ['0', '0'],
+                ['1', '1'],
+                ['2', '2'],
+                ['3', '3'],
+                ['4', '4'],
+                ['5', '5'],
+                ['6', '6'],
+                ['7', '7']
+            ]
+        }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#00BFFF',
+    tooltip: 'Hiển thị ký tự tùy chỉnh đã tạo trước đó',
+    helpUrl: ''
+};
 export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   simulateLed,
     setup,
@@ -1751,7 +1994,6 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     dhtSensor,
     ultrasonicSensor,
     dcMotorControl,
-    lcdDisplay,
     lightSensor,
     pirMotionSensor,
     debouncedButton,
@@ -1769,4 +2011,13 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     codeTextBlock,
     functionCall,
     customCodeBlock,
+
+    lcdInitBlock,
+    lcdClearBlock,
+    lcdPrintBlock,
+    lcdSetCursorBlock,
+    lcdCreateCharBlock,
+    lcdBacklightBlock,
+    lcdDisplayBlock,
+    lcdPrintCustomCharBlock,
 ]);

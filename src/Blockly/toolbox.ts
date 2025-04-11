@@ -78,9 +78,6 @@ export const toolbox = {
                 { kind: 'block', type: 'pir_motion_sensor' },
                 { kind: 'block', type: 'debounced_button' },
 
-                // Display
-                { kind: 'block', type: 'lcd_display' },
-
                 // Motors
                 { kind: 'block', type: 'dc_motor_control' },
                 { kind: 'block', type: 'stepper_motor_control' },
@@ -163,7 +160,21 @@ export const toolbox = {
                 }
             ]
         },
-
+        {
+            kind: 'category',
+            name: 'LCD',
+            colour: '#00BFFF',
+            contents: [
+                { kind: 'block', type: 'lcd_init' },
+                { kind: 'block', type: 'lcd_clear' },
+                { kind: 'block', type: 'lcd_print' },
+                { kind: 'block', type: 'lcd_set_cursor' },
+                { kind: 'block', type: 'lcd_create_char' },
+                { kind: 'block', type: 'lcd_backlight' },
+                { kind: 'block', type: 'lcd_display' },
+                { kind: 'block', type: 'lcd_print_custom_char' }
+            ]
+        },
         // Output & Feedback
         {
             kind: 'category',
