@@ -56,24 +56,8 @@ export const router = [
         },
     },
     {
-        path: PATHS.LOGIN,
-        component: LoginPage,
-        layout: NotAuthenticatedLayout,
-        meta: {
-            requiresAuth: false,
-        },
-    },
-    {
         path: PATHS.AUTH,
         component: AuthPage,
-        layout: NotAuthenticatedLayout,
-        meta: {
-            requiresAuth: false,
-        },
-    },
-    {
-        path: PATHS.REGISTER,
-        component: RegisterPage,
         layout: NotAuthenticatedLayout,
         meta: {
             requiresAuth: false,
@@ -153,7 +137,7 @@ export const router = [
     },
     {
         path: PATHS.PROJECT_DETAIL,
-        component: ProjectDetailPage, //ProjectDetail
+        component: ProjectDetail,
         layout: DefaultLayout,
         meta: {
             requiresAuth: false,
