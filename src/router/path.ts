@@ -2,8 +2,6 @@ export const PATHS = {
     HOME: '/',
 
     //athentication
-    LOGIN: '/login',
-    REGISTER: '/register',
     AUTH: '/auth',
     REFRESH_TOKEN: '/refresh-token',
 

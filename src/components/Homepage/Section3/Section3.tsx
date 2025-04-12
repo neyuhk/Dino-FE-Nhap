@@ -2,8 +2,11 @@ import React from 'react';
 import styles from './Section3.module.css';
 import ButtonComponent from "../../Button/ButtonComponent.tsx";
 import ButtonGradient from '../../ButtonGradient/ButtonGradient.tsx'
+import { useNavigate } from 'react-router-dom'
 
 const Section3: React.FC = () => {
+    const navigate = useNavigate();
+
     return (
         <section className={styles.section}>
             <div className={styles.container}>
@@ -17,7 +20,8 @@ const Section3: React.FC = () => {
                             Dino hỗ trợ nạp mã nguồn sang phần cứng
                         </p>
                         <ButtonGradient
-                            text = "Thử ngay"
+                            text="Thử ngay"
+                            onClick={() => navigate('/blockly')}
                         />
                     </div>
                     <div className={styles.imageWrapper}>

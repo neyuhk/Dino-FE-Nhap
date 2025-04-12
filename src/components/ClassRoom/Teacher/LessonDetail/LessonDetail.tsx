@@ -35,12 +35,6 @@ const LessonDetail: React.FC = () => {
         description: ''
     });
 
-    if (!user) {
-        return (
-            <RequireAuth></RequireAuth>
-        );
-    }
-
     const [toast, setToast] = useState<ToastMessage>({
         show: false,
         type: 'info',
@@ -101,6 +95,12 @@ const LessonDetail: React.FC = () => {
         fetchExercises()
         fetchLessonDetail();
     }, [lessonId, lesson, courseId]);
+
+    if (!user) {
+        return (
+            <RequireAuth></RequireAuth>
+        );
+    }
 
     const handleBack = () => {
         navigate(-1);
