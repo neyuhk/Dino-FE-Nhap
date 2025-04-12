@@ -1,5 +1,18 @@
 import * as Blockly from 'blockly/core';
 // Custom text blocks.
+const pinOptionsDigital = Array.from({ length: 12 }, (_, i) => {
+    const pin = (i + 2).toString(); // từ 2 đến 13
+    return [pin, pin];
+});
+const pinOptionsAll = [
+    ...Array.from({ length: 12 }, (_, i) => {
+        const pin = (i + 2).toString();
+        return [pin, pin];
+    }),
+    ...['A0', 'A1', 'A2', 'A3', 'A4', 'A5'].map(a => [a, a])
+];
+
+
 const addText = {
     type: 'add_text',
     message0: 'Add text %1',
@@ -1919,9 +1932,10 @@ const buttonPressHold = {
     message0: 'When button on pin %1 is pressed %2 do %3',
     args0: [
         {
-            type: 'input_value',
+            type: 'field_dropdown',
             name: 'PIN',
             check: 'Number',
+            options: pinOptionsDigital,
         },
         {
             type: 'input_dummy'
@@ -1944,9 +1958,10 @@ const buttonToggle = {
     message0: 'Toggle when button on pin %1 is pressed %2 ON action %3 OFF action %4',
     args0: [
         {
-            type: 'input_value',
+            type: 'field_dropdown',
             name: 'PIN',
             check: 'Number',
+            options: pinOptionsDigital,
         },
         {
             type: 'input_dummy'
@@ -1973,9 +1988,10 @@ const buttonLongPress = {
     message0: 'Button on pin %1 long press time %2 ms %3 short press action %4 long press action %5',
     args0: [
         {
-            type: 'input_value',
+            type: 'field_dropdown',
             name: 'PIN',
             check: 'Number',
+            options: pinOptionsDigital,
         },
         {
             type: 'input_value',
@@ -2007,9 +2023,10 @@ const buttonMultiPress = {
     message0: 'Count presses on pin %1 reset after %2 ms %3 on press #1 %4 on press #2 %5 on press #3 %6',
     args0: [
         {
-            type: 'input_value',
+            type: 'field_dropdown',
             name: 'PIN',
             check: 'Number',
+            options: pinOptionsDigital,
         },
         {
             type: 'input_value',
