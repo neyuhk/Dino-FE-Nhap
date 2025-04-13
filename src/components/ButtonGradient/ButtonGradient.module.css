@@ -8,6 +8,7 @@
     padding: 2px;
 }
 .gradientButton {
+    margin: 0px;
     position: relative;
     display: inline-block;
     padding: 10px 20px;
