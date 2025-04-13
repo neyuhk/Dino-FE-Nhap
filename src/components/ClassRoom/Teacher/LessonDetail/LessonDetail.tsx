@@ -293,19 +293,19 @@ const LessonDetail: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className={styles.progressContainer}>
-                            <div className={styles.progressLabel}>
-                                Tiến độ hoàn thành: {currentLesson.progress}%
-                            </div>
-                            <div className={styles.progressBar}>
-                                <div
-                                    className={styles.progressFill}
-                                    style={{
-                                        width: `${currentLesson.progress}%`,
-                                    }}
-                                />
-                            </div>
-                        </div>
+                        {/*<div className={styles.progressContainer}>*/}
+                            {/*<div className={styles.progressLabel}>*/}
+                            {/*    Tiến độ hoàn thành: {currentLesson.progress}%*/}
+                            {/*</div>*/}
+                            {/*<div className={styles.progressBar}>*/}
+                            {/*    <div*/}
+                            {/*        className={styles.progressFill}*/}
+                            {/*        style={{*/}
+                            {/*            width: `${currentLesson.progress}%`,*/}
+                            {/*        }}*/}
+                            {/*    />*/}
+                            {/*</div>*/}
+                        {/*</div>*/}
                     </div>
                 </div>
             )}

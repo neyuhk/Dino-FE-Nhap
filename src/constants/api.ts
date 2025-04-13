@@ -72,7 +72,7 @@ export const EXERCISE_API = {
 }
 
 export const COMMENT_API = {
-    GET_COMMENTS: '/comment/all-comments/',
+    GET_COMMENTS: '/comment/commentable/',
 
     GET_COMMENT_BY_ID: '/comment/',
     CREATE_COMMENT: '/comment',

@@ -82,7 +82,7 @@ const HeaderComponent: React.FC = () => {
         },
         {
             key: 'classroom',
-            title: 'Lớp học',
+            title: 'Khóa học của tôi',
             href: PATHS.CLASSROOM || '/classroom',
         },
     ];
