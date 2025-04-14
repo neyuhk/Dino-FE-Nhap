@@ -67,6 +67,7 @@ export const EXERCISE_API = {
     DELETE_EXERCISE: '/exercise/',
     GET_QUIZ_BY_EXERCISE_ID: '/quiz/exercise/',
     GET_ANSWER_QUIZ: '/quiz/answer',
+    GET_EXERCISE_DETAIL_FOR_TEACHER: 'quiz/exercise/teacher/',
     GET_EXERCISE_FOR_TEACHER: '/exercise/teacher/',
     GET_EXERCISE_FOR_STUDENT: 'exercise/lesson/', // +:lessonid/user/:userId
 }
