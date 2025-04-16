@@ -16,6 +16,7 @@ import { FaTimes } from 'react-icons/fa'
 import { Button, Upload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { convertDateTimeToDate } from '../../../../helpers/convertDateTime.ts'
+import CourseScore from './CourseScore.tsx'
 
 interface ToastMessage {
     show: boolean
@@ -30,7 +31,7 @@ const CourseDetail: React.FC = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const course = location.state?.course || null
-    const [activeTab, setActiveTab] = useState<'lessons' | 'students'>(
+    const [activeTab, setActiveTab] = useState<'lessons' | 'students' | 'scores'>(
         'lessons'
     )
     const [loading, setLoading] = useState<boolean>(true)
@@ -283,6 +284,10 @@ const CourseDetail: React.FC = () => {
         return <div className={styles.loadingContainer}>Đang tải...</div>
     }
 
+    function onClick(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
+        throw new Error('Function not implemented.')
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -380,17 +385,25 @@ const CourseDetail: React.FC = () => {
                 >
                     Quản lý học sinh
                 </button>
+                <button
+                    className={`${styles.tabButton} ${activeTab === 'scores' ? styles.active : ''}`}
+                    onClick={() => setActiveTab('scores')}
+                >
+                    Điểm khóa học
+                </button>
             </div>
 
             {/* Tab content */}
             <div className={styles.tabContent}>
                 {activeTab === 'lessons' ? (
                     <CourseLessons courseId={courseId ? courseId : ''} />
-                ) : (
+                ) : activeTab === 'students' ? (
                     <CourseStudents
                         courseId={courseId ? courseId : ''}
                         students={listStudent}
                     />
+                ) : (
+                    <CourseScore courseId={courseId ? courseId : ''} />
                 )}
             </div>
 
