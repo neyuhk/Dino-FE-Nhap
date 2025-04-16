@@ -83,6 +83,7 @@ export const COMMENT_API = {
 }
 
 export const FORUM_API = {
+    GET_MY_FORUMS: '/forum/user/',
     GET_FORUMS: '/forum/userId/',
     GET_FORUM_BY_ID: '/forum/',
     GET_LIKE_FORUM_BY_ID: '/forum/like/user/',
