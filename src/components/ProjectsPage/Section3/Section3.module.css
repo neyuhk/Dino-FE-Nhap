@@ -255,3 +255,6 @@
         margin-top: 10px;
     }
 }
+button{
+    box-shadow: none;
+}
