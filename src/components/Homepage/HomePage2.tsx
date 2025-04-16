@@ -186,7 +186,10 @@ const HomePage2 = () => {
                             Tương thích với Arduino và các nền tảng phổ biến
                         </li>
                     </ul>
-                    <button onClick={() => navigate('/blockly')} className={styles.primaryBtn}>
+                    <button onClick={() => {
+                        navigate('/our-product');
+                        window.scrollTo({ top: 0, behavior: 'smooth' }); // hoặc 'auto'
+                    }} className={styles.primaryBtn}>
                         Tìm Hiểu Về Dino
                     </button>
                 </div>
