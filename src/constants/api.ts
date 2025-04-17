@@ -12,12 +12,15 @@ export const USER_API = {
     GET_CURRENT_USER: '/user/me',
     GET_USERS: '/user',
     GET_USER_BY_ID: '/user/',
+    UPDATE_USERS: '/user/edit',
     FIND_USER: '/user/find',
 }
 
 export const PROJECT_API = {
     GET_PROJECTS: '/project',
+    SEARCH_PROJECTS: '/project/search-type',
     GET_PROJECT_BY_ID: '/project/',
+    GET_FAVORITE_PROJECTS: '/project/favorite/',
     CREATE_PROJECT: '/project',
     UPDATE_PROJECT: '/project/',
     DELETE_PROJECT: '/project/',
@@ -26,6 +29,7 @@ export const PROJECT_API = {
     GET_PROJECT_BY_USER_ID: '/project/user/',
     GET_PROJECT_BY_TYPE: '/project/type/',
     CHANGE_PROJECT_TYPE: '/project/change-type',
+    SET_FAVORITE_PROJECT: '/project/favorite',
 }
 
 export const COURSE_API = {
@@ -45,7 +49,7 @@ export const LESSON_API = {
     GET_LESSONS: '/lesson',
     GET_LESSONS_COURSE_ID: '/lesson/course/',
     GET_LESSONS_COURSE_ID_STUDENT: '/lesson/lesson-student/',
-    GET_LESSON_BY_ID: '/lesson/:id',
+    GET_LESSON_BY_ID: '/lesson/',
     CREATE_LESSON: '/lesson/course/',
     UPDATE_LESSON: '/lesson/',
     DELETE_LESSON: '/lesson/',

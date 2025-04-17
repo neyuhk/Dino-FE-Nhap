@@ -23,7 +23,7 @@ export interface User {
     createdAt: string;
     updatedAt: string;
     birthday: Date;
-    phonenumber: string;
+    phoneNumber: string;
 }
 
 export interface CourseReq {

@@ -112,7 +112,6 @@ const TeacherClassroom: React.FC = () => {
             message,
         })
     }
-
     // Close toast
     const hideToast = () => {
         setToast((prev) => ({ ...prev, show: false }))

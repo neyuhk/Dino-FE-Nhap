@@ -8,6 +8,22 @@ export const getProjects = async (page: number, perPage: number, name: string) =
         params: { page, perPage, name }
     })).data;
 };
+export const searchProject = async (page: number, perPage: number, name: string, is_mine: string, user_id: string) => {
+    return (await http.get(PROJECT_API.SEARCH_PROJECTS, {
+        params: { page, perPage, name, is_mine, user_id },
+    })).data;
+};
+export const getFavoriteProjects = async (userId: string, page: number, perPage: number) => {
+    return (
+        await http.get(PROJECT_API.GET_FAVORITE_PROJECTS, {
+            params: {
+                userId,
+                page,
+                perPage
+            }
+        })
+    ).data;
+};
 
 export const getProjectById = async (id: string) => {
     return (await http.get(PROJECT_API.GET_PROJECT_BY_ID + id)).data
@@ -51,4 +67,7 @@ export const getProjectByType = async (type: string) => {
 
 export const changeProjectType = async (projectId: string, type: string) => {
     return await http.post(PROJECT_API.CHANGE_PROJECT_TYPE, {projectId, type})
+}
+export const setFavoriteProject = async (projectId: string, userId: string) => {
+    return await http.post(PROJECT_API.SET_FAVORITE_PROJECT, {userId, projectId})
 }

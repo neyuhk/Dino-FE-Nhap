@@ -2,6 +2,7 @@
 import http from './http/http'
 import httpAuth from './http/httpAuth'
 import { USER_API } from '../constants/api'
+import httpFile from './http/httpFile.ts'
 
 export const getCurrentUser = async () => {
     return (await httpAuth.get(USER_API.GET_CURRENT_USER)).data
@@ -15,6 +16,9 @@ export const getUserById = async (id: string) => {
     return (await httpAuth.get(USER_API.GET_USER_BY_ID + id)).data
 }
 
+export const editUser = async (data: any) => {
+    return await httpFile.put(USER_API.UPDATE_USERS, data)
+}
 export const findUser = async (query: string, page: number, perPage: number) => {
     return (
         await httpAuth.get(USER_API.FIND_USER, {
