@@ -17,7 +17,15 @@
 .searchInput {
     width: 100%;
 }
-
+Space{
+    width: 100%;
+}
+.actionButton{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 .grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);

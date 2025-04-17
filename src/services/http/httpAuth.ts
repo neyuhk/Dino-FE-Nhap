@@ -6,6 +6,7 @@ import { logout } from '../../stores/authSlice.ts'
 
 // Tạo instance httpAuth
 const httpAuth: AxiosInstance = axios.create({
+    withCredentials: true,
     baseURL: import.meta.env.VITE_APP_ROOT_API,
     transformRequest: [
         (data) => {
@@ -20,6 +21,7 @@ const httpAuth: AxiosInstance = axios.create({
 
 // Tạo instance httpFile
 const httpFile: AxiosInstance = axios.create({
+    withCredentials: true,
     baseURL: import.meta.env.VITE_APP_ROOT_API,
     headers: {
         'Content-Type': 'multipart/form-data', // Dành cho upload file
@@ -44,13 +46,12 @@ const addTokenInterceptor = (instance: AxiosInstance) => {
         (response) => response,
         async (error) => {
             const originalRequest = error.config;
-            if (error.response?.status === 401 && !originalRequest._retry) {
+            if (error.response.status === 401 && !originalRequest._retry) {
                 originalRequest._retry = true;
                 try {
-                    // Gọi hàm refresh token
-                    const newToken = await store.dispatch(refreshTokenAction()).unwrap();
-                    originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
-                    return instance(originalRequest); // Thử lại request với token mới
+                    console.log('bd tim')
+                    await store.dispatch(refreshTokenAction())
+                    return instance(originalRequest)
                 } catch (refreshError) {
                     store.dispatch(logout()); // Đăng xuất nếu refresh token thất bại
                     return Promise.reject(refreshError);

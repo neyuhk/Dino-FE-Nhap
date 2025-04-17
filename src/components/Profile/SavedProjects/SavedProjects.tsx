@@ -6,6 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import styles from './SavedProjects.module.css';
 import { Project } from '../../../model/model.ts';
 import Toast from '../../commons/Toast/Toast.tsx'
+import { Bookmark } from 'lucide-react'
+import { searchProject, setFavoriteProject } from '../../../services/project.ts'
+import { useSelector } from 'react-redux'
 
 const { Title, Text, Paragraph } = Typography;
 const { Meta } = Card;
@@ -25,10 +28,10 @@ interface ToastMessage {
 interface SavedProjectsProps {
     projects: Project[];
     onSaveToggle: (projectId: string) => void;
-    userId: string;
 }
 
-const SavedProjects: React.FC<SavedProjectsProps> = ({ projects: initialProjects, onSaveToggle, userId }) => {
+const SavedProjects: React.FC<SavedProjectsProps> = ({ projects: initialProjects, onSaveToggle }) => {
+    const { user } = useSelector((state: any) => state.auth);
     const [projects, setProjects] = useState<Project[]>(initialProjects);
     const [unsaveProjectId, setUnsaveProjectId] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
@@ -66,8 +69,8 @@ const SavedProjects: React.FC<SavedProjectsProps> = ({ projects: initialProjects
         setLoading(true);
         try {
             // In the actual implementation, you would use the imported searchProject
-            // const response = await searchProject(1, 50, value, 'false', userId);
-            // setProjects(response.data);
+            const response = await searchProject(1, 1000, value, 'false', user._id);
+            setProjects(response.data);
 
             // For now, we'll just filter the current projects
             if (value.trim() === '') {
@@ -90,7 +93,7 @@ const SavedProjects: React.FC<SavedProjectsProps> = ({ projects: initialProjects
         if (unsaveProjectId) {
             try {
                 // In the actual implementation, you would use the imported setFavoriteProject
-                // await setFavoriteProject(unsaveProjectId, userId);
+                await setFavoriteProject(unsaveProjectId, user._id);
 
                 // Remove the project from the displayed list
                 setProjects(prevProjects =>
@@ -156,32 +159,33 @@ const SavedProjects: React.FC<SavedProjectsProps> = ({ projects: initialProjects
                                 </div>
                             }
                             onClick={() => handleProjectClick(project._id)}
-                            actions={[
-                                <Button
-                                    type="primary"
-                                    icon={<SaveOutlined />}
-                                    className={styles.saveButton}
-                                    style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }} // xanh sáng
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setUnsaveProjectId(project._id);
-                                    }}
-                                />
-                            ]}
                         >
                             <Meta
                                 title={project.name}
                                 description={
-                                    <Space direction="vertical" size="small">
+                                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
                                         <Paragraph ellipsis={{ rows: 2 }}>
                                             {truncateText(project.description)}
                                         </Paragraph>
-                                        <Space>
-                                            <ClockCircleOutlined />
-                                            <Text type="secondary">
-                                                {format(new Date(project.createdAt), 'dd/MM/yyyy')}
-                                            </Text>
-                                        </Space>
+                                        <div className={styles.actionButton}>
+                                            <Space>
+                                                <ClockCircleOutlined />
+                                                <Text type="secondary">
+                                                    {format(new Date(project.createdAt), 'dd/MM/yyyy')}
+                                                </Text>
+                                            </Space>
+                                            <Button
+                                                type="primary"
+                                                icon={<Bookmark size={16} />} // hoặc size={20} tùy ý
+                                                className={styles.saveButton}
+                                                style={{ backgroundColor: '#52c41a', borderColor: '#52c41a', color: 'white' }}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setUnsaveProjectId(project._id);
+                                                }}
+                                            />
+                                        </div>
+
                                     </Space>
                                 }
                             />
