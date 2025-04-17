@@ -34,6 +34,7 @@ export const COURSE_API = {
     GET_COUESE_BY_STUDENT_ID: '/course/member/',
     GET_COUESE_BY_TEACHER_ID: '/course/teacher/',
     CREATE_COURSE: '/course',
+    CLONE_COURSE: '/course/clone-course',
     UPDATE_COURSE: '/course/',
     DELETE_COURSE: '/course/',
     GET_STUDENT_BY_COURSE_ID: '/course/member/list-member/',
@@ -54,6 +55,7 @@ export const SCORE_API = {
     GET_SCORE_BY_USER_ID: '/score/user/',
     GET_SCORE_BY_COURSE_ID: '/score/course/',
     GET_SCORE_BY_EXERCISE_ID: '/score/exercise/',
+    GET_SUBMITTED_SCORE: '/quiz/get-submitted-quiz',
     CREATE_SCORE: '/score',
     UPDATE_SCORE: '/score/',
     DELETE_SCORE: '/score/',
@@ -73,8 +75,8 @@ export const EXERCISE_API = {
 }
 
 export const COMMENT_API = {
-    GET_COMMENTS: '/comment/commentable/',
-
+    GET_COMMENTS: '/comment/nguyen-comment/',
+    GET_SUB_COMMENT: 'comment/nguyen-sub-comment',
     GET_COMMENT_BY_ID: '/comment/',
     CREATE_COMMENT: '/comment',
     UPDATE_COMMENT: '/comment/:id',
