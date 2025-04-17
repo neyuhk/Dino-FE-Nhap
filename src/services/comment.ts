@@ -1,7 +1,7 @@
 import { COMMENT_API } from '../constants/api.ts'
 import http from '@/services/http/http'
 import { CommentReq } from '../model/model.ts'
-import httpAuth from './http/httpAuth.ts'
+import { httpAuth } from './http/httpAuth.ts'
 
 export const getCommentsByCommentableId = async (
     commentableId: string,

@@ -8,6 +8,8 @@ import { format } from 'date-fns';
 import styles from './AboutMe.module.css';
 import { User } from '../../../model/model.ts'
 import Toast from '../../commons/Toast/Toast.tsx'
+import { putLocalStorage } from '../../../helpers/localStorageHelper.ts'
+import { LOCAL_STORAGE_KEYS } from '../../../constants/localStorageKey.ts'
 
 interface ToastMessage {
     show: boolean
@@ -129,7 +131,7 @@ const AboutMe: React.FC = () => {
             });
 
             // Include user ID
-            data.append('_id', user._id);
+            data.append('userId', user._id);
 
             // Add avatar if selected
             if (selectedAvatar) {
@@ -137,7 +139,9 @@ const AboutMe: React.FC = () => {
             }
 
             // Call the API to update user data
-            await editUser(data);
+            const newUser = await editUser(data);
+            console.log('Updated user:', newUser.data.data);
+            putLocalStorage(LOCAL_STORAGE_KEYS.INFO, JSON.stringify(newUser.data.data))
 
             // Show success message
             showToast('success', 'Thành công', 'Thông tin cá nhân đã được cập nhật!');

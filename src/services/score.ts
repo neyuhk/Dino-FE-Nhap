@@ -1,6 +1,6 @@
-import { EXERCISE_API, SCORE_API } from '../constants/api.ts'
+import { SCORE_API } from '../constants/api.ts'
 import http from './http/http.ts'
-import httpAuth from './http/httpAuth.ts'
+import { httpAuth } from './http/httpAuth.ts'
 
 export const createScore = async (body: any) => {
     return (await http.post(SCORE_API.CREATE_SCORE, body)).data

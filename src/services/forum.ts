@@ -1,7 +1,6 @@
 import http from '@/services/http/http'
-import httpFile from './http/httpFile.ts'
-import { COURSE_API, FORUM_API } from '../constants/api.ts'
-import httpAuth from './http/httpAuth.ts'
+import { FORUM_API } from '../constants/api.ts'
+import { httpAuth, httpFile } from './http/httpAuth.ts'
 
 export const getForums = async (id: string, page: number, perPage: number) => {
     return (

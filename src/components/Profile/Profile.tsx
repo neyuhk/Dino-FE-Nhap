@@ -40,7 +40,7 @@ const Profile: React.FC = () => {
         };
 
         fetchSavedProjects();
-    }, [])
+    }, [user])
     return (
         <div className={styles.profileContainer}>
             <header className={styles.header}>

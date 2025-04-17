@@ -1,68 +1,68 @@
-import axios from 'axios'
+import axios, { AxiosInstance } from 'axios'
 import { LOCAL_STORAGE_KEYS } from '../../constants/localStorageKey.ts'
+import store from '../../stores'
 import { refreshTokenAction } from '../../stores/authAction.ts'
 import { logout } from '../../stores/authSlice.ts'
-import store from '../../stores'
 
-
-const httpAuth = axios.create({
-    withCredentials: true,
-    // @ts-ignore
+// Tạo instance httpAuth
+const httpAuth: AxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_APP_ROOT_API,
     transformRequest: [
-        // @ts-ignore
-        function(data: any, headers: any) {
-            return JSON.stringify(data)
+        (data) => {
+            // Chuyển đổi dữ liệu thành JSON trước khi gửi
+            return JSON.stringify(data);
         },
     ],
     headers: {
         'Content-Type': 'application/json',
     },
-})
+});
 
-httpAuth.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem(LOCAL_STORAGE_KEYS.AUTHENTICATION_TOKEN)
-        if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`
-        }
-        return config
+// Tạo instance httpFile
+const httpFile: AxiosInstance = axios.create({
+    baseURL: import.meta.env.VITE_APP_ROOT_API,
+    headers: {
+        'Content-Type': 'multipart/form-data', // Dành cho upload file
     },
-    (error) => {
-        return Promise.reject(error)
-    },
-)
+});
 
-httpAuth.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-        const originalRequest = error.config
-        if (error.response.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true
-            try {
-                console.log('bd tim')
-                await store.dispatch(refreshTokenAction())
-                return httpAuth(originalRequest)
-            } catch (err) {
-                await store.dispatch(logout())
-                return Promise.reject(err)
+// Hàm interceptor chung để thêm token
+const addTokenInterceptor = (instance: AxiosInstance) => {
+    instance.interceptors.request.use(
+        (config) => {
+            const token = localStorage.getItem(LOCAL_STORAGE_KEYS.AUTHENTICATION_TOKEN);
+            if (token) {
+                config.headers['Authorization'] = `Bearer ${token}`;
             }
+            return config;
+        },
+        (error) => Promise.reject(error)
+    );
+
+    // Xử lý response để refresh token nếu cần
+    instance.interceptors.response.use(
+        (response) => response,
+        async (error) => {
+            const originalRequest = error.config;
+            if (error.response?.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;
+                try {
+                    // Gọi hàm refresh token
+                    const newToken = await store.dispatch(refreshTokenAction()).unwrap();
+                    originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+                    return instance(originalRequest); // Thử lại request với token mới
+                } catch (refreshError) {
+                    store.dispatch(logout()); // Đăng xuất nếu refresh token thất bại
+                    return Promise.reject(refreshError);
+                }
+            }
+            return Promise.reject(error);
         }
-        return Promise
-    }
-)
+    );
+};
 
-// httpAuth.interceptors.response.use(
-//     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//     // @ts-ignore
-//     null,
-//     (error: any) => {
-//         if ([401, 403].includes(error.response.status)) {
-//             // eslint-disable-next-line @typescript-eslint/no-empty-function
-//             logout().then((r) => {console.log(r)})
-//         }
-//         return Promise.reject(error)
-//     },
-// )
+// Áp dụng interceptor cho cả hai instance
+addTokenInterceptor(httpAuth);
+addTokenInterceptor(httpFile);
 
-export default httpAuth
+export { httpAuth, httpFile };

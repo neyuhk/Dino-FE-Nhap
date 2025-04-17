@@ -1,8 +1,6 @@
 import { COURSE_API } from '../constants/api.ts'
 import http from '@/services/http/http'
-import httpFile from '@/services/http/httpFile'
-import axios from 'axios'
-import httpAuth from './http/httpAuth.ts'
+import { httpAuth, httpFile } from './http/httpAuth.ts'
 
 export const getCourses = async () => {
     return (await http.get(COURSE_API.GET_COURSES)).data

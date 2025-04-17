@@ -2,7 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { AUTH_API, USER_API } from '@/constants/api'
 import { getCurrentUser } from '@/services/user'
 import { login, refreshToken } from '../services/auth.ts'
-import { string } from 'blockly/core/utils'
 
 export const loginAction = createAsyncThunk(
     AUTH_API.LOGIN,

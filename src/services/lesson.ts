@@ -1,8 +1,7 @@
 import { COURSE_API, EXERCISE_API, FORUM_API, LESSON_API } from '../constants/api.ts'
 import http from '@/services/http/http'
-import httpFile from '@/services/http/httpFile'
 import { Lesson, Quiz, Student, SubmitAnswerReq } from '../model/classroom.ts'
-import httpAuth from './http/httpAuth.ts'
+import { httpAuth, httpFile } from './http/httpAuth.ts'
 
 export const getLessonByCourseId = async (id:string) => {
     return (await http.get(LESSON_API.GET_LESSONS_COURSE_ID + id)).data

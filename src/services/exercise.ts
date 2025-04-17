@@ -1,5 +1,4 @@
 import http from '@/services/http/http'
-import httpFile from './http/httpFile.ts'
 import {COURSE_API, EXERCISE_API, FORUM_API} from '../constants/api.ts'
 
 export const getExerciseForTeacher = async (lessonId: string) => {
