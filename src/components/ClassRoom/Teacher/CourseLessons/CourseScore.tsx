@@ -33,7 +33,15 @@ const CourseScore: React.FC<Props> = ({ courseId }) => {
     const [editScoreValue, setEditScoreValue] = useState<string>('');
     const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
     const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
-
+    const [deleteConfirm, setDeleteConfirm] = useState<{
+        show: boolean;
+        userId: string | null;
+        exerciseId: string | null;
+    }>({
+        show: false,
+        userId: null,
+        exerciseId: null
+    });
     const [detailPopup, setDetailPopup] = useState<DetailPopup>({
         show: false,
         userId: null,
@@ -281,59 +289,74 @@ const CourseScore: React.FC<Props> = ({ courseId }) => {
     };
 
     // Delete score
-    const handleDeleteScore = async (userId: string, exerciseId: string, event?: React.MouseEvent) => {
+    const handleDeleteScore = (userId: string, exerciseId: string, event?: React.MouseEvent) => {
         if (event) {
-            event.stopPropagation(); // Prevent event bubbling
+            event.stopPropagation();
         }
+        setDeleteConfirm({
+            show: true,
+            userId,
+            exerciseId
+        });
+        setOpenDropdownId(null);
+    };
+    // Confirm delete score
+    const confirmDeleteScore = async () => {
+        if (!deleteConfirm.userId || !deleteConfirm.exerciseId) return;
 
         // Find the score entry in the data
         const scoreEntry = data.find(
-            item => item.userId === userId &&
-                item.exerciseId === exerciseId
+            item => item.userId === deleteConfirm.userId &&
+                item.exerciseId === deleteConfirm.exerciseId
         );
 
         if (!scoreEntry) {
             showToast('error', 'Lỗi', 'Không tìm thấy dữ liệu điểm số.');
+            setDeleteConfirm({ show: false, userId: null, exerciseId: null });
             return;
         }
 
         // Check if scoreId is null
         if (!scoreEntry.scoreId) {
             showToast('error', 'Lỗi', 'Không thể xóa điểm số. Điểm số chưa được tạo hoặc đã bị xóa.');
-            setOpenDropdownId(null);
+            setDeleteConfirm({ show: false, userId: null, exerciseId: null });
             return;
         }
 
-        if (window.confirm("Bạn có chắc muốn xóa điểm số này không?")) {
-            try {
-                await deleteScore(scoreEntry.scoreId);
+        try {
+            await deleteScore(scoreEntry.scoreId);
 
-                // Update UI
-                const updatedData = data.map(item => {
-                    if (
-                        item.userId === userId &&
-                        item.exerciseId === exerciseId
-                    ) {
-                        return {
-                            ...item,
-                            score: null,
-                            status: 'Not Completed'
-                        };
-                    }
-                    return item;
-                });
+            // Update UI
+            const updatedData = data.map(item => {
+                if (
+                    item.userId === deleteConfirm.userId &&
+                    item.exerciseId === deleteConfirm.exerciseId
+                ) {
+                    return {
+                        ...item,
+                        score: null,
+                        status: 'Not Completed'
+                    };
+                }
+                return item;
+            });
 
-                setData(updatedData);
-                updateStats(updatedData);
-                setOpenDropdownId(null);
-                showToast('success', 'Thành công', 'Điểm số đã được xóa.');
-            } catch (error) {
-                console.error("Error deleting score:", error);
-                showToast('error', 'Lỗi', 'Có lỗi khi xóa điểm số. Vui lòng thử lại.');
-            }
+            setData(updatedData);
+            updateStats(updatedData);
+            showToast('success', 'Thành công', 'Điểm số đã được xóa.');
+        } catch (error) {
+            console.error("Error deleting score:", error);
+            showToast('error', 'Lỗi', 'Có lỗi khi xóa điểm số. Vui lòng thử lại.');
+        } finally {
+            // Close confirmation popup
+            setDeleteConfirm({ show: false, userId: null, exerciseId: null });
         }
     };
 
+// Cancel delete
+    const cancelDeleteScore = () => {
+        setDeleteConfirm({ show: false, userId: null, exerciseId: null });
+    };
     // View details
     const viewDetails = (userId: string, userName: string, exerciseId: string, scoreId: any, event?: React.MouseEvent) => {
         if(scoreId === null){
@@ -709,6 +732,34 @@ const CourseScore: React.FC<Props> = ({ courseId }) => {
                     exerciseId={detailPopup.exerciseId}
                     onClose={closeDetailPopup}
                 />
+            )}
+            {/* Delete confirmation popup */}
+            {deleteConfirm.show && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.confirmDialog}>
+                        <div className={styles.confirmHeader}>
+                            <h3>Xác nhận xóa</h3>
+                        </div>
+                        <div className={styles.confirmBody}>
+                            <p>Bạn có chắc muốn xóa điểm số này không?</p>
+                            <p>Hành động này không thể hoàn tác.</p>
+                        </div>
+                        <div className={styles.confirmFooter}>
+                            <button
+                                className={styles.cancelButton}
+                                onClick={cancelDeleteScore}
+                            >
+                                Hủy
+                            </button>
+                            <button
+                                className={styles.deleteButton}
+                                onClick={confirmDeleteScore}
+                            >
+                                Xóa
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
             {toast.show && (
                 <Toast toast={toast} onClose={hideToast} />
