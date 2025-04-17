@@ -44,6 +44,7 @@ export const COURSE_API = {
 export const LESSON_API = {
     GET_LESSONS: '/lesson',
     GET_LESSONS_COURSE_ID: '/lesson/course/',
+    GET_LESSONS_COURSE_ID_STUDENT: '/lesson/lesson-student/',
     GET_LESSON_BY_ID: '/lesson/:id',
     CREATE_LESSON: '/lesson/course/',
     UPDATE_LESSON: '/lesson/',
