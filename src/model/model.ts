@@ -41,8 +41,9 @@ export interface Comment {
     commentable_id: Project;
     commentable_type: string;
     like_count: number;
-    sub_comments: SubComment[];
-    parent_id: string;
+    isLiked: boolean;
+    countSubComment: number;
+    parentId: string;
     createdAt: string;
 }
 

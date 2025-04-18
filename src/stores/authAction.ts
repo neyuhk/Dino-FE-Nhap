@@ -2,7 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { AUTH_API, USER_API } from '@/constants/api'
 import { getCurrentUser } from '@/services/user'
 import { login, refreshToken } from '../services/auth.ts'
-
+import { User } from '../model/model.ts'
+export const UPDATE_USER = 'UPDATE_USER';
 export const loginAction = createAsyncThunk(
     AUTH_API.LOGIN,
     async (credentials: { email: string, password: string }, { rejectWithValue }) => {
@@ -41,3 +42,11 @@ export const refreshTokenAction = createAsyncThunk(
         }
     },
 )
+
+// Action Creators
+export const updateUser = (user: User) => {
+    return {
+        type: UPDATE_USER,
+        payload: user
+    };
+};

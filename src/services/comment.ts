@@ -24,7 +24,7 @@ export const getSubComment = async (
     perPage: number
 ) => {
     return (
-        await http.post(COMMENT_API.GET_COMMENTS,
+        await http.post(COMMENT_API.GET_SUB_COMMENT,
             { parentId, userId }, // body
             { params: { page, perPage } } // query params
         )

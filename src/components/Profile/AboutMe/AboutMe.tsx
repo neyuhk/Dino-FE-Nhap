@@ -1,15 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { editUser } from '../../../services/user'; // adjust path as needed
-import { PencilIcon, CheckIcon, XIcon, UserIcon, CalendarIcon, PhoneIcon, AtSignIcon, ImageIcon, PlusIcon } from 'lucide-react';
+import { editUser } from '../../../services/user';
+import { PencilIcon, CheckIcon, XIcon, UserIcon, CalendarIcon, PhoneIcon, AtSignIcon, PlusIcon } from 'lucide-react';
 import { format } from 'date-fns';
 
-// You can adjust this path based on your project structure
 import styles from './AboutMe.module.css';
-import { User } from '../../../model/model.ts'
-import Toast from '../../commons/Toast/Toast.tsx'
-import { putLocalStorage } from '../../../helpers/localStorageHelper.ts'
-import { LOCAL_STORAGE_KEYS } from '../../../constants/localStorageKey.ts'
+import { User } from '../../../model/model.ts';
+import Toast from '../../commons/Toast/Toast.tsx';
+import { putLocalStorage } from '../../../helpers/localStorageHelper.ts';
+import { LOCAL_STORAGE_KEYS } from '../../../constants/localStorageKey.ts';
 
 interface ToastMessage {
     show: boolean
@@ -18,7 +17,12 @@ interface ToastMessage {
     message: string
     image?: string
 }
-const AboutMe: React.FC = () => {
+
+interface AboutMeProps {
+    onUserUpdate?: (user: User) => void;
+}
+
+const AboutMe: React.FC<AboutMeProps> = ({ onUserUpdate }) => {
     const { user } = useSelector((state: any) => state.auth);
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -33,13 +37,27 @@ const AboutMe: React.FC = () => {
         type: 'info',
         title: '',
         message: '',
-    })
+    });
     // Avatar handling
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [selectedAvatar, setSelectedAvatar] = useState<File | null>(null);
     const [avatarPreview, setAvatarPreview] = useState<string | null>(
         user?.avatar && user.avatar.length > 0 ? user.avatar[0] : null
     );
+
+    // Update local form data when user prop changes
+    useEffect(() => {
+        if (user) {
+            setFormData({
+                username: user.username || '',
+                email: user.email || '',
+                birthday: user.birthday ? new Date(user.birthday) : new Date(),
+                phoneNumber: user.phoneNumber || '',
+            });
+            setAvatarPreview(user.avatar && user.avatar.length > 0 ? user.avatar[0] : null);
+        }
+    }, [user]);
+
     const showToast = (
         type: 'success' | 'error' | 'info',
         title: string,
@@ -50,12 +68,14 @@ const AboutMe: React.FC = () => {
             type,
             title,
             message,
-        })
-    }
+        });
+    };
+
     // Close toast
     const hideToast = () => {
-        setToast((prev) => ({ ...prev, show: false }))
-    }
+        setToast((prev) => ({ ...prev, show: false }));
+    };
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({
@@ -139,9 +159,17 @@ const AboutMe: React.FC = () => {
             }
 
             // Call the API to update user data
-            const newUser = await editUser(data);
-            console.log('Updated user:', newUser.data.data);
-            putLocalStorage(LOCAL_STORAGE_KEYS.INFO, JSON.stringify(newUser.data.data))
+            const response = await editUser(data);
+            const updatedUser = response.data.data;
+            console.log('Updated user:', updatedUser);
+
+            // Save to local storage
+            putLocalStorage(LOCAL_STORAGE_KEYS.INFO, JSON.stringify(updatedUser));
+
+            // Update parent component and Redux store if callback provided
+            if (onUserUpdate) {
+                onUserUpdate(updatedUser);
+            }
 
             // Show success message
             showToast('success', 'Thành công', 'Thông tin cá nhân đã được cập nhật!');
@@ -269,9 +297,10 @@ const AboutMe: React.FC = () => {
                                 type="email"
                                 value={formData.email}
                                 onChange={handleInputChange}
-                                className={styles.input}
+                                className={`${styles.input} ${styles.disabledInput}`}
                                 placeholder="Nhập email"
                                 required
+                                disabled // Disable the email field
                             />
                         </div>
 

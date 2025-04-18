@@ -6,12 +6,14 @@ import { Project, User } from '../../model/model.ts'
 import ProfileCourses from './Courses/Profile-Courses.tsx'
 import { Typography, Pagination } from 'antd'
 import SavedProjects from './SavedProjects/SavedProjects.tsx'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { getFavoriteProjects, searchProject } from '../../services/project.ts'
+import { updateUser } from '../../stores/authAction.ts'
 
 const Profile: React.FC = () => {
     const [activeTab, setActiveTab] = useState('me')
     const { user } = useSelector((state: any) => state.auth)
+    const dispatch = useDispatch() // Get the dispatch function
     const { Title } = Typography
     const [savedProjects, setSavedProjects] = useState<Project[]>([]);
     const [page, setPage] = useState<number>(1);
@@ -46,6 +48,11 @@ const Profile: React.FC = () => {
         if (newPerPage) {
             setPerPage(newPerPage);
         }
+    };
+
+    // Handle user update from AboutMe component
+    const handleUserUpdate = (updatedUser: User) => {
+        dispatch(updateUser(updatedUser)); // Dispatch the updateUser action
     };
 
     return (
@@ -90,7 +97,7 @@ const Profile: React.FC = () => {
             </header>
             <main className={styles.content}>
                 {activeTab === 'me' ? (
-                    <AboutMe />
+                    <AboutMe onUserUpdate={handleUserUpdate} />
                 ) : null}
 
                 {activeTab === 'projects' ? <ProjectList /> : null}

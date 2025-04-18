@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { getLocalStorage, putLocalStorage, removeLocalStorage } from '@/helpers/localStorageHelper'
 import { LOCAL_STORAGE_KEYS } from '@/constants/localStorageKey'
-import { getCurrentUserAction, loginAction, refreshTokenAction } from './authAction'
+import { getCurrentUserAction, loginAction, refreshTokenAction, UPDATE_USER } from './authAction'
+import { User } from '../model/model'
 
 const authSlice = createSlice({
     name: 'auth',
@@ -39,6 +40,12 @@ const authSlice = createSlice({
                 // @ts-ignore
                 // state.isAuthenticated = false
                 // state.user = null
+            })
+            // Add this case to handle user updates
+            .addCase(UPDATE_USER, (state, action: PayloadAction<User>) => {
+                state.user = action.payload
+                // Update local storage too
+                putLocalStorage(LOCAL_STORAGE_KEYS.INFO, JSON.stringify(action.payload))
             })
     },
 })
