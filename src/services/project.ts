@@ -2,9 +2,9 @@ import { PROJECT_API } from '../constants/api.ts'
 import http from '../services/http/http'
 import { httpAuth, httpFile } from './http/httpAuth.ts'
 
-export const getProjects = async (page: number, perPage: number, name: string) => {
+export const getProjects = async (page: number, perPage: number, name: string, type: string) => {
     return (await http.get(PROJECT_API.GET_PROJECTS, {
-        params: { page, perPage, name }
+        params: { page, perPage, name, type }
     })).data;
 };
 export const searchProject = async (page: number, perPage: number, name: string, is_mine: string, user_id: string) => {
@@ -65,8 +65,9 @@ export const getProjectByType = async (type: string) => {
 }
 
 export const changeProjectType = async (projectId: string, type: string) => {
-    return await http.post(PROJECT_API.CHANGE_PROJECT_TYPE, {projectId, type})
+    return await httpAuth.post(PROJECT_API.CHANGE_PROJECT_TYPE, {projectId, type})
 }
+
 export const setFavoriteProject = async (projectId: string, userId: string) => {
     return await http.post(PROJECT_API.SET_FAVORITE_PROJECT, {userId, projectId})
 }

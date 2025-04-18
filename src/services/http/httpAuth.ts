@@ -9,12 +9,12 @@ import { getLocalStorage } from '../../helpers/localStorageHelper.ts'
 const httpAuth: AxiosInstance = axios.create({
     withCredentials: true, // de gui cookie di
     baseURL: import.meta.env.VITE_APP_ROOT_API,
-    transformRequest: [
-        // @ts-ignore
-        function(data: any, headers: any) {
-            return JSON.stringify(data)
-        },
-    ],
+    // transformRequest: [
+    //     // @ts-ignore
+    //     function(data: any, headers: any) {
+    //         return JSON.stringify(data)
+    //     },
+    // ],
     headers: {
         'Content-Type': 'application/json',
     },

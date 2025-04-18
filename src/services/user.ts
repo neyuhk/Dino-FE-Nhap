@@ -30,4 +30,14 @@ export const findUser = async (query: string, page: number, perPage: number) => 
     ).data;
 };
 
+export const deleteUser = async (id: string) => {
+    return await httpAuth.delete(USER_API.DELETE_USERS + id)
+}
 
+export const changePassword = async (data: any) => {
+    return await httpAuth.post(USER_API.CHANGE_PASSWORD, data)
+}
+
+export const changeRole = async (userId: string, role: string) => {
+    return await httpAuth.put(USER_API.CHANGE_ROLE, { userId, role })
+}

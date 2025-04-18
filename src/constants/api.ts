@@ -14,6 +14,9 @@ export const USER_API = {
     GET_USER_BY_ID: '/user/',
     UPDATE_USERS: '/user/edit',
     FIND_USER: '/user/find',
+    DELETE_USERS: '/user/',
+    CHANGE_PASSWORD: '/user/change-password',
+    CHANGE_ROLE: '/user/change-role',
 }
 
 export const PROJECT_API = {

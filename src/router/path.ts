@@ -56,7 +56,4 @@ export const PATHS_ADMIN = {
 
     FORUM: '/admin/forum',
     FORUM_DETAIL: '/admin/forum/detail/:forumId',
-
-    CLASSROOM: '/admin/classroom',
-    CLASSROOM_DETAIL: '/admin/classroom/detail/:classroomId',
 }
