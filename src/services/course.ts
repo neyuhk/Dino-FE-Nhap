@@ -2,8 +2,10 @@ import { COURSE_API } from '../constants/api.ts'
 import http from '@/services/http/http'
 import { httpAuth, httpFile } from './http/httpAuth.ts'
 
-export const getCourses = async () => {
-    return (await http.get(COURSE_API.GET_COURSES)).data
+export const getCourses = async (page: number, perPage: number, title: string) => {
+    return (await http.get(COURSE_API.GET_COURSES, {
+        params: { page, perPage, title },
+    })).data
 }
 
 export const getCourseById = async (id: string) => {
@@ -11,18 +13,18 @@ export const getCourseById = async (id: string) => {
 }
 
 export const addCourse = async (data: any) => {
-    return (await httpFile.post(COURSE_API.CREATE_COURSE, data)).data;
+    return (await httpFile.post(COURSE_API.CREATE_COURSE, data)).data
 }
 export const cloneCourse = async (formData: any) => {
     return (await httpFile.post(COURSE_API.CLONE_COURSE, formData)).data
 }
 
 export const deleteCourse = async (id: string) => {
-    return await http.delete(COURSE_API.DELETE_COURSE + id);
+    return await http.delete(COURSE_API.DELETE_COURSE + id)
 }
 
-export const editCourse = async (courseId: string ,data: any) => {
-    return (await httpFile.put(COURSE_API.UPDATE_COURSE + courseId, data)).data;
+export const editCourse = async (courseId: string, data: any) => {
+    return (await httpFile.put(COURSE_API.UPDATE_COURSE + courseId, data)).data
 }
 
 export const getStudentByCourseId = async (id: string) => {
@@ -30,7 +32,7 @@ export const getStudentByCourseId = async (id: string) => {
 }
 
 export const addStudent = async (data: any) => {
-    return (await http.post(COURSE_API.ADD_STUDENT, data)).data;
+    return (await http.post(COURSE_API.ADD_STUDENT, data)).data
 }
 
 export const getCourseByUserId = async (userId: string) => {
