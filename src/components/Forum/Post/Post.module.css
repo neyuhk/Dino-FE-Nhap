@@ -398,3 +398,9 @@
     color: #6B7280;
     font-size: 0.875rem;
 }
+:global(.custom-popconfirm .ant-popconfirm-buttons) {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 8px;
+}

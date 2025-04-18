@@ -185,6 +185,20 @@ const ForumPage: React.FC = () => {
         }
     };
 
+    const handleUpdatePost = (postId: string, updatedPost: any) => {
+        setForumList(prev => prev.map(post => {
+            if (post._id === postId) {
+                // Thay thế hoàn toàn post cũ bằng post mới từ API response
+                return {
+                    ...post,         // Giữ lại các thuộc tính không thay đổi từ post ban đầu
+                    ...updatedPost,  // Cập nhật với tất cả dữ liệu mới
+                    _id: postId      // Đảm bảo _id không bị thay đổi
+                };
+            }
+            return post;
+        }));
+    };
+
     const handleDeletePost = (postId: string) => {
         // Loại bỏ bài đăng đã xóa khỏi danh sách
         setForumList(prev => prev.filter(post => post._id !== postId));
@@ -194,7 +208,6 @@ const ForumPage: React.FC = () => {
         { id: 'home', icon: Home, label: 'Trang chủ' },
         { id: 'class', icon: BookOpen, label: 'Lớp học' },
         { id: 'liked', icon: ThumbsUp, label: 'Bài đăng đã thích' },
-        { id: 'commented', icon: MessageSquare, label: 'Bài đăng đã bình luận' },
         { id: 'reposted', icon: Repeat, label: 'Bài đăng lại' },
         { id: 'me', icon: User, label: 'Nhà của tôi' },
     ];
@@ -355,6 +368,8 @@ const ForumPage: React.FC = () => {
                                     onLikeStatusChange={handleLikeStatusChange}
                                     onRepostStatusChange={handleRepostStatusChange}
                                     onDeletePost={handleDeletePost}
+                                    onUpdatePost={handleUpdatePost}
+                                    selectedMenu={selectedMenu}
                                 />
                             ))}
 

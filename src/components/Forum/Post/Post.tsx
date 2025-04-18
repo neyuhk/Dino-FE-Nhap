@@ -14,9 +14,10 @@ interface ExtendedPostProps extends Forum {
     onLikeStatusChange?: (postId: string, isLikedNew: boolean) => void;
     onRepostStatusChange?: (postId: string, isRepostedNew: boolean) => void;
     onDeletePost?: (postId: string) => void;
-    onUpdatePost?: (postId: string, updatedData: { title?: string, description?: string }) => void;
+    onUpdatePost?: (postId: string, updatedPost: any) => void;
     scrollToPost: () => void;
     postRef: (el: HTMLDivElement | null) => void;
+    selectedMenu?: string;
 }
 
 const Post: React.FC<ExtendedPostProps> = ({
@@ -38,6 +39,7 @@ const Post: React.FC<ExtendedPostProps> = ({
                                                onUpdatePost,
                                                scrollToPost,
                                                postRef,
+    selectedMenu,
                                            }) => {
     const { user } = useSelector((state: any) => state.auth)
     const commentSectionRef = useRef<HTMLDivElement>(null);
@@ -67,8 +69,9 @@ const Post: React.FC<ExtendedPostProps> = ({
         avatar: user.avatar,
     } : user_id;
 
-    // Kết nối ref với ref callback từ parent component
     useEffect(() => {
+        setIsReposted(selectedMenu === "reposted"? true : isReposted)
+        setIsLiked(selectedMenu === "liked"? true : isLiked)
         if (postElementRef.current) {
             postRef(postElementRef.current);
         }
@@ -181,17 +184,17 @@ const Post: React.FC<ExtendedPostProps> = ({
             description: description || '',
         });
     };
-
     const handleEditSubmit = async (values: { title: string, description: string }) => {
         try {
-            await updateForum(_id.toString(), values);
+            const response = await updateForum(_id.toString(), values);
 
-            // Cập nhật state local
-            setEditFormData(values);
-
-            // Thông báo cho component cha
+            const updatedPost = response.data;
+            setEditFormData({
+                title: updatedPost.title || '',
+                description: updatedPost.description || '',
+            });
             if (onUpdatePost) {
-                onUpdatePost(_id, values);
+                onUpdatePost(_id, updatedPost);
             }
 
             message.success('Cập nhật bài đăng thành công');
@@ -234,6 +237,7 @@ const Post: React.FC<ExtendedPostProps> = ({
                                     onConfirm={handleDeletePost}
                                     okText="Có"
                                     cancelText="Không"
+                                    overlayClassName="custom-popconfirm"
                                 >
                                     <button className={styles.optionItem}>
                                         <Trash2 size={16} />
@@ -249,7 +253,7 @@ const Post: React.FC<ExtendedPostProps> = ({
             <div className={styles.content}>
                 {title && <h2 className={styles.title}>{title}</h2>}
                 {description && <p className={styles.text}>{description}</p>}
-                {images && (
+                {images && images[0] && (
                     <img
                         src={images}
                         alt="Post content"
