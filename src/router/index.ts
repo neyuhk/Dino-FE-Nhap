@@ -16,16 +16,12 @@ import CourseDetailPage from '../page/Admin/CourseManagement/CourseDetail.tsx'
 import ListForumManagement from '../page/Admin/ForumManagement/ListForum.tsx'
 import ForumDetail from '../page/Admin/ForumManagement/ForumDetail.tsx'
 import AuthPage from '../pages/commons/AuthPage.tsx'
-import BlocklyDemo from '../pages/BlocklyDemo/BlocklyDemo.tsx'
-import BlocklyLayout from '../layouts/BlocklyLayout.tsx'
 import UserDetail from '../page/Admin/UserManagement/UserDetail.tsx'
 import BlocklyPage from '../pages/BlocklyDemo/BlocklyPage.tsx'
 import ProjectPage from '../pages/commons/ProjectPage.tsx'
 import NotAuthenticatedLayout from '../layouts/NotAuthenticatedLayout.tsx'
 import DefaultLayout from '../layouts/DefaultLayout.tsx'
 import HomePage from '../pages/commons/HomePage.tsx'
-import LoginPage from '../pages/commons/LoginPage.tsx'
-import RegisterPage from '../pages/commons/RegisterPage.tsx'
 import ClassRoom from '../pages/commons/ClassRoom.tsx'
 import ProfilePage from '../pages/commons/ProfilePage.tsx'
 import ForumPage from '../pages/commons/ForumPage.tsx'
@@ -34,20 +30,14 @@ import ClassroomDetailPage from '../page/Admin/ClassroomManagement/ClassroomDeta
 import ClassroomDetail from '../components/ClassRoom/ClassroomDetail/ClassroomDetail.tsx'
 import LessonList from '../components/ClassRoom/LessonList/LessonList.tsx'
 import HeaderOnlyLayout from '../layouts/HeaderOnlyLayout.tsx'
-import LearningChallengePage from '../pages/commons/LearningChallengePage.tsx'
 import LearningChallenge from '../components/ClassRoom/LessonList/LessonDetail/LearningChallenge/LearningChallenge.tsx'
-import TestLayout from '../layouts/TestLayout.tsx'
-import CourseLessons from '../components/ClassRoom/Teacher/CourseLessons/CourseLessons.tsx'
 import CourseDetail from '../components/ClassRoom/Teacher/CourseLessons/CourseDetail.tsx'
 import LessonDetail from '../components/ClassRoom/Teacher/LessonDetail/LessonDetail.tsx'
-import ExerciseForm from '../components/ClassRoom/Teacher/LessonDetail/ExerciseForm/ExerciseForm.tsx'
 import ExamplePage from '../components/ClassRoom/Teacher/LessonDetail/ExerciseForm/ExampleUsage.tsx'
 import ExerciseDetail from '../components/ClassRoom/Teacher/LessonDetail/ExerciseDetail/ExerciseDetail.tsx'
 import LessonStudentDetail from '../components/ClassRoom/LessonList/LessonDetail/LessonStudentDetail.tsx'
-import AboutUs from '../components/AboutUs/AboutUs.tsx'
 import AboutUsPage from '../pages/commons/AboutUsPage.tsx'
 import HomePage2 from '../components/Homepage/HomePage2.tsx'
-import OurProductPage from '../pages/commons/OurProductPage.tsx'
 import OurProduct from '../components/OurProduct/OurProduct.tsx'
 
 
@@ -172,14 +162,6 @@ export const router = [
             requiresAuth: false,
         },
     },
-    // {
-    //     path: PATHS.BLOCKLY,
-    //     component: BlocklyDemo,
-    //     layout: BlocklyLayout,
-    //     meta: {
-    //         requiresAuth: false,
-    //     },
-    // },
     {
         path: PATHS.BLOCKLY,
         component: BlocklyPage,

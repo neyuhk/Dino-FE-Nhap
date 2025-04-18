@@ -1,6 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Layout, Typography, Modal, Input, Dropdown, Menu, Space, Avatar, MenuProps, message, Button } from 'antd'
-import { DownOutlined, UserOutlined, SaveOutlined, UploadOutlined, FileOutlined, EditOutlined, PlayCircleOutlined } from '@ant-design/icons'
+import {
+    DownOutlined,
+    UserOutlined,
+    SaveOutlined,
+    UploadOutlined,
+    FileOutlined,
+    EditOutlined,
+    PlayCircleOutlined,
+    CloudDownloadOutlined,
+} from '@ant-design/icons'
 import * as Blockly from 'blockly'
 import { blocks } from '../../Blockly/blocks/defineBlock.ts'
 import { forBlock } from '../../Blockly/generators/customBlock.ts'
@@ -10,7 +19,7 @@ import { save, load } from '../../Blockly/serialization'
 import { Link, useParams } from 'react-router-dom'
 import '../../Blockly/index.css'
 import '../../components/commons/styles/headerBlockly.css'
-import { createProject, getProjectById, updateProject } from '../../services/project.ts'
+import { cloneProject, createProject, getProjectById, updateProject } from '../../services/project.ts'
 import { Project } from '../../model/model.ts'
 import { useSelector } from 'react-redux'
 import { logout } from '../../stores/authSlice.ts'
@@ -122,29 +131,7 @@ const BlocklyPage: React.FC = () => {
         }
     }, [workspace])
 
-
-    const executeCode = () => {
-    };
-
-    const pushCodeBlock = () => {
-        if (workspace) {
-            const javascriptCode = javascriptGenerator.workspaceToCode(workspace)
-            const jsonCode = JSON.stringify(Blockly.serialization.workspaces.save(workspace), null, 2)
-            const xml = Blockly.Xml.workspaceToDom(workspace)
-            const xmlCode = Blockly.Xml.domToPrettyText(xml)
-
-            const payload = {
-                javascriptCode,
-                jsonCode,
-                xmlCode,
-            }
-
-            console.log('Pushing code block:', payload)
-        }
-    }
     const saveCodeBlockToDB = async () => {
-        executeCode();
-
         const outputDiv = document.getElementById("output");
         if (outputDiv) outputDiv.innerText = ""; // Xóa kết quả cũ nếu có
 
@@ -294,6 +281,25 @@ const BlocklyPage: React.FC = () => {
         }
     }
 
+    const cloneProjectFunc = async () => {
+        if (!isAuthenticated) {
+            message.error('Vui lòng đăng nhập để sao chép dự án!');
+            return;
+        }
+
+        if (currentProject) {
+            try {
+                await cloneProject(currentProject._id, user._id)
+                message.success('Dự án đã được sao chép thành công!');
+            } catch (e) {
+                console.error('Error cloning project', e)
+                message.error('Có lỗi xảy ra khi sao chép dự án!');
+            }
+        } else {
+            message.warning('Không tìm thấy dự án để sao chép!');
+        }
+    }
+
     const handleSaveProject = async () => {
         if (!isAuthenticated) {
             message.error('Vui lòng đăng nhập để lưu dự án!');
@@ -313,7 +319,11 @@ const BlocklyPage: React.FC = () => {
 
                 message.loading({ content: 'Đang lưu dự án...', key: 'saveProject' });
 
-                if (projectId) {
+                if (currentProject && currentProject.user_id._id !== user._id) {
+                    message.error('Bạn không có quyền sửa dự án này!');
+                    return;
+                }
+                if (projectId && currentProject?.user_id._id !== user._id) {
                     const project = {
                         ...currentProject,
                         name: projectName,
@@ -382,6 +392,15 @@ const BlocklyPage: React.FC = () => {
             onClick: handleSaveProject,
         },
         {
+            key: '5',
+            label: (
+                <span>
+          <CloudDownloadOutlined /> Clone project
+        </span>
+            ),
+            onClick: cloneProjectFunc,
+        },
+        {
             key: '2',
             label: (
                 <span>
@@ -439,15 +458,6 @@ const BlocklyPage: React.FC = () => {
         </span>
             ),
             onClick: handleLogCode,
-        },
-        {
-            key: '2',
-            label: (
-                <span>
-          <PlayCircleOutlined /> Execute Code
-        </span>
-            ),
-            onClick: executeCode,
         },
         {
             key: '3',

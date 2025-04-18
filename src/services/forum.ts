@@ -67,3 +67,10 @@ export const newForum = async (payload : any) => {
     return (await httpFile.post(FORUM_API.CREATE_FORUM, payload)).data
 }
 
+export const updateForum = async (id: string, payload : any) => {
+    return (await httpFile.put(FORUM_API.UPDATE_FORUM + id, payload)).data
+}
+
+export const getUserLikeForum = async (forumId: string) => {
+    return (await http.get(FORUM_API.GET_USER_LIKE_FORUM + forumId)).data
+}

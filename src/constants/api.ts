@@ -30,6 +30,7 @@ export const PROJECT_API = {
     GET_PROJECT_BY_TYPE: '/project/type/',
     CHANGE_PROJECT_TYPE: '/project/change-type',
     SET_FAVORITE_PROJECT: '/project/favorite',
+    CLONE_PROJECT: '/project/clone',
 }
 
 export const COURSE_API = {
@@ -95,10 +96,11 @@ export const FORUM_API = {
     GET_FORUM_BY_ID: '/forum/',
     GET_LIKE_FORUM_BY_ID: '/forum/like/user/',
     GET_REPOST_FORUM_BY_ID: '/forum/repost/',
+    GET_USER_LIKE_FORUM: '/forum/user-liked/',
     LIKE: '/forum/like',
     REPOST: '/forum/repost',
     CREATE_FORUM: '/forum',
-    UPDATE_FORUM: '/forum/:id',
+    UPDATE_FORUM: '/forum/',
     DELETE_FORUM: '/forum/',
 }
 
