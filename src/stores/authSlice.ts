@@ -11,6 +11,7 @@ const authSlice = createSlice({
     },
     reducers: {
         logout: (state) => {
+            console.log('dang xuat ne')
             state.isAuthenticated = false
             state.user = null
             removeLocalStorage(LOCAL_STORAGE_KEYS.INFO)

@@ -30,6 +30,7 @@ export const PROJECT_API = {
     GET_PROJECT_BY_TYPE: '/project/type/',
     CHANGE_PROJECT_TYPE: '/project/change-type',
     SET_FAVORITE_PROJECT: '/project/favorite',
+    CLONE_PROJECT: '/project/clone',
 }
 
 export const COURSE_API = {

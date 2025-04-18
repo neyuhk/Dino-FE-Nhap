@@ -45,7 +45,7 @@ export const isLikedProject = async (projectId: string, userId: string) => {
 
 export const createProject = async (project: any) => {
     console.log(project)
-    return await httpAuth.post(PROJECT_API.CREATE_PROJECT, project)
+    return await httpFile.post(PROJECT_API.CREATE_PROJECT, project)
 }
 
 export const updateProject = async (project: any, projectId: string) => {
@@ -69,4 +69,8 @@ export const changeProjectType = async (projectId: string, type: string) => {
 }
 export const setFavoriteProject = async (projectId: string, userId: string) => {
     return await http.post(PROJECT_API.SET_FAVORITE_PROJECT, {userId, projectId})
+}
+
+export const cloneProject = async (projectId: string, userId: string) => {
+    return await http.post(PROJECT_API.CLONE_PROJECT, {userId, projectId})
 }
