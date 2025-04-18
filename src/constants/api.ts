@@ -96,10 +96,11 @@ export const FORUM_API = {
     GET_FORUM_BY_ID: '/forum/',
     GET_LIKE_FORUM_BY_ID: '/forum/like/user/',
     GET_REPOST_FORUM_BY_ID: '/forum/repost/',
+    GET_USER_LIKE_FORUM: '/forum/user-liked/',
     LIKE: '/forum/like',
     REPOST: '/forum/repost',
     CREATE_FORUM: '/forum',
-    UPDATE_FORUM: '/forum/:id',
+    UPDATE_FORUM: '/forum/',
     DELETE_FORUM: '/forum/',
 }
 
