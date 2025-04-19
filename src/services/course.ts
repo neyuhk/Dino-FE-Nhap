@@ -20,7 +20,7 @@ export const cloneCourse = async (formData: any) => {
 }
 
 export const deleteCourse = async (id: string) => {
-    return await http.delete(COURSE_API.DELETE_COURSE + id)
+    return await httpAuth.delete(COURSE_API.DELETE_COURSE + id)
 }
 
 export const editCourse = async (courseId: string, data: any) => {
@@ -32,7 +32,7 @@ export const getStudentByCourseId = async (id: string) => {
 }
 
 export const addStudent = async (data: any) => {
-    return (await http.post(COURSE_API.ADD_STUDENT, data)).data
+    return (await httpAuth.post(COURSE_API.ADD_STUDENT, data)).data
 }
 
 export const getCourseByUserId = async (userId: string) => {

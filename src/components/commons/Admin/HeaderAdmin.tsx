@@ -1,17 +1,14 @@
-import { Avatar, Button, Dropdown, Menu, type MenuProps, Modal } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
+import { Avatar, Button, Dropdown, Modal } from 'antd'
+import { UserOutlined, LogoutOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { PATHS } from '../../../router/path.ts'
-import '../styles/header.css'
 import React, { useState } from 'react'
 import { logout } from '../../../stores/authSlice.ts'
 import { AppDispatch } from '../../../stores'
 import { Link, useNavigate } from 'react-router-dom'
+import styles from './HeaderAdmin.module.css'
+import dinoLogo from '../../../assets/dinologo-nobgr.png'
 
-const items1: MenuProps['items'] = ['1', '2', '3'].map((key) => ({
-    key,
-    label: `nav ${key}`,
-}));
 const HeaderAdmin = () => {
     const { isAuthenticated } = useSelector((state: any) => state.auth)
     const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -22,8 +19,9 @@ const HeaderAdmin = () => {
     const confirmLogout = () => {
         setShowLogoutModal(true);
     };
+
     const handleLogout = async () => {
-        console.log('Logout')
+        console.log('Đăng xuất')
         dispatch(logout());
         setShowLogoutModal(false);
         window.location.href = PATHS.AUTH;
@@ -33,63 +31,55 @@ const HeaderAdmin = () => {
         setShowLogoutModal(false);
     };
 
-    const navLeft = (
-        <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={['2']}
-            items={items1}
-            style={{ flex: 1, minWidth: 0 }}
-        />
-    )
-    const menu = (
-        <Menu>
-            <Menu.Item key="profile">
-                <a href="/profile">Trang cá nhân</a>
-            </Menu.Item>
-            <Menu.Item key="logout">
-                <a
-                    onClick={confirmLogout}
-                >
-                    Đăng xuất
-                </a>
-            </Menu.Item>
-        </Menu>
-    )
+    const dropdownItems = [
+        {
+            key: 'profile',
+            label: (
+                <div className={styles.menuItem}>
+                    <UserOutlined />
+                    <span>Trang cá nhân</span>
+                </div>
+            ),
+            onClick: () => navigate('/profile')
+        },
+        {
+            key: 'logout',
+            label: (
+                <div className={styles.menuItem}>
+                    <LogoutOutlined />
+                    <span>Đăng xuất</span>
+                </div>
+            ),
+            onClick: confirmLogout
+        }
+    ];
+
     return (
-        <div className="header-content">
-            <h2
-                style={{
-                    color: '#F26526',
-                }}
-            >
-                Logo
-            </h2>
-            {navLeft}
-            <div>
+        <header className={styles.headerContainer}>
+            <div className={styles.logoSection}>
+                <img src={dinoLogo} alt="Logo" className={styles.logo} />
+                <h2 className={styles.logoText}>Hệ Thống Quản Trị</h2>
+            </div>
+
+            <div className={styles.userSection}>
                 {isAuthenticated ? (
-                    <Dropdown overlay={menu} trigger={['click']}>
-                        <div
-                            className="user-info"
-                            onClick={(e) => e.preventDefault()}
-                        >
-                            <Avatar icon={<UserOutlined />} />
-                            <span className="username white-text">Amin</span>
+                    <Dropdown menu={{ items: dropdownItems }} placement="bottomRight" trigger={['click']}>
+                        <div className={styles.userInfo}>
+                            <Avatar icon={<UserOutlined />} className={styles.avatar} size="large" />
+                            <span className={styles.username}>Admin</span>
                         </div>
                     </Dropdown>
                 ) : (
-                    <Link
-                        to="/auth"
-                        className="sign-in-btn"
-                        onClick={(e) => {
-                            e.preventDefault()
-                            navigate('/auth')
-                        }}
+                    <Button
+                        type="primary"
+                        className={styles.loginButton}
+                        onClick={() => navigate('/auth')}
                     >
                         Đăng nhập
-                    </Link>
+                    </Button>
                 )}
             </div>
+
             <Modal
                 open={showLogoutModal}
                 onCancel={cancelLogout}
@@ -97,29 +87,25 @@ const HeaderAdmin = () => {
                 centered
                 closable={false}
                 width={400}
-                className="logout-confirmation"
+                className={styles.logoutModal}
             >
-                <div className="logout-modal">
-                    <div className="modal-icon">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8.90002 7.55999C9.21002 3.95999 11.06 2.48999 15.11 2.48999H15.24C19.71 2.48999 21.5 4.27999 21.5 8.74999V15.27C21.5 19.74 19.71 21.53 15.24 21.53H15.11C11.09 21.53 9.24002 20.08 8.91002 16.54" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="M15 12H3.62" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="M5.85 8.6499L2.5 11.9999L5.85 15.3499" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
+                <div className={styles.modalContent}>
+                    <div className={styles.modalIcon}>
+                        <LogoutOutlined />
                     </div>
-                    <h3>Xác nhận đăng xuất</h3>
-                    <p>Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?</p>
-                    <div className="modal-actions">
-                        <Button className="cancel-btn" onClick={cancelLogout}>
-                            Hủy
+                    <h3 className={styles.modalTitle}>Xác nhận đăng xuất</h3>
+                    <p className={styles.modalText}>Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?</p>
+                    <div className={styles.modalActions}>
+                        <Button className={styles.cancelButton} onClick={cancelLogout}>
+                            Hủy bỏ
                         </Button>
-                        <Button type="primary" className="confirm-btn" onClick={handleLogout}>
+                        <Button type="primary" className={styles.confirmButton} onClick={handleLogout}>
                             Đồng ý
                         </Button>
                     </div>
                 </div>
             </Modal>
-        </div>
+        </header>
     )
 }
 

@@ -56,11 +56,11 @@ export const getRepostForum = async (id: string, page: number, perPage: number) 
 
 
 export const likePost = async (forumId: string, userId: string) => {
-    return (await http.post(FORUM_API.LIKE , {forumId, userId})).data
+    return (await httpAuth.post(FORUM_API.LIKE , {forumId, userId})).data
 }
 
 export const repost = async (forumId: string, userId: string) => {
-    return (await http.post(FORUM_API.REPOST , {forumId, userId})).data
+    return (await httpAuth.post(FORUM_API.REPOST , {forumId, userId})).data
 }
 
 export const newForum = async (payload : any) => {
