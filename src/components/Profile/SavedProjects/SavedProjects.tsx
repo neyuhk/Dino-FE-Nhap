@@ -222,7 +222,7 @@ const SavedProjects: React.FC<SavedProjectsProps> = ({ projects: initialProjects
                 </div>
             </Modal>
 
-            {toast.show && <Toast toast={toast} onClose={hideToast} />}
+            {toast.show && <Toast toast={toast} onClose={hideToast} type={''} />}
         </div>
     );
 };

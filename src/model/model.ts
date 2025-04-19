@@ -35,12 +35,18 @@ export interface CourseReq {
 }
 
 export interface Course {
-    id: string;
+    _id: string;
     title: string;
     description: string;
     imageUrl: string;
     level: 'Beginner' | 'Intermediate' | 'Advanced';
     startDate: string;
+    certification: string
+    end_date: string;
+    start_date: string;
+    createdAt: string;
+    images: string[];
+    user_id: User;
 }
 
 export interface Comment {

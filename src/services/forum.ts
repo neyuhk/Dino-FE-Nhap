@@ -1,3 +1,4 @@
+// @ts-ignore
 import http from '@/services/http/http'
 import { FORUM_API } from '../constants/api.ts'
 import { httpAuth, httpFile } from './http/httpAuth.ts'

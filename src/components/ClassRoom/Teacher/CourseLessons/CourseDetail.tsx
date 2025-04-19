@@ -374,7 +374,7 @@ const CourseDetail: React.FC = () => {
                 ) : activeTab === 'students' ? (
                     <CourseStudents
                         courseId={courseId ? courseId : ''}
-                        students={listStudent}
+                        // students={listStudent}
                     />
                 ) : (
                     <CourseScore courseId={courseId ? courseId : ''} />
@@ -559,7 +559,7 @@ const CourseDetail: React.FC = () => {
 
              {/*Toast notification*/}
             {toast.show && (
-                <Toast toast={toast} onClose={hideToast} />
+                <Toast toast={toast} onClose={hideToast} type={''} />
             )}
         </div>
     )

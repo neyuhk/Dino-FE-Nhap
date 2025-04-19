@@ -599,7 +599,7 @@ const ProjectList: React.FC = () => {
                     </div>
                 </div>
             )}
-            {toast.show && <Toast toast={toast} onClose={hideToast} />}
+            {toast.show && <Toast toast={toast} onClose={hideToast} type={''} />}
         </div>
     )
 };

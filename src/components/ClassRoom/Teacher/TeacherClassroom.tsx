@@ -309,7 +309,7 @@ const TeacherClassroom: React.FC = () => {
             )}
 
             {/* Toast notification */}
-            {toast.show && <Toast toast={toast} onClose={hideToast} />}
+            {toast.show && <Toast toast={toast} onClose={hideToast} type={''} />}
         </div>
     )
 }

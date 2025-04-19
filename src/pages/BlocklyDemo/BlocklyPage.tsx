@@ -24,8 +24,9 @@ import { Project } from '../../model/model.ts'
 import { useSelector } from 'react-redux'
 import { logout } from '../../stores/authSlice.ts'
 import store from '../../stores'
-import {pushCodeToDb, saveCodeBlock} from '../../services/codeBlock.ts'
+import { pushCodeToDb, saveCodeBlock } from '../../services/codeBlock.ts'
 import styles from './BlocklyPage.module.css'
+import JSZip from 'jszip';
 
 const { Header, Content } = Layout
 const { Title } = Typography
@@ -59,9 +60,9 @@ const BlocklyPage: React.FC = () => {
                         startScale: 1.0,   // Initial zoom level
                         maxScale: 3,       // Maximum zoom in level
                         minScale: 0.3,     // Maximum zoom out level
-                        scaleSpeed: 1.2    // Zoom speed factor
-                    }
-                });
+                        scaleSpeed: 1.2,    // Zoom speed factor
+                    },
+                })
                 setWorkspace(newWorkspace)
 
                 if (projectId) {
@@ -116,44 +117,47 @@ const BlocklyPage: React.FC = () => {
     }, [workspace])
 
     const saveCodeBlockToDB = async () => {
-        const outputDiv = document.getElementById("output");
-        if (outputDiv) outputDiv.innerText = ""; // Xóa kết quả cũ nếu có
+        const outputDiv = document.getElementById('output')
+        if (outputDiv) outputDiv.innerText = '' // Xóa kết quả cũ nếu có
 
         if (workspace) {
-            javascriptGenerator.finish = function (code: string): string {
-                const definitions = this.definitions_ || {};
-                const includes: string[] = [];
-                const others: string[] = [];
+            javascriptGenerator.finish = function(code: string): string {
+                const definitions = this.definitions_ || {}
+                const includes: string[] = []
+                const others: string[] = []
 
                 for (const [_, value] of Object.entries(definitions)) {
                     if (value.trim().startsWith('#include')) {
-                        includes.push(value);
+                        includes.push(value)
                     } else {
-                        others.push(value);
+                        others.push(value)
                     }
                 }
 
-                return includes.join('\n') + '\n\n' + others.join('\n') + '\n\n' + code;
-            };
+                return includes.join('\n') + '\n\n' + others.join('\n') + '\n\n' + code
+            }
 
-            const javascriptCode = javascriptGenerator.workspaceToCode(workspace);
-            console.log('Mã JavaScript đã tạo:', javascriptCode);
+            const javascriptCode = javascriptGenerator.workspaceToCode(workspace)
+            console.log('Mã JavaScript đã tạo:', javascriptCode)
 
             try {
-                message.loading({ content: 'Đang tải mã lên thiết bị...', key: 'saveCodeBlock' });
-                await pushCodeToDb(javascriptCode);
-                message.success({ content: 'Mã đã được tải lên thiết bị thành công!', key: 'saveCodeBlock' });
-                if (outputDiv) outputDiv.innerText = "✅ Mã đã được tải lên thiết bị thành công!";
+                message.loading({ content: 'Đang tải mã lên thiết bị...', key: 'saveCodeBlock' })
+                await pushCodeToDb(javascriptCode)
+                message.success({ content: 'Mã đã được tải lên thiết bị thành công!', key: 'saveCodeBlock' })
+                if (outputDiv) outputDiv.innerText = '✅ Mã đã được tải lên thiết bị thành công!'
             } catch (e) {
-                console.error('Lỗi khi lưu mã', e);
-                message.error({ content: `Lỗi: ${e instanceof Error ? e.message : 'Không thể tải mã lên thiết bị'}`, key: 'saveCodeBlock' });
-                if (outputDiv) outputDiv.innerText = `❌ Lỗi: ${e instanceof Error ? e.message : e}`;
+                console.error('Lỗi khi lưu mã', e)
+                message.error({
+                    content: `Lỗi: ${e instanceof Error ? e.message : 'Không thể tải mã lên thiết bị'}`,
+                    key: 'saveCodeBlock',
+                })
+                if (outputDiv) outputDiv.innerText = `❌ Lỗi: ${e instanceof Error ? e.message : e}`
             }
         } else {
-            message.warning('Không tìm thấy không gian làm việc!');
-            if (outputDiv) outputDiv.innerText = "⚠️ Không tìm thấy không gian làm việc.";
+            message.warning('Không tìm thấy không gian làm việc!')
+            if (outputDiv) outputDiv.innerText = '⚠️ Không tìm thấy không gian làm việc.'
         }
-    };
+    }
     const handleMenuClick = () => {
         setIsFileActive(!isFileActive)
     }
@@ -269,32 +273,32 @@ const BlocklyPage: React.FC = () => {
 
     const cloneProjectFunc = async () => {
         if (!isAuthenticated) {
-            message.error('Vui lòng đăng nhập để sao chép bài học!');
-            return;
+            message.error('Vui lòng đăng nhập để sao chép bài học!')
+            return
         }
 
         if (currentProject) {
             try {
                 await cloneProject(currentProject._id, user._id)
-                message.success('Đã sao chép bài học này về tài khoản của bạn!');
+                message.success('Đã sao chép bài học này về tài khoản của bạn!')
             } catch (e) {
                 console.error('Lỗi khi sao chép bài học', e)
-                message.error('Có lỗi xảy ra khi sao chép bài học!');
+                message.error('Có lỗi xảy ra khi sao chép bài học!')
             }
         } else {
-            message.warning('Không tìm thấy bài học để sao chép!');
+            message.warning('Không tìm thấy bài học để sao chép!')
         }
     }
 
     const handleSaveProject = async () => {
         if (!isAuthenticated) {
-            message.error('Vui lòng đăng nhập để lưu bài học!');
-            return;
+            message.error('Vui lòng đăng nhập để lưu bài học!')
+            return
         }
 
         if (!projectName.trim()) {
-            message.warning('Vui lòng đặt tên cho bài học trước khi lưu!');
-            return;
+            message.warning('Vui lòng đặt tên cho bài học trước khi lưu!')
+            return
         }
 
         if (workspace) {
@@ -302,11 +306,11 @@ const BlocklyPage: React.FC = () => {
                 const json = Blockly.serialization.workspaces.save(workspace)
                 const jsonString = JSON.stringify(json, null, 2)
 
-                message.loading({ content: 'Đang lưu bài học...', key: 'saveProject' });
+                message.loading({ content: 'Đang lưu bài học...', key: 'saveProject' })
 
                 if (currentProject && !isProjectOwner) {
-                    message.error({ content: 'Bạn không có quyền sửa bài học này!', key: 'saveProject' });
-                    return;
+                    message.error({ content: 'Bạn không có quyền sửa bài học này!', key: 'saveProject' })
+                    return
                 }
 
                 if (projectId && isProjectOwner) {
@@ -316,23 +320,23 @@ const BlocklyPage: React.FC = () => {
                         block: jsonString,
                     }
                     await updateProject(project, projectId)
-                    message.success({ content: 'Bài học đã được cập nhật thành công!', key: 'saveProject' });
+                    message.success({ content: 'Bài học đã được cập nhật thành công!', key: 'saveProject' })
                 } else {
                     const project = {
                         name: projectName,
                         block: jsonString,
-                        createdBy: user._id
+                        createdBy: user._id,
                     }
                     await createProject(project)
-                    message.success({ content: 'Bài học đã được lưu thành công!', key: 'saveProject' });
+                    message.success({ content: 'Bài học đã được lưu thành công!', key: 'saveProject' })
                 }
             } catch (e) {
                 console.error('Lỗi khi lưu bài học', e)
-                message.error({ content: 'Có lỗi xảy ra khi lưu bài học!', key: 'saveProject' });
+                message.error({ content: 'Có lỗi xảy ra khi lưu bài học!', key: 'saveProject' })
             }
         } else {
             console.error('Không tìm thấy không gian làm việc')
-            message.error('Không tìm thấy không gian làm việc!');
+            message.error('Không tìm thấy không gian làm việc!')
         }
     }
 
@@ -364,7 +368,7 @@ const BlocklyPage: React.FC = () => {
                 </span>
             ),
             onClick: handleSaveProject,
-            disabled: currentProject ? !isProjectOwner : !isAuthenticated
+            disabled: currentProject ? !isProjectOwner : !isAuthenticated,
         },
         {
             key: '2',
@@ -374,7 +378,7 @@ const BlocklyPage: React.FC = () => {
                 </span>
             ),
             onClick: cloneProjectFunc,
-            disabled: !isAuthenticated || !currentProject
+            disabled: !isAuthenticated || !currentProject,
         },
         {
             key: '3',
@@ -386,7 +390,7 @@ const BlocklyPage: React.FC = () => {
             onClick: showModal,
         },
         {
-            type: 'divider'
+            type: 'divider',
         },
         {
             key: '4',
@@ -427,39 +431,177 @@ const BlocklyPage: React.FC = () => {
     ]
 
     // Send the workspace file to the Python backend
-    const sendFileToPythonBackend = async () => {
+//     const sendFileToClient = async () => {
+//         if (!workspace) {
+//             message.error('Không gian làm việc chưa được khởi tạo!')
+//             console.error('Workspace is not initialized.')
+//             return
+//         }
+//
+//         const code = javascriptGenerator.workspaceToCode(workspace)
+//
+//         // Tạo file code.ino bên trong thư mục "code"
+//         const zip = new JSZip()
+//         const codeFolder = zip.folder('code')
+//         codeFolder.file('code.ino', code)
+//
+//         // Tạo nội dung run.bat bên ngoài
+//         const batContent = `@echo off
+// setlocal
+//
+// REM === Locate Arduino IDE ===
+// set "ARDUINO_PATH="
+//
+// if exist "C:\\Program Files\\Arduino\\Arduino.exe" (
+//     set "ARDUINO_PATH=C:\\Program Files\\Arduino\\Arduino.exe"
+//     goto found
+// )
+//
+// if exist "C:\\Program Files\\Arduino\\Arduino_debug.exe" (
+//     set "ARDUINO_PATH=C:\\Program Files\\Arduino\\Arduino_debug.exe"
+//     goto found
+// )
+//
+// if exist "C:\\Program Files (x86)\\Arduino\\Arduino.exe" (
+//     set "ARDUINO_PATH=C:\\Program Files (x86)\\Arduino\\Arduino.exe"
+//     goto found
+// )
+//
+// if exist "C:\\Program Files (x86)\\Arduino\\Arduino_debug.exe" (
+//     set "ARDUINO_PATH=C:\\Program Files (x86)\\Arduino\\Arduino_debug.exe"
+//     goto found
+// )
+//
+// echo Arduino IDE not found! Please install Arduino IDE.
+// pause
+// exit /b
+//
+// :found
+// echo Found Arduino IDE at: "%ARDUINO_PATH%"
+//
+// REM === Detect COM port ===
+// set "COMPORT="
+// for /f "tokens=3" %%A in ('reg query HKEY_LOCAL_MACHINE\\HARDWARE\\DEVICEMAP\\SERIALCOMM ^| find "REG_SZ"') do (
+//     set "COMPORT=%%A"
+// )
+//
+// if not defined COMPORT (
+//     echo No COM port detected, defaulting to COM3.
+//     set "COMPORT=COM3"
+// )
+//
+// echo Using port: %COMPORT%
+//
+// REM === Upload sketch ===
+// "%ARDUINO_PATH%" --upload --port %COMPORT% "%~dp0code\\code.ino"
+//
+// pause
+// `
+//
+//         // Thêm run.bat vào zip
+//         zip.file('run.bat', batContent)
+//
+//         // Tạo file zip và gửi về client
+//         zip.generateAsync({ type: 'blob' }).then((zipBlob) => {
+//             const zipUrl = URL.createObjectURL(zipBlob)
+//             const link = document.createElement('a')
+//             link.href = zipUrl
+//             link.download = 'arduino_project.zip'
+//             document.body.appendChild(link)
+//             link.click()
+//             document.body.removeChild(link)
+//             URL.revokeObjectURL(zipUrl)
+//         })
+//     }
+    const sendFileToClient = async () => {
         if (!workspace) {
-            message.error('Không gian làm việc chưa được khởi tạo!');
-            console.error("Workspace is not initialized.");
-            return;
+            message.error('Không gian làm việc chưa được khởi tạo!')
+            console.error('Workspace is not initialized.')
+            return
         }
 
-        // Generate JSON representation of the workspace
-        const jsonWorkspace = Blockly.serialization.workspaces.save(workspace);
-        const jsonText = JSON.stringify(jsonWorkspace, null, 2);
+        const code = javascriptGenerator.workspaceToCode(workspace)
 
-        // Prepare FormData for the JSON format
-        const jsonFormData = new FormData();
-        jsonFormData.append("file", new Blob([jsonText], { type: "application/json" }), "workspace.json");
+        // Chuyển code thành các dòng echo >> code\code.ino
+        const codeLines = code.split('\n')
+        const echoLines = codeLines.map((line, index) => {
+            // Escape các ký tự đặc biệt trong batch như ^
+            const safeLine = line.replace(/([&<>|^])/g, '^$1')
+            return `${index === 0 ? 'echo' : 'echo.'} ${safeLine} >> code\\code.ino`
+        })
 
-        try {
-            message.loading({ content: 'Đang lưu bài học lên hệ thống...', key: 'sendFile' });
+        // Nội dung file run.bat
+        const batContent = `@echo off
+setlocal
 
-            // Send the JSON file to the backend
-            const response = await fetch("http://127.0.0.1:5001/upload-json", {
-                method: "POST",
-                body: jsonFormData,
-            });
+REM === Tạo thư mục code ===
+if not exist "code" mkdir code
 
-            // Process the response
-            const result = await response.json();
-            console.log("JSON Response:", result);
-            message.success({ content: 'Bài học đã được lưu lên hệ thống!', key: 'sendFile' });
-        } catch (error) {
-            console.error("Lỗi khi gửi tệp JSON tới máy chủ:", error);
-            message.error({ content: 'Không thể lưu bài học lên hệ thống!', key: 'sendFile' });
-        }
+REM === Ghi nội dung vào code\\code.ino ===
+del code\\code.ino >nul 2>&1
+${echoLines.join('\n')}
+
+REM === Locate Arduino IDE ===
+set "ARDUINO_PATH="
+
+if exist "C:\\Program Files\\Arduino\\Arduino.exe" (
+    set "ARDUINO_PATH=C:\\Program Files\\Arduino\\Arduino.exe"
+    goto found
+)
+
+if exist "C:\\Program Files\\Arduino\\Arduino_debug.exe" (
+    set "ARDUINO_PATH=C:\\Program Files\\Arduino\\Arduino_debug.exe"
+    goto found
+)
+
+if exist "C:\\Program Files (x86)\\Arduino\\Arduino.exe" (
+    set "ARDUINO_PATH=C:\\Program Files (x86)\\Arduino\\Arduino.exe"
+    goto found
+)
+
+if exist "C:\\Program Files (x86)\\Arduino\\Arduino_debug.exe" (
+    set "ARDUINO_PATH=C:\\Program Files (x86)\\Arduino\\Arduino_debug.exe"
+    goto found
+)
+
+echo Arduino IDE not found! Please install Arduino IDE.
+pause
+exit /b
+
+:found
+echo Found Arduino IDE at: "%ARDUINO_PATH%"
+
+REM === Detect COM port ===
+set "COMPORT="
+for /f "tokens=3" %%A in ('reg query HKEY_LOCAL_MACHINE\\HARDWARE\\DEVICEMAP\\SERIALCOMM ^| find "REG_SZ"') do (
+    set "COMPORT=%%A"
+)
+
+if not defined COMPORT (
+    echo No COM port detected, defaulting to COM3.
+    set "COMPORT=COM3"
+)
+
+echo Using port: %COMPORT%
+
+REM === Upload sketch ===
+"%ARDUINO_PATH%" --upload --port %COMPORT% "%~dp0code\\code.ino"
+
+pause
+`
+
+        // Tạo và tải file run.bat
+        const batBlob = new Blob([batContent], { type: 'application/octet-stream' })
+        const batUrl = URL.createObjectURL(batBlob)
+        const batLink = document.createElement('a')
+        batLink.href = batUrl
+        batLink.download = 'run.bat'
+        document.body.appendChild(batLink)
+        batLink.click()
+        document.body.removeChild(batLink)
+        URL.revokeObjectURL(batUrl)
     }
+
 
     return (
         <Layout
@@ -577,9 +719,9 @@ const BlocklyPage: React.FC = () => {
                         <button
                             className={styles.saveDBbutton}
                             id="sendFileButton"
-                            onClick={sendFileToPythonBackend}
+                            onClick={sendFileToClient}
                         >
-                            <SaveOutlined /> Lưu bài học lên hệ thống
+                            <SaveOutlined />Tải xuống tệp để chạy
                         </button>
 
                         <h3>Kết quả</h3>
