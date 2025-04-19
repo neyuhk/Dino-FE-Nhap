@@ -1,5 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { PlusCircle, Home, BookOpen, ThumbsUp, MessageSquare, Repeat, User, ChevronDown, Loader } from 'lucide-react';
+import {
+    PlusCircle,
+    Home,
+    BookOpen,
+    ThumbsUp,
+    MessageSquare,
+    Repeat,
+    User,
+    ChevronDown,
+    Loader,
+    LucideIcon,
+} from 'lucide-react'
 import styles from './Forum.module.css';
 import Post from './Post/Post.tsx'
 import { Forum } from '../../model/model.ts';
@@ -11,7 +22,7 @@ import CreatePostModal from './CreatePost/CreatePostModal.tsx'
 
 interface MenuItem {
     id: string;
-    icon: React.FC<{ size?: number; className?: string }>;
+    icon: LucideIcon;
     label: string;
 }
 
@@ -204,6 +215,7 @@ const ForumPage: React.FC = () => {
         setForumList(prev => prev.filter(post => post._id !== postId));
     };
 
+    // @ts-ignore
     const menuItems: MenuItem[] = [
         { id: 'home', icon: Home, label: 'Trang chủ' },
         { id: 'class', icon: BookOpen, label: 'Lớp học' },

@@ -91,6 +91,7 @@ const ListCourseManagement: React.FC = () => {
         formData.append('certification', values.certification);
 
         if (selectedImage) {
+            // @ts-ignore
             formData.append('file', selectedImage.originFileObj);
         }
         try {
@@ -120,6 +121,7 @@ const ListCourseManagement: React.FC = () => {
         setIsModalVisible(true);
     };
 
+    // @ts-ignore
     const handleImageChange = ({ fileList }) => {
         setSelectedImage(fileList[0]);
     };

@@ -151,7 +151,9 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
                     message: 'Cập nhật bài tập thành công!'
                 });
 
-                if (onSuccess) onSuccess(updatedExercise);
+                if (onSuccess) { // @ts-ignore
+                    onSuccess(updatedExercise);
+                }
             }  else {
                 response = await newExercise(payload);
                 const newExerciseId = response.data._id;
@@ -426,7 +428,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
                 </div>
             </form>
 
-            {toast.show && <Toast toast={toast} onClose={hideToast} />}
+            {toast.show && <Toast toast={toast} onClose={hideToast} type={''} />}
         </div>
     );
 };

@@ -1,4 +1,5 @@
 import { COURSE_API, EXERCISE_API, FORUM_API, LESSON_API } from '../constants/api.ts'
+// @ts-ignore
 import http from '@/services/http/http'
 import { Lesson, Quiz, Student, SubmitAnswerReq } from '../model/classroom.ts'
 import { httpAuth, httpFile } from './http/httpAuth.ts'

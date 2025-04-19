@@ -1,4 +1,5 @@
 import { COMMENT_API } from '../constants/api.ts'
+// @ts-ignore
 import http from '@/services/http/http'
 import { CommentReq } from '../model/model.ts'
 import { httpAuth } from './http/httpAuth.ts'

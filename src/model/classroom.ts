@@ -1,4 +1,3 @@
-
 import { User } from './model.ts'
 
 export interface Exercise {

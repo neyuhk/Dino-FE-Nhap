@@ -403,7 +403,7 @@ const AboutMe: React.FC<AboutMeProps> = ({ onUserUpdate }) => {
                 )}
             </div>
             {/* Toast notification */}
-            {toast.show && <Toast toast={toast} onClose={hideToast} />}
+            {toast.show && <Toast toast={toast} onClose={hideToast} type={''} />}
         </div>
     );
 };

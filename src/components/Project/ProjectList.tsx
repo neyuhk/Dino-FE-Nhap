@@ -17,7 +17,7 @@ const ProjectList: React.FC = () => {
 
     useEffect(() => {
         const fetchProjects = async () => {
-            const data = await getProjects(page, perPage);
+            const data = await getProjects(page, perPage, '', '');
             setProjects(data.data);
             setTotal(data.total);
         };

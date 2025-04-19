@@ -255,7 +255,7 @@ const Post: React.FC<ExtendedPostProps> = ({
                 {description && <p className={styles.text}>{description}</p>}
                 {images && images[0] && (
                     <img
-                        src={images}
+                        src={images[0]}
                         alt="Post content"
                         className={styles.image}
                     />

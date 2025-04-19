@@ -743,7 +743,7 @@ const CourseScore: React.FC<Props> = ({ courseId }) => {
             {detailPopup.show && detailPopup.userId && detailPopup.exerciseId && (
                 <ExerciseDetail
                     userId={detailPopup.userId}
-                    userName={detailPopup.userName}
+                    userName={detailPopup.userName || ''}
                     exerciseId={detailPopup.exerciseId}
                     onClose={closeDetailPopup}
                 />
@@ -777,7 +777,7 @@ const CourseScore: React.FC<Props> = ({ courseId }) => {
                 </div>
             )}
             {toast.show && (
-                <Toast toast={toast} onClose={hideToast} />
+                <Toast toast={toast} onClose={hideToast} type={''} />
             )}
         </div>
 

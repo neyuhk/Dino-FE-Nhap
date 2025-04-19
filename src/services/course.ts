@@ -1,4 +1,5 @@
 import { COURSE_API } from '../constants/api.ts'
+// @ts-ignore
 import http from '@/services/http/http'
 import { httpAuth, httpFile } from './http/httpAuth.ts'
 
