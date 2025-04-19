@@ -47,7 +47,7 @@ export interface Comment {
     _id: string;
     content: string;
     user_id: User;
-    commentable_id: Project;
+    commentable_id: string;
     commentable_type: string;
     like_count: number;
     isLiked: boolean;

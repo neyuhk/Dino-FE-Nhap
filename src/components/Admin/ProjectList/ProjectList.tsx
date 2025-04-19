@@ -1,10 +1,10 @@
 // import React, { useEffect, useState } from 'react';
 // import { List, Pagination } from 'antd';
 // @ts-ignore
-import ProjectItem from './ProjectItem.tsx';
+import ProjectItem from '../../Project/ProjectItem.tsx';
 import styles from './ProjectList.module.css';
-import { getProjects } from '../../services/project.ts';
-import { Project } from '../../model/model.ts';
+import { getProjects } from '../../../services/project.ts';
+import { Project } from '../../../model/model.ts';
 
 import { useEffect, useState } from 'react'
 import { List, Pagination } from 'antd'

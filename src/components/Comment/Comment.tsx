@@ -35,9 +35,9 @@ const CommentComponent: React.FC<CommentProps> = ({ commentableId, commentableTy
     const MAX_VISIBLE_REPLIES = 5; // Number of replies to show initially per API call
 
     const [visibleMainComments, setVisibleMainComments] = useState<number>(INITIAL_MAIN_COMMENTS);
-    const [subCommentPagination, setSubCommentPagination] = useState<{[key: string]: {page: number, hasMore: boolean}}>({});
     const [collapsedComments, setCollapsedComments] = useState<Set<string>>(new Set());
     const [lastClosedCommentId, setLastClosedCommentId] = useState<string | null>(null);
+    const [subCommentPagination, setSubCommentPagination] = useState<{[key: string]: { page: number; hasMore: boolean }}>({});
 
     const getTotalCommentCount = (mainComments: CommentInterface[]) => {
         let count = mainComments.length;
@@ -63,7 +63,7 @@ const CommentComponent: React.FC<CommentProps> = ({ commentableId, commentableTy
             setComments(sortedComments);
 
             // Initialize pagination state for each comment
-            const initialPagination = {};
+            const initialPagination : any = {};
             sortedComments.forEach(comment => {
                 initialPagination[comment._id] = {
                     page: 1,
@@ -170,7 +170,7 @@ const CommentComponent: React.FC<CommentProps> = ({ commentableId, commentableTy
                 commentableId: commentableId,
                 commentableType: commentableType,
                 userId: user._id,
-                parentId: parentCommentId,
+                parentId: parentCommentId || "",
             };
 
             const response = await addComment(comment);
@@ -184,18 +184,26 @@ const CommentComponent: React.FC<CommentProps> = ({ commentableId, commentableTy
                 const newMainComment: CommentInterface = {
                     _id: newComment._id,
                     content: values.content,
-                    commentableId,
-                    commentableType,
+                    commentable_id: commentableId,
+                    commentable_type: commentableType,
                     user_id: {
                         _id: user._id,
                         username: user.username,
-                        avatar: user.avatar || []
+                        avatar: user.avatar || '',
+                        email: '',
+                        name: '',
+                        role: '',
+                        createdAt: '',
+                        updatedAt: '',
+                        birthday: new Date,
+                        phoneNumber: '',
                     },
                     like_count: 0,
                     isLiked: false,
                     countSubComment: 0,
-                    createdAt: new Date().toISOString()
-                };
+                    parentId: "",
+                    createdAt: new Date().toISOString(),
+                }
 
                 // Add to top of comments list
                 setComments(prev => [newMainComment, ...prev]);
@@ -240,18 +248,26 @@ const CommentComponent: React.FC<CommentProps> = ({ commentableId, commentableTy
                 const newSubComment: CommentInterface = {
                     _id: newComment._id,
                     content: values.content,
-                    commentableId,
-                    commentableType,
+                    commentable_id: commentableId,
+                    commentable_type: commentableType,
                     parentId: parentCommentId,
                     user_id: {
                         _id: user._id,
                         username: user.username,
-                        avatar: user.avatar || []
+                        avatar: user.avatar || [],
+                        email: '',
+                        name: '',
+                        role: '',
+                        createdAt: '',
+                        updatedAt: '',
+                        birthday: new Date(),
+                        phoneNumber: '',
                     },
                     like_count: 0,
                     isLiked: false,
-                    createdAt: new Date().toISOString()
-                };
+                    countSubComment: 0,
+                    createdAt: new Date().toISOString(),
+                }
 
                 // Add to existing subcomments and make sure they're visible
                 setSubComments(prev => ({
@@ -682,10 +698,11 @@ const CommentComponent: React.FC<CommentProps> = ({ commentableId, commentableTy
                         <>
                             <Text
                                 className={level === 1 ? styles.subCommentContent : ''}
-                                ellipsis={collapsedComments.has(comment._id) ? { rows: 2, expandable: false } : false}
+                                ellipsis={collapsedComments.has(comment._id)}
                             >
                                 {comment.content}
                             </Text>
+
                             {comment.content.length > 150 && (
                                 <Button
                                     type="link"
