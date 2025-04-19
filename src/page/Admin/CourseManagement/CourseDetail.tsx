@@ -19,11 +19,12 @@ import {
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { getCourseById } from '../../../services/course.ts'
-import { Course, Lesson } from '../../../model/model.ts'
+import { Course } from '../../../model/model.ts'
 import { getLessonByCourseId, addLesson } from '../../../services/lesson.ts'
 import { PROJECT_TYPE } from '../../../enum/projectType.ts'
 import { AlignLeftOutlined, DeleteOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons'
 import { debounce } from 'lodash'
+import { Lesson } from '../../../model/classroom.ts'
 
 const { Title, Paragraph, Text } = Typography
 const { Search } = Input

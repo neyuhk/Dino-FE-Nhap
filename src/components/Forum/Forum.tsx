@@ -229,7 +229,7 @@ const ForumPage: React.FC = () => {
                 <nav className={styles.desktopNav}>
                     <div className={styles.avatarContainer}>
                         <img
-                            src={user.avatar}
+                            src={user.avatar[0]? user.avatar :"https://i.pinimg.com/474x/0b/10/23/0b10236ae55b58dceaef6a1d392e1d15.jpg"}
                             alt="User Avatar"
                             className={styles.userAvatar}
                         />
@@ -336,7 +336,7 @@ const ForumPage: React.FC = () => {
             <div className={styles.mainContent}>
                 <div className={styles.mobileHeader}>
                     <img
-                        src={user.avatar}
+                        src={user.avatar[0]? user.avatar :"https://i.pinimg.com/474x/0b/10/23/0b10236ae55b58dceaef6a1d392e1d15.jpg"}
                         alt="User Avatar"
                         className={styles.avatar}
                     />

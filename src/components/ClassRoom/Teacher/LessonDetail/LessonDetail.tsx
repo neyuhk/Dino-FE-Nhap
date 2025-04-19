@@ -100,7 +100,7 @@ const LessonDetail: React.FC = () => {
         }
         fetchExercises()
         fetchLessonDetail()
-    }, [lessonId, lesson, courseId])
+    }, [lessonId, lesson, courseId, navigate])
 
     if (!user) {
         return (
@@ -539,11 +539,6 @@ const LessonDetail: React.FC = () => {
                                                 </tbody>
                                             </table>
                                         )}
-                                    </div>
-                                    <div className={styles.buttonGroup}>
-                                        <button onClick={closeScoreModal} className={styles.cancelButton}>
-                                            Đóng
-                                        </button>
                                     </div>
                                 </div>
                             </div>

@@ -72,11 +72,11 @@ export const getQuizByExerciseId = async (exerciseId: string) => {
 }
 
 export const getQuizForTeacher = async (exerciseId: string) => {
-    return (await http.get(EXERCISE_API.GET_EXERCISE_DETAIL_FOR_TEACHER + exerciseId)).data
+    return (await httpAuth.get(EXERCISE_API.GET_EXERCISE_DETAIL_FOR_TEACHER + exerciseId)).data
 }
 
 export const getAnsweredQuiz = async (submitAnswerReq : SubmitAnswerReq) => {
-    return (await http.post(EXERCISE_API.GET_ANSWER_QUIZ, submitAnswerReq)).data
+    return (await httpAuth.post(EXERCISE_API.GET_ANSWER_QUIZ, submitAnswerReq)).data
 }
 
 export const addStudentToCourse = async (courseId: string, studentData: Partial<Student>) => {

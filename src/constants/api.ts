@@ -81,6 +81,7 @@ export const EXERCISE_API = {
     GET_EXERCISE_DETAIL_FOR_TEACHER: 'quiz/exercise/teacher/',
     GET_EXERCISE_FOR_TEACHER: '/exercise/teacher/',
     GET_EXERCISE_FOR_STUDENT: 'exercise/lesson/', // +:lessonid/user/:userId
+    EDIT_EXERCISE: '/exercise/',
 }
 
 export const COMMENT_API = {

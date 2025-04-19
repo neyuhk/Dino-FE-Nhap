@@ -31,7 +31,7 @@ const httpFile: AxiosInstance = axios.create({
 
 // luc nao bo di sau cung duoc
 let refreshRetryCount = 0
-const MAX_REFRESH_RETRY = 3 // Giới hạn 3 lần thử lại
+const MAX_REFRESH_RETRY = 15 // Giới hạn 3 lần thử lại
 
 // Hàm interceptor chung để thêm token
 const addTokenInterceptor = (instance: AxiosInstance) => {

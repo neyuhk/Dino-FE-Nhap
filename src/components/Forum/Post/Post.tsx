@@ -209,7 +209,7 @@ const Post: React.FC<ExtendedPostProps> = ({
         <div className={styles.container} ref={postElementRef}>
             <div className={styles.header}>
                 <img
-                    src={authorInfo.avatar || "/MockData/avt-def.jpg"}
+                    src={authorInfo.avatar[0] || "https://i.pinimg.com/474x/0b/10/23/0b10236ae55b58dceaef6a1d392e1d15.jpg"}
                     alt={`${authorInfo.username}'s avatar`}
                     className={styles.avatar}
                 />
@@ -399,7 +399,7 @@ const Post: React.FC<ExtendedPostProps> = ({
                                 likedUsers.map((user) => (
                                     <div key={user._id} className={styles.likedUser}>
                                         <img
-                                            src={user.avatar?.[0] || '/MockData/avt-def.jpg'}
+                                            src={user.avatar[0] ? user.avatar[0] : 'https://i.pinimg.com/474x/0b/10/23/0b10236ae55b58dceaef6a1d392e1d15.jpg'}
                                             alt={`${user.username}'s avatar`}
                                             className={styles.likedUserAvatar}
                                         />
