@@ -105,7 +105,15 @@ button {
 .title-gradian{
     background: var(--gradient-colors);
     -webkit-background-clip: text;
-    /*background-clip: text;*/
     -webkit-text-fill-color: transparent;
     color: var(--primary-color);
+}
+.ant-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ant-layout-content{
+    line-height: initial !important;
+    text-align: initial !important;
 }
