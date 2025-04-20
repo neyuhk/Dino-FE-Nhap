@@ -26,7 +26,6 @@ import { logout } from '../../stores/authSlice.ts'
 import store from '../../stores'
 import { pushCodeToDb, saveCodeBlock } from '../../services/codeBlock.ts'
 import styles from './BlocklyPage.module.css'
-import JSZip from 'jszip';
 
 const { Header, Content } = Layout
 const { Title } = Typography
@@ -516,22 +515,28 @@ const BlocklyPage: React.FC = () => {
     const sendFileToClient = async () => {
         if (!workspace) {
             message.error('Không gian làm việc chưa được khởi tạo!')
-            console.error('Workspace is not initialized.')
             return
         }
 
+        // Generate JSON representation of the workspace
         const code = javascriptGenerator.workspaceToCode(workspace)
 
-        // Chuyển code thành các dòng echo >> code\code.ino
-        const codeLines = code.split('\n')
-        const echoLines = codeLines.map((line, index) => {
-            // Escape các ký tự đặc biệt trong batch như ^
-            const safeLine = line.replace(/([&<>|^])/g, '^$1')
-            return `${index === 0 ? 'echo' : 'echo.'} ${safeLine} >> code\\code.ino`
-        })
+        const isWindows = navigator.platform.includes('Win')
+        const fileName = isWindows ? 'run.bat' : 'run.sh'
 
-        // Nội dung file run.bat
-        const batContent = `@echo off
+        console.log('isWindows', isWindows)
+
+        let scriptContent = ''
+
+        if (isWindows) {
+            // Escape & generate bat content
+            const codeLines = code.split('\n')
+            const echoLines = codeLines.map((line, index) => {
+                const safeLine = line.replace(/([&<>|^])/g, '^$1')
+                return `${index === 0 ? 'echo' : 'echo.'} ${safeLine} >> code\\code.ino`
+            })
+
+            scriptContent = `@echo off
 setlocal
 
 REM === Tạo thư mục code ===
@@ -585,21 +590,55 @@ if not defined COMPORT (
 echo Using port: %COMPORT%
 
 REM === Upload sketch ===
+echo uploading command: "%ARDUINO_PATH%" --upload --port %COMPORT% "%~dp0code\\code.ino"
+
 "%ARDUINO_PATH%" --upload --port %COMPORT% "%~dp0code\\code.ino"
 
-pause
-`
+pause`
+        } else {
+            // Escape & generate bash content
+            const codeLines = code.split('\n')
+            const echoLines = codeLines.map(line => {
+                const safeLine = line.replace(/(["`\\$])/g, '\\$1')
+                return `echo "${safeLine}" >> code/code.ino`
+            })
 
-        // Tạo và tải file run.bat
-        const batBlob = new Blob([batContent], { type: 'application/octet-stream' })
-        const batUrl = URL.createObjectURL(batBlob)
-        const batLink = document.createElement('a')
-        batLink.href = batUrl
-        batLink.download = 'run.bat'
-        document.body.appendChild(batLink)
-        batLink.click()
-        document.body.removeChild(batLink)
-        URL.revokeObjectURL(batUrl)
+            scriptContent = `#!/bin/bash
+
+mkdir -p code
+rm -f code/code.ino
+${echoLines.join('\n')}
+
+# Tìm Arduino IDE path (có thể chỉnh sửa nếu khác)
+ARDUINO_PATH="/Applications/Arduino.app/Contents/MacOS/Arduino"
+
+if [ ! -f "$ARDUINO_PATH" ]; then
+    echo "Arduino IDE không được tìm thấy!"
+    exit 1
+fi
+
+# Cổng mặc định là /dev/cu.usbmodem*
+PORT=$(ls /dev/cu.usbmodem* 2>/dev/null | head -n 1)
+if [ -z "$PORT" ]; then
+    echo "Không tìm thấy cổng thiết bị! Mặc định là /dev/cu.usbmodem14101"
+    PORT="/dev/cu.usbmodem14101"
+fi
+
+"$ARDUINO_PATH" --upload --port "$PORT" "$(pwd)/code/code.ino"
+`
+        }
+
+        const blob = new Blob([scriptContent], { type: 'text/plain' })
+        const url = URL.createObjectURL(blob)
+
+        const link = document.createElement('a')
+        link.href = url
+        link.download = fileName
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+
+        URL.revokeObjectURL(url)
     }
 
 

@@ -47,6 +47,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
+.ant-layout-content.css-dev-only-do-not-override-apn68 {
+    text-align: left !important;
+    line-height: initial !important;
+}
 button:hover {
   border-color: #646cff;
 }
@@ -68,3 +73,4 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
